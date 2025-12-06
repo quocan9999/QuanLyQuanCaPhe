@@ -60,8 +60,35 @@
     <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fQuanLyBan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fQuanLyBan.Designer.cs">
+      <DependentUpon>fQuanLyBan.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fQuanLyDanhMuc.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fQuanLyDanhMuc.Designer.cs">
+      <DependentUpon>fQuanLyDanhMuc.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fQuanLySanPham.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fQuanLySanPham.Designer.cs">
+      <DependentUpon>fQuanLySanPham.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\fQuanLyBan.resx">
+      <DependentUpon>fQuanLyBan.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fQuanLyDanhMuc.resx">
+      <DependentUpon>fQuanLyDanhMuc.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Forms\fQuanLySanPham.resx">
+      <DependentUpon>fQuanLySanPham.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Properties\Resources.resx">
       <Generator>ResXFileCodeGenerator</Generator>
       <LastGenOutput>Resources.Designer.cs</LastGenOutput>
