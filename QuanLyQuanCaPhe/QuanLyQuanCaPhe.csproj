@@ -54,11 +54,17 @@
     <Compile Include="Class\NhanVien.cs" />
     <Compile Include="Class\SanPham.cs" />
     <Compile Include="DataProvider.cs" />
-    <Compile Include="Forms\Form1.cs">
+    <Compile Include="Forms\fDangKy.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\Form1.Designer.cs">
-      <DependentUpon>Form1.cs</DependentUpon>
+    <Compile Include="Forms\fDangKy.Designer.cs">
+      <DependentUpon>fDangKy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fDangNhap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fDangNhap.Designer.cs">
+      <DependentUpon>fDangNhap.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -70,6 +76,7 @@
     <Compile Include="Properties\Resources.Designer.cs">
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
     </Compile>
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
@@ -87,6 +94,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HinhAnh\coffeesidebar.png" />
+    <None Include="Resources\coffeesidebar.png" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
