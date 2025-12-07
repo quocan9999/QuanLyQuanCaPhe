@@ -82,6 +82,7 @@ namespace QuanLyQuanCaPhe.Forms
         // =====================================================================
         private void btnXem_Click(object sender, EventArgs e)
         {
+            LoadDanhMucComBoBox(cboDanhMuc);
             LoadListSanPham();
             AddSanPhamBinding();
         }
@@ -272,6 +273,35 @@ namespace QuanLyQuanCaPhe.Forms
         // =====================================================================
         // NÚT XÓA
         // =====================================================================
+        //private void btnXoa_Click(object sender, EventArgs e)
+        //{
+        //    if (!int.TryParse(txtID.Text.Trim(), out int id))
+        //    {
+        //        MessageBox.Show("Chọn món để xóa.");
+        //        return;
+        //    }
+
+        //    if (MessageBox.Show("Xóa món này?", "Xác nhận", MessageBoxButtons.YesNo) != DialogResult.Yes)
+        //        return;
+
+        //    using (SqlConnection conn = new SqlConnection(connectionString))
+        //    {
+        //        conn.Open();
+        //        string query = "DELETE FROM SanPham WHERE Id = @Id";
+        //        using (SqlCommand cmd = new SqlCommand(query, conn))
+        //        {
+        //            cmd.Parameters.AddWithValue("@Id", id);
+
+        //            if (cmd.ExecuteNonQuery() > 0)
+        //            {
+        //                MessageBox.Show("Xóa thành công.");
+        //                LoadListSanPham();
+        //                AddSanPhamBinding();
+        //            }
+        //            else MessageBox.Show("Xóa thất bại.");
+        //        }
+        //    }
+        //}
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(txtID.Text.Trim(), out int id))
@@ -286,21 +316,39 @@ namespace QuanLyQuanCaPhe.Forms
             using (SqlConnection conn = new SqlConnection(connectionString))
             {
                 conn.Open();
-                string query = "DELETE FROM SanPham WHERE Id = @Id";
-                using (SqlCommand cmd = new SqlCommand(query, conn))
+
+                // 1. Xóa dữ liệu
+                string deleteQuery = "DELETE FROM SanPham WHERE Id = @Id";
+                using (SqlCommand cmd = new SqlCommand(deleteQuery, conn))
                 {
                     cmd.Parameters.AddWithValue("@Id", id);
 
                     if (cmd.ExecuteNonQuery() > 0)
                     {
-                        MessageBox.Show("Xóa thành công.");
+                        // 2. Reset IDENTITY sau khi xóa
+                        string resetIdentity = @"
+                    DECLARE @maxId INT;
+                    SELECT @maxId = ISNULL(MAX(Id), 0) FROM SanPham;
+                    DBCC CHECKIDENT ('SanPham', RESEED, @maxId);
+                ";
+
+                        using (SqlCommand resetCmd = new SqlCommand(resetIdentity, conn))
+                        {
+                            resetCmd.ExecuteNonQuery();
+                        }
+
+                        MessageBox.Show("Xóa thành công và đã reset ID.");
                         LoadListSanPham();
                         AddSanPhamBinding();
                     }
-                    else MessageBox.Show("Xóa thất bại.");
+                    else
+                    {
+                        MessageBox.Show("Xóa thất bại.");
+                    }
                 }
             }
         }
+
 
         // =====================================================================
         // LOAD DANH MỤC
@@ -329,14 +377,44 @@ namespace QuanLyQuanCaPhe.Forms
         // =====================================================================
         private void fQuanLySanPham_Load(object sender, EventArgs e)
         {
-            LoadDanhMucComBoBox(cboDanhMuc); // ⭐ phải chạy trước
-            LoadListSanPham();
-            AddSanPhamBinding();
+          
+          
         }
 
-        private void btnThem_Click_1(object sender, EventArgs e)
+        // =====================================================================
+        // NÚT TÌM KIẾM
+        // =====================================================================
+        // =====================================================================
+        // NÚT TÌM KIẾM THEO TÊN SẢN PHẨM
+        // =====================================================================
+        private void btnTimKiem_Click(object sender, EventArgs e)
         {
+            string keyword = txtTimKiemMon.Text.Trim();
 
+            if (string.IsNullOrEmpty(keyword))
+            {
+                MessageBox.Show("Vui lòng nhập tên sản phẩm cần tìm!");
+                return;
+            }
+
+            string query = "SELECT * FROM SanPham WHERE TenSP LIKE @ten ORDER BY Id ASC";
+
+            using (SqlConnection conn = new SqlConnection(connectionString))
+            {
+                conn.Open();
+
+                SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
+                adapter.SelectCommand.Parameters.AddWithValue("@ten", "%" + keyword + "%");
+
+                DataTable data = new DataTable();
+                adapter.Fill(data);
+
+                // Gán kết quả vào BindingSource
+                monList.DataSource = data;
+                grvMon.DataSource = monList;
+            }
         }
+
+
     }
 }

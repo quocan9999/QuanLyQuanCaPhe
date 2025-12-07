@@ -63,13 +63,17 @@ namespace QuanLyQuanCaPhe.Forms
             txtID.DataBindings.Add("Text", grvDanhMuc.DataSource, "Id");
             txtDanhMuc.DataBindings.Add("Text", grvDanhMuc.DataSource, "TenDanhMuc");
         }
-
+        // =====================================================================
+        // NÚT XEM
+        // =====================================================================
         private void btnXem_Click(object sender, EventArgs e)
         {
             LoadListDanhMuc();
             AddDanhMucBinding();
         }
-
+        // =====================================================================
+        // NÚT THÊM
+        // =====================================================================
         private void btnThem_Click(object sender, EventArgs e)
         {
             if (!isAdding)
@@ -124,7 +128,9 @@ namespace QuanLyQuanCaPhe.Forms
             isAdding = false;
             btnThem.Text = "Thêm";
         }
-
+        // =====================================================================
+        // NÚT SỬA
+        // =====================================================================
         private void btnSua_Click(object sender, EventArgs e)
         {
             // Nếu chưa vào chế độ sửa → chuyển sang chế độ sửa
@@ -188,7 +194,9 @@ namespace QuanLyQuanCaPhe.Forms
                 }
             }
         }
-
+        // =====================================================================
+        // NÚT XÓA
+        // =====================================================================
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(txtID.Text.Trim(), out int id))
