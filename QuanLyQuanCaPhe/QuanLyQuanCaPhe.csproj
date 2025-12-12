@@ -54,6 +54,18 @@
     <Compile Include="Class\NhanVien.cs" />
     <Compile Include="Class\SanPham.cs" />
     <Compile Include="DataProvider.cs" />
+    <Compile Include="Forms\fDangKy.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fDangKy.Designer.cs">
+      <DependentUpon>fDangKy.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fDangNhap.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fDangNhap.Designer.cs">
+      <DependentUpon>fDangNhap.cs</DependentUpon>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <EmbeddedResource Include="Properties\Resources.resx">
@@ -81,9 +93,8 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HinhAnh\coffeesidebar.png" />
+    <Content Include="Resources\coffeesidebar.png" />
   </ItemGroup>
-  <ItemGroup>
-    <Folder Include="Forms\" />
-  </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>
