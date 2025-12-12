@@ -119,6 +119,10 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Database\DuLieuMau.sql" />
+    <Content Include="Database\Procedure\usp_GetTableList.sql" />
+    <Content Include="Database\Procedure\usp_Login.sql" />
+    <Content Include="Database\QuanLyCaPhe_data.sql" />
     <Content Include="HinhAnh\coffeesidebar.png" />
     <Content Include="Resources\coffeesidebar.png" />
   </ItemGroup>
