@@ -74,6 +74,12 @@
     <Compile Include="Forms\BaoCaoBanChay.Designer.cs">
       <DependentUpon>BaoCaoBanChay.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\BaoCaoDoanhThu.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\BaoCaoDoanhThu.Designer.cs">
+      <DependentUpon>BaoCaoDoanhThu.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\Form1.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -97,6 +103,10 @@
       <AutoGen>True</AutoGen>
       <DependentUpon>Resources.resx</DependentUpon>
     </Compile>
+    <None Include="Docs\BaoCaoDoanhThu_HuongDan.md" />
+    <None Include="Docs\BaoCaoDoanhThu_README.md" />
+    <None Include="Docs\Comparison_BaoCao.md" />
+    <None Include="Docs\COMPLETED_BaoCaoDoanhThu.md" />
     <None Include="packages.config" />
     <None Include="Properties\Settings.settings">
       <Generator>SettingsSingleFileGenerator</Generator>
@@ -113,6 +123,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="HinhAnh\coffeesidebar.png" />
+    <Content Include="SQL\Create_View_BaoCaoDoanhThu.sql" />
   </ItemGroup>
   <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
