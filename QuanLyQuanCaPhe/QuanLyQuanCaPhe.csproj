@@ -51,6 +51,7 @@
   <ItemGroup>
     <Compile Include="Class\Ban.cs" />
     <Compile Include="Class\DanhMuc.cs" />
+    <Compile Include="Class\NguoiDung.cs" />
     <Compile Include="Class\NhanVien.cs" />
     <Compile Include="Class\SanPham.cs" />
     <Compile Include="DataProvider.cs" />
@@ -59,6 +60,12 @@
     </Compile>
     <Compile Include="Forms\Form1.Designer.cs">
       <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\QuanLyTaiKhoan.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\QuanLyTaiKhoan.Designer.cs">
+      <DependentUpon>QuanLyTaiKhoan.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
