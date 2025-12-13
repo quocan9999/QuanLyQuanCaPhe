@@ -22,7 +22,7 @@ namespace QuanLyQuanCaPhe
 
             Application.EnableVisualStyles();
             Application.SetCompatibleTextRenderingDefault(false);
-            Application.Run(new QuanLyTaiKhoan());
+            Application.Run(new BaoCaoBanChay());
         }
 
         [System.Runtime.InteropServices.DllImport("user32.dll")]
