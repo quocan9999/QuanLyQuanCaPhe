@@ -80,7 +80,6 @@
     <Compile Include="Forms\BaoCaoDoanhThu.Designer.cs">
       <DependentUpon>BaoCaoDoanhThu.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\Form1.cs">
     <Compile Include="Forms\fDangKy.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -92,6 +91,12 @@
     </Compile>
     <Compile Include="Forms\fDangNhap.Designer.cs">
       <DependentUpon>fDangNhap.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Forms\fMain.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fMain.Designer.cs">
+      <DependentUpon>fMain.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fQuanLyBan.cs">
       <SubType>Form</SubType>

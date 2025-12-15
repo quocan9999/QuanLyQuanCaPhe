@@ -1,4 +1,4 @@
-CREATE PROC usp_Login
+CREATE OR ALTER PROC usp_Login
 @userName NVARCHAR(100), @passWord NVARCHAR(1000)
 AS
 BEGIN

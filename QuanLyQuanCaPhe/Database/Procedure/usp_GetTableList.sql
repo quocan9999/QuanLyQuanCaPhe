@@ -1,4 +1,4 @@
-CREATE PROC usp_GetTableList
+CREATE OR ALTER PROC usp_GetTableList
 AS 
 BEGIN
 	SELECT 

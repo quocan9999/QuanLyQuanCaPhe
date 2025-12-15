@@ -1,8 +1,8 @@
 -- =============================================
--- Script t?o View h? tr? b�o c�o doanh thu
+-- Script tạo view hỗ trợ báo cáo doanh thu
 -- =============================================
 
--- View: B�o c�o doanh thu theo ng�y
+-- View: Báo cáo doanh thu theo ngày
 IF OBJECT_ID('v_BaoCao_DoanhThuTheoNgay', 'V') IS NOT NULL
     DROP VIEW v_BaoCao_DoanhThuTheoNgay;
 GO
@@ -17,11 +17,11 @@ SELECT
     MIN(hd.TongTien) AS DoanhThuThapNhat,
     MAX(hd.TongTien) AS DoanhThuCaoNhat
 FROM HoaDon hd
-WHERE hd.TrangThai = N'?� thanh to�n'
+WHERE hd.TrangThai = N'Đã thanh toán'
 GROUP BY CAST(hd.NgayLap AS DATE);
 GO
 
--- View: B�o c�o doanh thu theo th�ng
+-- View: Báo cáo doanh thu theo tháng
 IF OBJECT_ID('v_BaoCao_DoanhThuTheoThang', 'V') IS NOT NULL
     DROP VIEW v_BaoCao_DoanhThuTheoThang;
 GO
@@ -29,16 +29,16 @@ GO
 CREATE VIEW v_BaoCao_DoanhThuTheoThang
 AS
 SELECT 
-  YEAR(hd.NgayLap) AS Nam,
+    YEAR(hd.NgayLap) AS Nam,
     MONTH(hd.NgayLap) AS Thang,
     COUNT(DISTINCT hd.Id) AS SoHoaDon,
     SUM(hd.TongTien) AS DoanhThu
 FROM HoaDon hd
-WHERE hd.TrangThai = N'?� thanh to�n'
+WHERE hd.TrangThai = N'Đã thanh toán'
 GROUP BY YEAR(hd.NgayLap), MONTH(hd.NgayLap);
 GO
 
--- View: L?ch s? b�o c�o ?� l?u
+-- View: Lịch sử báo cáo đã lưu
 IF OBJECT_ID('v_LichSuBaoCaoDoanhThu', 'V') IS NOT NULL
     DROP VIEW v_LichSuBaoCaoDoanhThu;
 GO
@@ -58,7 +58,7 @@ FROM BaoCao_DoanhThu bc
 LEFT JOIN NhanVien nv ON bc.NguoiLap = nv.Id;
 GO
 
--- View: T?ng h?p doanh thu theo nh�n vi�n l?p b�o c�o
+-- View: Tổng hợp doanh thu theo nhân viên lập báo cáo
 IF OBJECT_ID('v_ThongKeBaoCaoTheoNhanVien', 'V') IS NOT NULL
     DROP VIEW v_ThongKeBaoCaoTheoNhanVien;
 GO
@@ -77,7 +77,7 @@ LEFT JOIN BaoCao_DoanhThu bc ON nv.Id = bc.NguoiLap
 GROUP BY nv.Id, nv.HoTen;
 GO
 
--- Stored Procedure: L?y b�o c�o doanh thu theo kho?ng th?i gian
+-- Stored Procedure: Lấy báo cáo doanh thu theo khoảng thời gian
 IF OBJECT_ID('sp_GetBaoCaoDoanhThu', 'P') IS NOT NULL
     DROP PROCEDURE sp_GetBaoCaoDoanhThu;
 GO
@@ -89,28 +89,28 @@ AS
 BEGIN
     SET NOCOUNT ON;
     
-    -- Ki?m tra ng�y h?p l?
+    -- Kiểm tra ngày hợp lệ
     IF @TuNgay > @DenNgay
     BEGIN
-        RAISERROR('Ng�y b?t ??u ph?i nh? h?n ho?c b?ng ng�y k?t th�c', 16, 1);
+        RAISERROR(N'Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc', 16, 1);
         RETURN;
     END
   
-    -- L?y d? li?u doanh thu
+    -- Lấy dữ liệu doanh thu
     SELECT 
         CAST(hd.NgayLap AS DATE) AS Ngay,
         COUNT(DISTINCT hd.Id) AS SoHoaDon,
-    SUM(hd.TongTien) AS DoanhThu
+        SUM(hd.TongTien) AS DoanhThu
     FROM HoaDon hd
     WHERE hd.NgayLap >= @TuNgay 
-  AND hd.NgayLap <= @DenNgay
-     AND hd.TrangThai = N'?� thanh to�n'
+      AND hd.NgayLap <= @DenNgay
+      AND hd.TrangThai = N'Đã thanh toán'
     GROUP BY CAST(hd.NgayLap AS DATE)
     ORDER BY Ngay;
 END
 GO
 
--- Stored Procedure: L?u b�o c�o doanh thu
+-- Stored Procedure: Lưu báo cáo doanh thu
 IF OBJECT_ID('sp_LuuBaoCaoDoanhThu', 'P') IS NOT NULL
     DROP PROCEDURE sp_LuuBaoCaoDoanhThu;
 GO
@@ -123,34 +123,34 @@ CREATE PROCEDURE sp_LuuBaoCaoDoanhThu
     @BaoCaoId INT OUTPUT
 AS
 BEGIN
-  SET NOCOUNT ON;
+    SET NOCOUNT ON;
     
     BEGIN TRY
-   BEGIN TRANSACTION;
+        BEGIN TRANSACTION;
         
-        -- Ki?m tra ng�y h?p l?
+        -- Kiểm tra ngày hợp lệ
         IF @TuNgay > @DenNgay
         BEGIN
- RAISERROR('Ng�y b?t ??u ph?i nh? h?n ho?c b?ng ng�y k?t th�c', 16, 1);
+            RAISERROR(N'Ngày bắt đầu phải nhỏ hơn hoặc bằng ngày kết thúc', 16, 1);
             RETURN;
         END
         
-        -- Ki?m tra nh�n vi�n t?n t?i
-  IF NOT EXISTS (SELECT 1 FROM NhanVien WHERE Id = @NguoiLap)
+        -- Kiểm tra nhân viên tồn tại
+        IF NOT EXISTS (SELECT 1 FROM NhanVien WHERE Id = @NguoiLap)
         BEGIN
-     RAISERROR('Nh�n vi�n kh�ng t?n t?i', 16, 1);
-       RETURN;
+            RAISERROR(N'Nhân viên không tồn tại', 16, 1);
+            RETURN;
         END
   
-  -- Th�m b�o c�o m?i
+        -- Thêm báo cáo mới
         INSERT INTO BaoCao_DoanhThu (TuNgay, DenNgay, TongDoanhThu, NguoiLap)
-  VALUES (@TuNgay, @DenNgay, @TongDoanhThu, @NguoiLap);
+        VALUES (@TuNgay, @DenNgay, @TongDoanhThu, @NguoiLap);
    
-      SET @BaoCaoId = SCOPE_IDENTITY();
+        SET @BaoCaoId = SCOPE_IDENTITY();
         
         COMMIT TRANSACTION;
         
-   SELECT @BaoCaoId AS BaoCaoId, 'L?u b�o c�o th�nh c�ng' AS Message;
+        SELECT @BaoCaoId AS BaoCaoId, N'Lưu báo cáo thành công' AS Message;
     END TRY
     BEGIN CATCH
         IF @@TRANCOUNT > 0
@@ -163,12 +163,12 @@ END
 GO
 
 -- Test Views
-PRINT '=== Testing Views ===';
-PRINT 'View v_BaoCao_DoanhThuTheoNgay created successfully';
-PRINT 'View v_BaoCao_DoanhThuTheoThang created successfully';
-PRINT 'View v_LichSuBaoCaoDoanhThu created successfully';
-PRINT 'View v_ThongKeBaoCaoTheoNhanVien created successfully';
-PRINT 'Stored Procedure sp_GetBaoCaoDoanhThu created successfully';
-PRINT 'Stored Procedure sp_LuuBaoCaoDoanhThu created successfully';
-PRINT '=== All objects created successfully ===';
+PRINT N'=== Kiểm thử các view ===';
+PRINT N'View v_BaoCao_DoanhThuTheoNgay đã được tạo thành công';
+PRINT N'View v_BaoCao_DoanhThuTheoThang đã được tạo thành công';
+PRINT N'View v_LichSuBaoCaoDoanhThu đã được tạo thành công';
+PRINT N'View v_ThongKeBaoCaoTheoNhanVien đã được tạo thành công';
+PRINT N'Stored Procedure sp_GetBaoCaoDoanhThu đã được tạo thành công';
+PRINT N'Stored Procedure sp_LuuBaoCaoDoanhThu đã được tạo thành công';
+PRINT N'=== Tất cả các đối tượng đã được tạo thành công ===';
 GO
