@@ -21,7 +21,7 @@ namespace QuanLyQuanCaPhe
             SetupEventHandlers();
 
             // Load dữ liệu
-            LoadKhuVuc();
+            LoadComboBoxKhuVuc();
             LoadTables();
         }
 
@@ -31,7 +31,7 @@ namespace QuanLyQuanCaPhe
             dgvHoaDon.Rows.Clear();
             btnThanhToan.Enabled = false;
 
-            // Giả lập hiển thị nhân viên (Sau này lấy từ form Đăng nhập)
+            // todo: hiển thị nhân viên động theo bảng đăng nhập
             lblTenNhanVien.Text = "Nhân viên: Admin";
         }
 
@@ -57,12 +57,10 @@ namespace QuanLyQuanCaPhe
 
         #region 1. QUẢN LÝ BÀN & HIỂN THỊ (Load Tables - ADO.NET DataProvider)
 
-        private void LoadKhuVuc()
+        private void LoadComboBoxKhuVuc()
         {
-            // Quán cà phê chia khu vực dựa vào cột 'ViTri' trong bảng Ban
             string query = "SELECT DISTINCT ViTri FROM Ban";
 
-            // DataProvider của bạn dùng SqlParameter[] làm tham số thứ 2
             DataTable data = DataProvider.Instance.ExecuteQuery(query, null);
 
             cboLocKhuVuc.Items.Clear();
@@ -112,7 +110,6 @@ namespace QuanLyQuanCaPhe
                 btn.Tag = row; // Lưu cả dòng dữ liệu vào Tag
                 btn.Click += BtnTable_Click;
 
-                // Thẩm mỹ nút
                 btn.FlatStyle = FlatStyle.Flat;
                 btn.FlatAppearance.BorderSize = 1;
 
@@ -128,17 +125,17 @@ namespace QuanLyQuanCaPhe
             // Xử lý màu sắc
             if (id == _selectedTableId)
             {
-                btn.BackColor = Color.Yellow; // Đang chọn
+                btn.BackColor = Color.Yellow;
                 btn.ForeColor = Color.Black;
             }
             else if (trangThai == "Có người")
             {
-                btn.BackColor = Color.ForestGreen; // Có khách
+                btn.BackColor = Color.ForestGreen;
                 btn.ForeColor = Color.White;
             }
             else
             {
-                btn.BackColor = Color.LightGray; // Trống
+                btn.BackColor = Color.LightGray;
                 btn.ForeColor = Color.Black;
             }
 
@@ -159,7 +156,7 @@ namespace QuanLyQuanCaPhe
             // Cập nhật giao diện khi chọn bàn
             lblInvoiceTitle.Text = "Hóa đơn: " + _selectedTableName;
 
-            // Highlight nút vừa chọn (cần reload visual các nút khác)
+            // Highlight nút vừa chọn
             foreach (Control c in flpBan.Controls)
             {
                 if (c is Button b && b.Tag is DataRow r)
@@ -177,7 +174,6 @@ namespace QuanLyQuanCaPhe
                 btnHuyHoaDon.Enabled = false;
                 btnChuyenBan.Enabled = false;
 
-                // Clear thông tin hóa đơn cũ
                 ResetInvoiceUI();
             }
             else
@@ -368,7 +364,7 @@ namespace QuanLyQuanCaPhe
             {
                 int hdId = Convert.ToInt32(objId);
 
-                // Tính tổng tiền chi tiết (Cần trigger trong SQL để chuẩn hơn, nhưng code C# tạm ở đây)
+                // Tính tổng tiền chi tiết (này tạo cái trigger)
                 string qSum = "SELECT SUM(ThanhTien) FROM ChiTietHoaDon WHERE MaHoaDon = @hdId";
                 object objSum = DataProvider.Instance.ExecuteScalar(qSum, new SqlParameter[] { new SqlParameter("@hdId", hdId) });
                 decimal tong = (objSum != DBNull.Value && objSum != null) ? Convert.ToDecimal(objSum) : 0;
