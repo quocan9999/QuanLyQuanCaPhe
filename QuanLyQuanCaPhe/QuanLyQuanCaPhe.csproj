@@ -124,6 +124,9 @@
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <EmbeddedResource Include="Forms\fMain.resx">
+      <DependentUpon>fMain.cs</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="Forms\fQuanLyBan.resx">
       <DependentUpon>fQuanLyBan.cs</DependentUpon>
     </EmbeddedResource>

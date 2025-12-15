@@ -35,7 +35,6 @@
             this.colTotal = new System.Windows.Forms.DataGridViewTextBoxColumn();
             this.lblInvoiceTitle = new System.Windows.Forms.Label();
             this.btnOrderMon = new System.Windows.Forms.Button();
-            this.pnlServiceControls = new System.Windows.Forms.Panel();
             this.btnSua = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
             this.pnlChonDichVu = new System.Windows.Forms.Panel();
@@ -59,7 +58,6 @@
             this.pnlFilter.SuspendLayout();
             this.pnlCenter.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.dgvHoaDon)).BeginInit();
-            this.pnlServiceControls.SuspendLayout();
             this.pnlChonDichVu.SuspendLayout();
             ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).BeginInit();
             this.pnlServiceButton.SuspendLayout();
@@ -172,7 +170,7 @@
             this.lblLocKhuVuc.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblLocKhuVuc.Location = new System.Drawing.Point(10, 15);
             this.lblLocKhuVuc.Name = "lblLocKhuVuc";
-            this.lblLocKhuVuc.Size = new System.Drawing.Size(66, 18);
+            this.lblLocKhuVuc.Size = new System.Drawing.Size(65, 18);
             this.lblLocKhuVuc.TabIndex = 0;
             this.lblLocKhuVuc.Text = "Khu vực:";
             // 
@@ -191,7 +189,6 @@
             this.pnlCenter.Controls.Add(this.dgvHoaDon);
             this.pnlCenter.Controls.Add(this.lblInvoiceTitle);
             this.pnlCenter.Controls.Add(this.btnOrderMon);
-            this.pnlCenter.Controls.Add(this.pnlServiceControls);
             this.pnlCenter.Controls.Add(this.pnlChonDichVu);
             this.pnlCenter.Controls.Add(this.pnlServiceButton);
             this.pnlCenter.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -203,8 +200,8 @@
             // dgvHoaDon
             // 
             this.dgvHoaDon.AllowUserToAddRows = false;
-            this.dgvHoaDon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.dgvHoaDon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvHoaDon.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvHoaDon.BackgroundColor = System.Drawing.Color.White;
@@ -278,25 +275,15 @@
             this.btnOrderMon.Text = "Thêm món";
             this.btnOrderMon.UseVisualStyleBackColor = false;
             // 
-            // pnlServiceControls
-            // 
-            this.pnlServiceControls.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.pnlServiceControls.Controls.Add(this.btnSua);
-            this.pnlServiceControls.Controls.Add(this.btnXoa);
-            this.pnlServiceControls.Location = new System.Drawing.Point(400, 460);
-            this.pnlServiceControls.Name = "pnlServiceControls";
-            this.pnlServiceControls.Size = new System.Drawing.Size(184, 40);
-            this.pnlServiceControls.TabIndex = 5;
-            // 
             // btnSua
             // 
             this.btnSua.BackColor = System.Drawing.Color.LightGray;
             this.btnSua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSua.Location = new System.Drawing.Point(0, 0);
+            this.btnSua.Location = new System.Drawing.Point(276, 5);
             this.btnSua.Name = "btnSua";
-            this.btnSua.Size = new System.Drawing.Size(90, 40);
+            this.btnSua.Size = new System.Drawing.Size(169, 40);
             this.btnSua.TabIndex = 0;
-            this.btnSua.Text = "Cập nhật SL";
+            this.btnSua.Text = "Cập nhật số lượng";
             this.btnSua.UseVisualStyleBackColor = false;
             // 
             // btnXoa
@@ -304,7 +291,7 @@
             this.btnXoa.BackColor = System.Drawing.Color.IndianRed;
             this.btnXoa.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnXoa.ForeColor = System.Drawing.Color.White;
-            this.btnXoa.Location = new System.Drawing.Point(94, 0);
+            this.btnXoa.Location = new System.Drawing.Point(481, 4);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.Size = new System.Drawing.Size(90, 40);
             this.btnXoa.TabIndex = 1;
@@ -313,8 +300,10 @@
             // 
             // pnlChonDichVu
             // 
-            this.pnlChonDichVu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.pnlChonDichVu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
+            this.pnlChonDichVu.Controls.Add(this.btnXoa);
+            this.pnlChonDichVu.Controls.Add(this.btnSua);
             this.pnlChonDichVu.Controls.Add(this.lblQuantity);
             this.pnlChonDichVu.Controls.Add(this.nudQuantity);
             this.pnlChonDichVu.Location = new System.Drawing.Point(10, 510);
@@ -355,7 +344,7 @@
             // 
             // pnlServiceButton
             // 
-            this.pnlServiceButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.pnlServiceButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlServiceButton.Controls.Add(this.tlpActions);
             this.pnlServiceButton.Location = new System.Drawing.Point(10, 570);
@@ -419,6 +408,7 @@
             this.btnHuyHoaDon.TabIndex = 3;
             this.btnHuyHoaDon.Text = "Hủy bàn";
             this.btnHuyHoaDon.UseVisualStyleBackColor = false;
+            this.btnHuyHoaDon.Click += new System.EventHandler(this.btnHuyHoaDon_Click);
             // 
             // pnlRight
             // 
@@ -446,9 +436,8 @@
             // 
             // lblTongTien
             // 
-            this.lblTongTien.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.lblTongTien.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
-            this.lblTongTien.AutoSize = false;
             this.lblTongTien.BackColor = System.Drawing.Color.White;
             this.lblTongTien.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
             this.lblTongTien.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(192)))), ((int)(((byte)(0)))), ((int)(((byte)(0)))));
@@ -495,7 +484,7 @@
             this.lblMaHoaDon.Name = "lblMaHoaDon";
             this.lblMaHoaDon.Size = new System.Drawing.Size(214, 40);
             this.lblMaHoaDon.TabIndex = 5;
-            this.lblMaHoaDon.Text = "Mã HĐ: --";
+            this.lblMaHoaDon.Text = "Mã Hóa Đơn: --";
             this.lblMaHoaDon.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
             // btnThanhToan
@@ -533,7 +522,6 @@
             this.pnlFilter.PerformLayout();
             this.pnlCenter.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.dgvHoaDon)).EndInit();
-            this.pnlServiceControls.ResumeLayout(false);
             this.pnlChonDichVu.ResumeLayout(false);
             ((System.ComponentModel.ISupportInitialize)(this.nudQuantity)).EndInit();
             this.pnlServiceButton.ResumeLayout(false);
@@ -541,6 +529,7 @@
             this.pnlRight.ResumeLayout(false);
             this.pnlThongTinHoaDon.ResumeLayout(false);
             this.ResumeLayout(false);
+
         }
 
         #endregion
@@ -560,7 +549,6 @@
         private System.Windows.Forms.DataGridView dgvHoaDon;
         private System.Windows.Forms.Label lblInvoiceTitle;
         private System.Windows.Forms.Button btnOrderMon;
-        private System.Windows.Forms.Panel pnlServiceControls;
         private System.Windows.Forms.Button btnSua;
         private System.Windows.Forms.Button btnXoa;
         private System.Windows.Forms.Panel pnlChonDichVu;

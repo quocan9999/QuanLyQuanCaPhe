@@ -42,7 +42,6 @@ namespace QuanLyQuanCaPhe
             btnOrderMon.Click += btnOrderMon_Click;
             btnSua.Click += BtnSua_Click;
             btnXoa.Click += BtnXoa_Click;
-            btnHuyHoaDon.Click += btnHuyHoaDon_Click;
             btnThanhToan.Click += btnThanhToan_Click;
             btnChuyenBan.Click += BtnChuyenBan_Click;
 
@@ -201,7 +200,7 @@ namespace QuanLyQuanCaPhe
         private void ResetInvoiceUI()
         {
             dgvHoaDon.Rows.Clear();
-            lblMaHoaDon.Text = "Mã HĐ: --";
+            lblMaHoaDon.Text = "Mã hóa đơn: --";
             lblThoiGianBatDau.Text = "GIỜ VÀO\n\nNgày: --/--/----\nGiờ: --:--:--";
             lblTongTien.Text = "TỔNG: 0đ";
             lblGiamGia.Text = "Giảm giá: 0%";
@@ -414,6 +413,12 @@ namespace QuanLyQuanCaPhe
             }
         }
 
+        private void BtnChuyenBan_Click(object sender, EventArgs e)
+        {
+            if (_selectedTableId == -1) return;
+            MessageBox.Show("Cần tạo form fChuyenBan để thực hiện chức năng này.", "Thông báo");
+        }
+
         private void btnHuyHoaDon_Click(object sender, EventArgs e)
         {
             if (_selectedTableId == -1) return;
@@ -426,14 +431,9 @@ namespace QuanLyQuanCaPhe
                 if (objId != null)
                 {
                     int hdId = Convert.ToInt32(objId);
-                    SqlParameter[] pHD = new SqlParameter[] { new SqlParameter("@hdId", hdId) };
 
-                    // Xóa chi tiết
-                    DataProvider.Instance.ExecuteNonQuery("DELETE FROM ChiTietHoaDon WHERE MaHoaDon = @hdId", pHD);
-                    // Xóa hóa đơn
-                    DataProvider.Instance.ExecuteNonQuery("DELETE FROM HoaDon WHERE Id = @hdId", pHD);
-
-                    // Update bàn -> Trống
+                    DataProvider.Instance.ExecuteNonQuery("DELETE FROM ChiTietHoaDon WHERE MaHoaDon = @hdId", new SqlParameter[] { new SqlParameter("hdId", hdId) });
+                    DataProvider.Instance.ExecuteNonQuery("DELETE FROM HoaDon WHERE Id = @hdId", new SqlParameter[] { new SqlParameter("hdId", hdId) });
                     DataProvider.Instance.ExecuteNonQuery("UPDATE Ban SET TrangThai = N'Còn trống' WHERE Id = @id", new SqlParameter[] { new SqlParameter("@id", _selectedTableId) });
 
                     LoadTables();
@@ -441,12 +441,6 @@ namespace QuanLyQuanCaPhe
                     MessageBox.Show("Đã hủy bàn thành công.");
                 }
             }
-        }
-
-        private void BtnChuyenBan_Click(object sender, EventArgs e)
-        {
-            if (_selectedTableId == -1) return;
-            MessageBox.Show("Cần tạo form fChuyenBan để thực hiện chức năng này.", "Thông báo");
         }
 
         #endregion
