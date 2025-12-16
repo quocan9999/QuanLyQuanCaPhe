@@ -220,7 +220,7 @@ namespace QuanLyQuanCaPhe
                 decimal giamGia = Convert.ToDecimal(hd["GiamGiaPhanTram"]);
                 decimal tongTien = Convert.ToDecimal(hd["TongTien"]);
 
-                lblMaHoaDon.Text = "Mã HĐ: #" + hoaDonId;
+                lblMaHoaDon.Text = "Mã hóa đơn: #" + hoaDonId;
                 lblThoiGianBatDau.Text = $"GIỜ VÀO\n\nNgày: {ngayLap:dd/MM/yyyy}\nGiờ: {ngayLap:HH:mm:ss}";
                 lblGiamGia.Text = $"Giảm giá: {giamGia}%";
                 lblTongTien.Text = $"TỔNG: {tongTien:N0}đ";

@@ -73,25 +73,17 @@ namespace QuanLyQuanCaPhe.Forms
 
             if (Login(userName, passWord))
             {
-                //fMain f = new fMain();
-                //this.Hide();
-                //f.ShowDialog();
-                //this.Show();
-
                 MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+
+                fMain f = new fMain();
+                this.Hide();
+                f.ShowDialog();
+                this.Show();
             }
             else
             {
                 MessageBox.Show("Sai tên tài khoản hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
-        }
-
-        private void btnDangKy_Click(object sender, EventArgs e)
-        {
-            fDangKy f = new fDangKy();
-            this.Hide();
-            f.ShowDialog();
-            this.Show();
         }
 
         private void fDangNhap_FormClosing(object sender, FormClosingEventArgs e)
@@ -100,6 +92,11 @@ namespace QuanLyQuanCaPhe.Forms
             {
                 e.Cancel = true;
             }
+        }
+
+        private void btnThoat_Click(object sender, EventArgs e)
+        {
+            MessageBox.Show("Đang làm", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
