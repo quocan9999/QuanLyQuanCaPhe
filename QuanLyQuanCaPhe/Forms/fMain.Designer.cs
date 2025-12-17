@@ -571,13 +571,13 @@
             // tsmiThongTinCaNhan
             // 
             this.tsmiThongTinCaNhan.Name = "tsmiThongTinCaNhan";
-            this.tsmiThongTinCaNhan.Size = new System.Drawing.Size(180, 22);
+            this.tsmiThongTinCaNhan.Size = new System.Drawing.Size(170, 22);
             this.tsmiThongTinCaNhan.Text = "Thông tin cá nhân";
             // 
             // tsmiDangXuat
             // 
             this.tsmiDangXuat.Name = "tsmiDangXuat";
-            this.tsmiDangXuat.Size = new System.Drawing.Size(180, 22);
+            this.tsmiDangXuat.Size = new System.Drawing.Size(170, 22);
             this.tsmiDangXuat.Text = "Đăng xuất";
             this.tsmiDangXuat.Click += new System.EventHandler(this.tsmiDangXuat_Click);
             // 
@@ -595,28 +595,28 @@
             // tsmiQuanLyBan
             // 
             this.tsmiQuanLyBan.Name = "tsmiQuanLyBan";
-            this.tsmiQuanLyBan.Size = new System.Drawing.Size(180, 22);
+            this.tsmiQuanLyBan.Size = new System.Drawing.Size(172, 22);
             this.tsmiQuanLyBan.Text = "Quản lý bàn";
             this.tsmiQuanLyBan.Click += new System.EventHandler(this.tsmiQuanLyBan_Click);
             // 
             // tmsiQuanLySanPham
             // 
             this.tmsiQuanLySanPham.Name = "tmsiQuanLySanPham";
-            this.tmsiQuanLySanPham.Size = new System.Drawing.Size(180, 22);
+            this.tmsiQuanLySanPham.Size = new System.Drawing.Size(172, 22);
             this.tmsiQuanLySanPham.Text = "Quản lý sản phẩm";
             this.tmsiQuanLySanPham.Click += new System.EventHandler(this.tmsiQuanLySanPham_Click);
             // 
             // tsmiQuanLyDanhMuc
             // 
             this.tsmiQuanLyDanhMuc.Name = "tsmiQuanLyDanhMuc";
-            this.tsmiQuanLyDanhMuc.Size = new System.Drawing.Size(180, 22);
+            this.tsmiQuanLyDanhMuc.Size = new System.Drawing.Size(172, 22);
             this.tsmiQuanLyDanhMuc.Text = "Quản lý danh mục";
             this.tsmiQuanLyDanhMuc.Click += new System.EventHandler(this.tsmiQuanLyDanhMuc_Click);
             // 
             // tsmiQuanLyTaiKhoan
             // 
             this.tsmiQuanLyTaiKhoan.Name = "tsmiQuanLyTaiKhoan";
-            this.tsmiQuanLyTaiKhoan.Size = new System.Drawing.Size(180, 22);
+            this.tsmiQuanLyTaiKhoan.Size = new System.Drawing.Size(172, 22);
             this.tsmiQuanLyTaiKhoan.Text = "Quản lý tài khoản";
             this.tsmiQuanLyTaiKhoan.Click += new System.EventHandler(this.tsmiQuanLyTaiKhoan_Click);
             // 
@@ -632,14 +632,14 @@
             // tsmiBaoCaoBanChay
             // 
             this.tsmiBaoCaoBanChay.Name = "tsmiBaoCaoBanChay";
-            this.tsmiBaoCaoBanChay.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBaoCaoBanChay.Size = new System.Drawing.Size(174, 22);
             this.tsmiBaoCaoBanChay.Text = "Báo cáo bán chạy";
             this.tsmiBaoCaoBanChay.Click += new System.EventHandler(this.tsmiBaoCaoBanChay_Click);
             // 
             // tsmiBaoCaoDoanhThu
             // 
             this.tsmiBaoCaoDoanhThu.Name = "tsmiBaoCaoDoanhThu";
-            this.tsmiBaoCaoDoanhThu.Size = new System.Drawing.Size(180, 22);
+            this.tsmiBaoCaoDoanhThu.Size = new System.Drawing.Size(174, 22);
             this.tsmiBaoCaoDoanhThu.Text = "Báo cáo doanh thu";
             this.tsmiBaoCaoDoanhThu.Click += new System.EventHandler(this.tsmiBaoCaoDoanhThu_Click);
             // 
@@ -653,7 +653,7 @@
             this.Controls.Add(this.mnsMain);
             this.MainMenuStrip = this.mnsMain;
             this.Margin = new System.Windows.Forms.Padding(2);
-            this.MinimumSize = new System.Drawing.Size(754, 495);
+            this.MinimumSize = new System.Drawing.Size(916, 608);
             this.Name = "fMain";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản lý quán Cà Phê";

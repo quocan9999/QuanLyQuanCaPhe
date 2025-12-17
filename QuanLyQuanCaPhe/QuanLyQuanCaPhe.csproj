@@ -93,6 +93,12 @@
     <Compile Include="Forms\fMain.Designer.cs">
       <DependentUpon>fMain.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fOrder.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fOrder.Designer.cs">
+      <DependentUpon>fOrder.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fQuanLyBan.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -163,6 +169,7 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="Database\DuLieuMau.sql" />
+    <Content Include="Database\newquery.sql" />
     <Content Include="Database\Procedure\usp_GetTableList.sql" />
     <Content Include="Database\Procedure\usp_Login.sql" />
     <Content Include="Database\QuanLyCaPhe_data.sql" />

@@ -308,14 +308,12 @@ namespace QuanLyQuanCaPhe
                 return;
             }
 
-            // Mở Form Order (Bạn cần tạo form này)
-            // fOrder frm = new fOrder(_selectedTableId); 
-            // if (frm.ShowDialog() == DialogResult.OK)
-            // {
-            //     UpdateTotalMoney(_selectedTableId);
-            //     LoadInvoiceData(_selectedTableId);
-            // }
-            MessageBox.Show("Chức năng này cần Form fOrder. Vui lòng tạo form Order và gọi tại đây.", "Thông báo");
+            fOrder f = new fOrder(_selectedTableId);
+            if (f.ShowDialog() == DialogResult.OK)
+            {
+                UpdateTotalMoney(_selectedTableId);
+                LoadInvoiceData(_selectedTableId);
+            }
         }
 
         private void BtnSua_Click(object sender, EventArgs e)
