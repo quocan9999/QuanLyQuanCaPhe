@@ -128,7 +128,7 @@
             this.lblTenNhanVien.Location = new System.Drawing.Point(315, 12);
             this.lblTenNhanVien.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblTenNhanVien.Name = "lblTenNhanVien";
-            this.lblTenNhanVien.Size = new System.Drawing.Size(188, 24);
+            this.lblTenNhanVien.Size = new System.Drawing.Size(299, 24);
             this.lblTenNhanVien.TabIndex = 1;
             this.lblTenNhanVien.Text = "Nhân viên: ";
             this.lblTenNhanVien.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;

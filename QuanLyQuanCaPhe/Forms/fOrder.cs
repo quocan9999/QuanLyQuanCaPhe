@@ -175,7 +175,7 @@ namespace QuanLyQuanCaPhe
         {
             if (danhSachMonTam.Count == 0)
             {
-                MessageBox.Show("chưa chọn món nào!", "thông báo");
+                MessageBox.Show("Chưa chọn món nào!", "Thông báo");
                 return;
             }
 
@@ -187,7 +187,7 @@ namespace QuanLyQuanCaPhe
 
                 if (ketQuaId == null)
                 {
-                    MessageBox.Show("bàn này chưa được mở! vui lòng mở bàn trước khi gọi món.", "thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    MessageBox.Show("Bàn này chưa được mở! vui lòng mở bàn trước khi gọi món.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                     return;
                 }
 
@@ -216,13 +216,13 @@ namespace QuanLyQuanCaPhe
                     }
                 }
 
-                MessageBox.Show("gọi món thành công!", "thông báo");
+                MessageBox.Show("Gọi món thành công!", "Thông báo");
                 this.DialogResult = DialogResult.OK;
                 this.Close();
             }
             catch (Exception ex)
             {
-                MessageBox.Show("có lỗi xảy ra khi gọi món: " + ex.Message, "lỗi");
+                MessageBox.Show("Có lỗi xảy ra khi gọi món: " + ex.Message, "Lỗi");
             }
         }
 

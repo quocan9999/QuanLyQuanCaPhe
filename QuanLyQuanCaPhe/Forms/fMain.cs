@@ -33,8 +33,8 @@ namespace QuanLyQuanCaPhe
             dgvHoaDon.Rows.Clear();
             btnThanhToan.Enabled = false;
 
-            // todo: hiển thị nhân viên động theo bảng đăng nhập
-            lblTenNhanVien.Text = "Nhân viên: Admin";
+            lblTenNhanVien.Text = "Nhân viên: " + LuuTruThongTinDangNhap.HoTen;
+            
         }
 
         private void SetupEventHandlers()

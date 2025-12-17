@@ -81,6 +81,7 @@ namespace QuanLyQuanCaPhe.Forms
                 DataRow hangDuLieu = duLieu.Rows[0];
                 LuuTruThongTinDangNhap.TenDangNhap = hangDuLieu["TenDangNhap"].ToString();
                 LuuTruThongTinDangNhap.VaiTro = hangDuLieu["VaiTro"].ToString();
+                LuuTruThongTinDangNhap.HoTen = hangDuLieu["HoTen"].ToString();
 
                 MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 fMain f = new fMain();

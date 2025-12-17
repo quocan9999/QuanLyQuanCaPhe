@@ -221,7 +221,7 @@ INSERT INTO Ban (TenBan, ViTri, TrangThai)
 VALUES
     (N'Bàn 1', N'Tầng trệt', N'Còn trống'),
     (N'Bàn 2', N'Tầng trệt', N'Còn trống'),
-    (N'Bàn 3', N'Lầu 1',     N'Có người'),
+    (N'Bàn 3', N'Lầu 1',     N'Còn trống'),
     (N'Bàn 4', N'Lầu 1',     N'Còn trống');
 GO
 
@@ -345,17 +345,24 @@ CREATE OR ALTER PROC usp_Login
 AS
 BEGIN
 	SELECT 
-		TenDangNhap,
+	    ND.TenDangNhap,
 		VaiTro,
 		NgayTao,
-		TrangThai
-	FROM dbo.NguoiDung 
-	WHERE TenDangNhap = @userName 
+		ND.TrangThai,
+        NV.HoTen,
+        NV.GioiTinh,
+        NV.NgaySinh,
+        NV.SDT,
+        NV.Email,
+        NV.DiaChi,
+        NV.Luong,
+        NV.TrangThai
+	FROM dbo.NguoiDung AS ND LEFT JOIN dbo.NhanVien AS NV ON NV.TenDangNhap = ND.TenDangNhap
+	WHERE ND.TenDangNhap = @userName 
 	  AND MatKhau = @passWord 
-	  AND TrangThai = N'Hoạt động'
+	  AND ND.TrangThai = N'Hoạt động'
 END
 GO
-
 
 -- View: Báo cáo doanh thu theo ngày
 IF OBJECT_ID('v_BaoCao_DoanhThuTheoNgay', 'V') IS NOT NULL

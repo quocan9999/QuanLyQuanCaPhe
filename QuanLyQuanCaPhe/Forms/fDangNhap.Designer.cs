@@ -127,7 +127,7 @@
             this.txtMatKhau.Name = "txtMatKhau";
             this.txtMatKhau.Size = new System.Drawing.Size(263, 29);
             this.txtMatKhau.TabIndex = 3;
-            this.txtMatKhau.Text = "1";
+            this.txtMatKhau.Text = "admin";
             this.txtMatKhau.UseSystemPasswordChar = true;
             // 
             // pictureBox1
