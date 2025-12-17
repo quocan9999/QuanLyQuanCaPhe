@@ -88,9 +88,10 @@
             this.label1.Font = new System.Drawing.Font("Segoe UI", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.label1.Location = new System.Drawing.Point(607, 5);
             this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(130, 25);
+            this.label1.Size = new System.Drawing.Size(170, 25);
             this.label1.TabIndex = 0;
-            this.label1.Text = "Quản Lý Món ";
+            this.label1.Text = "Quản Lý Sản Phẩm";
+            //this.label1.Click += new System.EventHandler(this.label1_Click);
             // 
             // panel2
             // 
@@ -350,7 +351,7 @@
             this.btnTimKiem.Location = new System.Drawing.Point(262, 15);
             this.btnTimKiem.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.btnTimKiem.Name = "btnTimKiem";
-            this.btnTimKiem.Size = new System.Drawing.Size(102, 50);
+            this.btnTimKiem.Size = new System.Drawing.Size(130, 60);
             this.btnTimKiem.TabIndex = 16;
             this.btnTimKiem.Text = "Tìm kiếm";
             this.btnTimKiem.UseVisualStyleBackColor = false;
@@ -391,6 +392,7 @@
             // 
             // txtID
             // 
+            this.txtID.Enabled = false;
             this.txtID.Location = new System.Drawing.Point(173, 94);
             this.txtID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtID.Name = "txtID";
@@ -407,7 +409,7 @@
             this.Controls.Add(this.panel2);
             this.Controls.Add(this.panel1);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.MinimumSize = new System.Drawing.Size(1200, 649);
+            this.MinimumSize = new System.Drawing.Size(900, 600);
             this.Name = "fQuanLySanPham";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản lý sản phẩm";

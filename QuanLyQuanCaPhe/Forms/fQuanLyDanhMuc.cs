@@ -1,5 +1,4 @@
-﻿
-using QuanLyQuanCaPhe.Class;
+﻿using QuanLyQuanCaPhe.Class;
 using System;
 using System.Collections.Generic;
 using System.Data;
@@ -19,19 +18,32 @@ namespace QuanLyQuanCaPhe.Forms
         {
             InitializeComponent();
         }
+        private void KiemTraKetNoi()
+        {
+            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
+            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
+        }
+
+        private void SetInputReadOnly(bool state)
+        {
+            txtDanhMuc.ReadOnly = state;
+        }
+
         private void LockControls(bool lockState)
         {
-            grvDanhMuc.Enabled = !lockState;   // Khóa chọn dòng
+            grvDanhMuc.Enabled = !lockState;
         }
 
         private void fQuanLyDanhMuc_Load(object sender, EventArgs e)
         {
-            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
-            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
+            KiemTraKetNoi();
             txtID.ReadOnly = true;
-            txtDanhMuc.Text = "";
+            SetInputReadOnly(true);
         }
 
+        // ===================
+        // DỮ LIỆU
+        // ===================
         private List<DanhMuc> GetListDanhMuc()
         {
             List<DanhMuc> list = new List<DanhMuc>();
@@ -44,8 +56,7 @@ namespace QuanLyQuanCaPhe.Forms
                 adapter.Fill(data);
                 foreach (DataRow item in data.Rows)
                 {
-                    DanhMuc dm = new DanhMuc(item);
-                    list.Add(dm);
+                    list.Add(new DanhMuc(item));
                 }
             }
             return list;
@@ -63,165 +74,120 @@ namespace QuanLyQuanCaPhe.Forms
             txtID.DataBindings.Add("Text", grvDanhMuc.DataSource, "Id");
             txtDanhMuc.DataBindings.Add("Text", grvDanhMuc.DataSource, "TenDanhMuc");
         }
-        // =====================================================================
-        // NÚT XEM
-        // =====================================================================
+
+        // ========================
+        // CÁC NÚT CHỨC NĂNG
+        // ========================
         private void btnXem_Click(object sender, EventArgs e)
         {
             LoadListDanhMuc();
             AddDanhMucBinding();
+            SetInputReadOnly(true);
+            LockControls(false);
+            isAdding = isEditing = false;
+            btnThem.Text = "Thêm";
+            btnSua.Text = "Sửa";
+            btnThem.Enabled = btnSua.Enabled = btnXoa.Enabled = true;
         }
-        // =====================================================================
-        // NÚT THÊM
-        // =====================================================================
+
         private void btnThem_Click(object sender, EventArgs e)
         {
             if (!isAdding)
             {
-                // Clear binding và input để chuẩn bị thêm mới
+                isAdding = true;
+                btnThem.Text = "Lưu";
+                btnSua.Enabled = btnXoa.Enabled = false;
+
                 txtID.DataBindings.Clear();
                 txtDanhMuc.DataBindings.Clear();
                 txtID.Text = "";
                 txtDanhMuc.Text = "";
+
+                SetInputReadOnly(false);
+                LockControls(true);
                 txtDanhMuc.Focus();
-                isAdding = true;
-                btnThem.Text = "Lưu";
                 return;
             }
 
-            string tenDanhMuc = txtDanhMuc.Text.Trim();
-            if (string.IsNullOrEmpty(tenDanhMuc))
-            {
-                MessageBox.Show("Tên danh mục không được để trống.");
-                return;
-            }
-            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
-            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
+            string ten = txtDanhMuc.Text.Trim();
+            if (string.IsNullOrEmpty(ten)) { MessageBox.Show("Tên danh mục không được trống."); return; }
+
+            KiemTraKetNoi(); 
+
             // Kiểm tra trùng tên
-            string checkQuery = "SELECT COUNT(*) FROM DanhMuc WHERE TenDanhMuc = @TenDanhMuc";
+            string checkQuery = "SELECT COUNT(*) FROM DanhMuc WHERE TenDanhMuc = @ten";
             using (SqlCommand checkCmd = new SqlCommand(checkQuery, sqlCon))
             {
-                checkCmd.Parameters.AddWithValue("@TenDanhMuc", tenDanhMuc);
-                int count = (int)checkCmd.ExecuteScalar();
-                if (count > 0)
-                {
-                    MessageBox.Show("Tên danh mục đã tồn tại. Vui lòng nhập tên khác.");
-                    return;
-                }
+                checkCmd.Parameters.AddWithValue("@ten", ten);
+                if ((int)checkCmd.ExecuteScalar() > 0) { MessageBox.Show("Tên đã tồn tại.Bạn vui lòng nhập tên khác"); return; }
             }
-            string query = "INSERT INTO DanhMuc (TenDanhMuc) VALUES (@TenDanhMuc)";
+
+            string query = "INSERT INTO DanhMuc (TenDanhMuc) VALUES (@ten)";
             using (SqlCommand cmd = new SqlCommand(query, sqlCon))
             {
-                cmd.Parameters.AddWithValue("@TenDanhMuc", tenDanhMuc);
-                int result = cmd.ExecuteNonQuery();
-                if (result > 0)
+                cmd.Parameters.AddWithValue("@ten", ten);
+                if (cmd.ExecuteNonQuery() > 0)
                 {
-                    MessageBox.Show("Thêm danh mục thành công.");
-                    LoadListDanhMuc();
-                    AddDanhMucBinding();
-                }
-                else
-                {
-                    MessageBox.Show("Lỗi khi thêm danh mục.");
+                    MessageBox.Show("Thêm thành công.");
+                    btnXem_Click(null, null); // Tự động load lại
                 }
             }
-            isAdding = false;
-            btnThem.Text = "Thêm";
         }
-        // =====================================================================
-        // NÚT SỬA
-        // =====================================================================
+
         private void btnSua_Click(object sender, EventArgs e)
         {
-            // Nếu chưa vào chế độ sửa → chuyển sang chế độ sửa
             if (!isEditing)
             {
-                if (!int.TryParse(txtID.Text.Trim(), out int id))
-                {
-                    MessageBox.Show("Vui lòng chọn một Danh mục để sửa.", "Lỗi ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    return;
-                }
-
+                if (string.IsNullOrEmpty(txtID.Text)) { MessageBox.Show("Hãy chọn danh mục."); return; }
                 isEditing = true;
-                LockControls(true);
                 btnSua.Text = "Lưu";
-                btnThem.Enabled = false;
-                btnXoa.Enabled = false;
+                btnThem.Enabled = btnXoa.Enabled = false;
+                SetInputReadOnly(false);
+                LockControls(true);
                 return;
             }
 
-            // Đang trong chế độ sửa → thực hiện lưu
-            if (!int.TryParse(txtID.Text.Trim(), out int idUpdate))
-            {
-                MessageBox.Show("ID không hợp lệ.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-
-            string tenDanhMucMoi = txtDanhMuc.Text.Trim();
-            if (string.IsNullOrEmpty(tenDanhMucMoi))
-            {
-                MessageBox.Show("Tên Danh mục không được để trống.", "Lỗi nhập liệu", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
-            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
-
-            string query = "UPDATE DanhMuc SET TenDanhMuc = @TenDanhMuc WHERE Id = @Id";
+            KiemTraKetNoi();
+            string query = "UPDATE DanhMuc SET TenDanhMuc = @ten WHERE Id = @id";
             using (SqlCommand cmd = new SqlCommand(query, sqlCon))
             {
-                cmd.Parameters.AddWithValue("@TenDanhMuc", tenDanhMucMoi);
-                cmd.Parameters.AddWithValue("@Id", idUpdate);
-
-                int result = cmd.ExecuteNonQuery();
-                if (result > 0)
+                cmd.Parameters.AddWithValue("@ten", txtDanhMuc.Text.Trim());
+                cmd.Parameters.AddWithValue("@id", txtID.Text);
+                if (cmd.ExecuteNonQuery() > 0)
                 {
-                    MessageBox.Show("Sửa danh mục thành công.");
-
-                    LoadListDanhMuc();
-                    AddDanhMucBinding();
-
-                    // Thoát chế độ sửa
-                    isEditing = false;
-                    LockControls(false);
-                    btnSua.Text = "Sửa";
-                    btnThem.Enabled = true;
-                    btnXoa.Enabled = true;
-                }
-                else
-                {
-                    MessageBox.Show("Sửa thất bại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Cập nhật thành công.");
+                    btnXem_Click(null, null);
                 }
             }
         }
-        // =====================================================================
-        // NÚT XÓA
-        // =====================================================================
+
         private void btnXoa_Click(object sender, EventArgs e)
         {
-            if (!int.TryParse(txtID.Text.Trim(), out int id))
+            if (string.IsNullOrEmpty(txtID.Text)) return;
+
+            if (MessageBox.Show("Bạn có chắc muốn xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                MessageBox.Show("Vui lòng chọn một Danh mục để xóa (ID không hợp lệ).", "Lỗi ID", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                return;
-            }
-            DialogResult r = MessageBox.Show("Bạn có chắc muốn xóa danh mục này?", "Xác nhận", MessageBoxButtons.YesNo, MessageBoxIcon.Warning);
-            if (r != DialogResult.Yes) return;
-            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
-            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
-            string query = "DELETE FROM DanhMuc WHERE Id = @Id";
-            using (SqlCommand cmd = new SqlCommand(query, sqlCon))
-            {
-                cmd.Parameters.AddWithValue("@Id", id);
-                int result = cmd.ExecuteNonQuery();
-                if (result > 0)
+                try
                 {
-                    MessageBox.Show("Xóa danh mục thành công.");
-                    LoadListDanhMuc();
-                    AddDanhMucBinding();
+                    KiemTraKetNoi();
+                    string query = "DELETE FROM DanhMuc WHERE Id = @id";
+                    using (SqlCommand cmd = new SqlCommand(query, sqlCon))
+                    {
+                        cmd.Parameters.AddWithValue("@id", txtID.Text);
+                        if (cmd.ExecuteNonQuery() > 0)
+                        {
+                            // RESET ID
+                            string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM DanhMuc; DBCC CHECKIDENT ('DanhMuc', RESEED, @max);";
+                            using (SqlCommand cmdReset = new SqlCommand(resetQuery, sqlCon)) { cmdReset.ExecuteNonQuery(); }
+
+                            MessageBox.Show("Xóa thành công.");
+                            btnXem_Click(null, null);
+                        }
+                    }
                 }
-                else
+                catch
                 {
-                    MessageBox.Show("Xóa danh mục thất bại hoặc danh mục không tồn tại.", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Lỗi: Danh mục này đang có sản phẩm, không thể xóa!");
                 }
             }
         }

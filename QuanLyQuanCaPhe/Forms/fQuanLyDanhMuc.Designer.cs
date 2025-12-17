@@ -146,6 +146,7 @@
             // 
             // txtID
             // 
+            this.txtID.Enabled = false;
             this.txtID.Location = new System.Drawing.Point(191, 53);
             this.txtID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtID.Name = "txtID";
@@ -255,6 +256,7 @@
             this.Name = "fQuanLyDanhMuc";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản lý danh mục";
+            //this.Load += new System.EventHandler(this.fQuanLyDanhMuc_Load_1);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel2.ResumeLayout(false);
@@ -267,6 +269,7 @@
             this.panel5.PerformLayout();
             this.panel4.ResumeLayout(false);
             this.ResumeLayout(false);
+            this.MinimumSize = new System.Drawing.Size(900, 600);
 
         }
 
