@@ -76,7 +76,7 @@
             // 
             this.label1.AutoSize = true;
             this.label1.Font = new System.Drawing.Font("Segoe UI", 13.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.label1.Location = new System.Drawing.Point(665, 19);
+            this.label1.Location = new System.Drawing.Point(591, 9);
             this.label1.Name = "label1";
             this.label1.Size = new System.Drawing.Size(147, 31);
             this.label1.TabIndex = 0;
@@ -234,6 +234,7 @@
             // 
             // txtID
             // 
+            this.txtID.Enabled = false;
             this.txtID.Location = new System.Drawing.Point(212, 138);
             this.txtID.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txtID.Name = "txtID";
@@ -333,6 +334,7 @@
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.ResumeLayout(false);
+            this.MinimumSize = new System.Drawing.Size(900, 600);
 
         }
 
