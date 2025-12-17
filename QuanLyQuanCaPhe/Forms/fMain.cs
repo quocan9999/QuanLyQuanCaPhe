@@ -448,7 +448,11 @@ namespace QuanLyQuanCaPhe
 
         private void tsmiDangXuat_Click(object sender, EventArgs e)
         {
-            this.Close();
+            DialogResult thongBaoDangXuat = MessageBox.Show("Bạn có muốn đăng xuất?", "Thông báo", MessageBoxButtons.YesNo, MessageBoxIcon.Question);
+            if (thongBaoDangXuat == DialogResult.Yes)
+            {
+                this.Close();
+            }
         }
     }
 }
