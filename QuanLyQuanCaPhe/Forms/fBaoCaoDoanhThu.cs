@@ -12,12 +12,12 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace QuanLyQuanCaPhe.Forms
 {
-    public partial class BaoCaoDoanhThu : Form
+    public partial class fBaoCaoDoanhThu : Form
     {
         private DataProvider dataProvider;
         private int? currentUserId; // ID người dùng đang đăng nhập
 
-        public BaoCaoDoanhThu()
+        public fBaoCaoDoanhThu()
         {
             try
             {

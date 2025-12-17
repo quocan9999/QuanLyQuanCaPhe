@@ -1,10 +1,12 @@
-﻿using System;
+﻿using QuanLyQuanCaPhe.Class;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Security.Cryptography;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
@@ -71,10 +73,16 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
-            if (Login(userName, passWord))
-            {
-                MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            string query = "EXEC usp_Login @userName = '" + userName + "' , @passWord = '" + passWord + "'";
+            DataTable duLieu = DataProvider.Instance.ExecuteQuery(query);
 
+            if (duLieu.Rows.Count > 0)
+            {
+                DataRow hangDuLieu = duLieu.Rows[0];
+                LuuTruThongTinDangNhap.TenDangNhap = hangDuLieu["TenDangNhap"].ToString();
+                LuuTruThongTinDangNhap.VaiTro = hangDuLieu["VaiTro"].ToString();
+
+                MessageBox.Show("Đăng nhập thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                 fMain f = new fMain();
                 this.Hide();
                 f.ShowDialog();
@@ -96,7 +104,7 @@ namespace QuanLyQuanCaPhe.Forms
 
         private void btnThoat_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Đang làm", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            this.Close();
         }
     }
 }

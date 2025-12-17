@@ -64,21 +64,22 @@
   <ItemGroup>
     <Compile Include="Class\Ban.cs" />
     <Compile Include="Class\DanhMuc.cs" />
+    <Compile Include="Class\LuuTruThongTinDangNhap.cs" />
     <Compile Include="Class\NguoiDung.cs" />
     <Compile Include="Class\NhanVien.cs" />
     <Compile Include="Class\SanPham.cs" />
     <Compile Include="DataProvider.cs" />
-    <Compile Include="Forms\BaoCaoBanChay.cs">
+    <Compile Include="Forms\fBaoCaoBanChay.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BaoCaoBanChay.Designer.cs">
-      <DependentUpon>BaoCaoBanChay.cs</DependentUpon>
+    <Compile Include="Forms\fBaoCaoBanChay.Designer.cs">
+      <DependentUpon>fBaoCaoBanChay.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\BaoCaoDoanhThu.cs">
+    <Compile Include="Forms\fBaoCaoDoanhThu.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\BaoCaoDoanhThu.Designer.cs">
-      <DependentUpon>BaoCaoDoanhThu.cs</DependentUpon>
+    <Compile Include="Forms\fBaoCaoDoanhThu.Designer.cs">
+      <DependentUpon>fBaoCaoDoanhThu.cs</DependentUpon>
     </Compile>
     <Compile Include="Forms\fDangNhap.cs">
       <SubType>Form</SubType>
@@ -116,11 +117,11 @@
     <Compile Include="Forms\fQuanLySanPham.Designer.cs">
       <DependentUpon>fQuanLySanPham.cs</DependentUpon>
     </Compile>
-    <Compile Include="Forms\QuanLyTaiKhoan.cs">
+    <Compile Include="Forms\fQuanLyTaiKhoan.cs">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="Forms\QuanLyTaiKhoan.Designer.cs">
-      <DependentUpon>QuanLyTaiKhoan.cs</DependentUpon>
+    <Compile Include="Forms\fQuanLyTaiKhoan.Designer.cs">
+      <DependentUpon>fQuanLyTaiKhoan.cs</DependentUpon>
     </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

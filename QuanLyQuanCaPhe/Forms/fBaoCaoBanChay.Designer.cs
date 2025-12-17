@@ -1,6 +1,6 @@
 ﻿namespace QuanLyQuanCaPhe.Forms
 {
-    partial class BaoCaoBanChay
+    partial class fBaoCaoBanChay
     {
         /// <summary>
         /// Required designer variable.

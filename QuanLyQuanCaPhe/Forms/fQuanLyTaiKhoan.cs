@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace QuanLyQuanCaPhe.Forms
 {
-    public partial class QuanLyTaiKhoan : Form
+    public partial class fQuanLyTaiKhoan : Form
     {
         private DataProvider dataProvider;
         private string selectedTenDangNhap = "";
 
-        public QuanLyTaiKhoan()
+        public fQuanLyTaiKhoan()
         {
             try
             {

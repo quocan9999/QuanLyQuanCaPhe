@@ -1,4 +1,6 @@
-﻿using System;
+﻿using QuanLyQuanCaPhe.Class;
+using QuanLyQuanCaPhe.Forms;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
@@ -452,6 +454,84 @@ namespace QuanLyQuanCaPhe
             if (thongBaoDangXuat == DialogResult.Yes)
             {
                 this.Close();
+            }
+        }
+
+        private void tsmiQuanLyBan_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fQuanLyBan f = new fQuanLyBan();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void tmsiQuanLySanPham_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fQuanLySanPham f = new fQuanLySanPham();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void tsmiQuanLyDanhMuc_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fQuanLyDanhMuc f = new fQuanLyDanhMuc();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void tsmiQuanLyTaiKhoan_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fQuanLyTaiKhoan f = new fQuanLyTaiKhoan();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void tsmiBaoCaoBanChay_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fBaoCaoBanChay f = new fBaoCaoBanChay();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void tsmiBaoCaoDoanhThu_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fBaoCaoDoanhThu f = new fBaoCaoDoanhThu();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
         }
     }

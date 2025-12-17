@@ -12,11 +12,11 @@ using System.Windows.Forms.DataVisualization.Charting;
 
 namespace QuanLyQuanCaPhe.Forms
 {
-    public partial class BaoCaoBanChay : Form
+    public partial class fBaoCaoBanChay : Form
     {
         private DataProvider dataProvider;
 
-        public BaoCaoBanChay()
+        public fBaoCaoBanChay()
         {
             try
             {
