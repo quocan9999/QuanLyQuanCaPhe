@@ -18,8 +18,6 @@ namespace QuanLyQuanCaPhe.Forms
         {
             InitializeComponent();
         }
-
-        // ⭐ Hàm quan trọng nhất để sửa lỗi NullReference trong ảnh của bạn
         private void KiemTraKetNoi()
         {
             if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
@@ -43,9 +41,9 @@ namespace QuanLyQuanCaPhe.Forms
             SetInputReadOnly(true);
         }
 
-        // =====================================================================
+        // ===================
         // DỮ LIỆU
-        // =====================================================================
+        // ===================
         private List<DanhMuc> GetListDanhMuc()
         {
             List<DanhMuc> list = new List<DanhMuc>();
@@ -77,9 +75,9 @@ namespace QuanLyQuanCaPhe.Forms
             txtDanhMuc.DataBindings.Add("Text", grvDanhMuc.DataSource, "TenDanhMuc");
         }
 
-        // =====================================================================
+        // ========================
         // CÁC NÚT CHỨC NĂNG
-        // =====================================================================
+        // ========================
         private void btnXem_Click(object sender, EventArgs e)
         {
             LoadListDanhMuc();
@@ -114,7 +112,7 @@ namespace QuanLyQuanCaPhe.Forms
             string ten = txtDanhMuc.Text.Trim();
             if (string.IsNullOrEmpty(ten)) { MessageBox.Show("Tên danh mục không được trống."); return; }
 
-            KiemTraKetNoi(); // Đảm bảo kết nối không bị null
+            KiemTraKetNoi(); 
 
             // Kiểm tra trùng tên
             string checkQuery = "SELECT COUNT(*) FROM DanhMuc WHERE TenDanhMuc = @ten";
@@ -178,7 +176,7 @@ namespace QuanLyQuanCaPhe.Forms
                         cmd.Parameters.AddWithValue("@id", txtID.Text);
                         if (cmd.ExecuteNonQuery() > 0)
                         {
-                            // ⭐ RESET IDENTITY 
+                            // RESET ID
                             string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM DanhMuc; DBCC CHECKIDENT ('DanhMuc', RESEED, @max);";
                             using (SqlCommand cmdReset = new SqlCommand(resetQuery, sqlCon)) { cmdReset.ExecuteNonQuery(); }
 

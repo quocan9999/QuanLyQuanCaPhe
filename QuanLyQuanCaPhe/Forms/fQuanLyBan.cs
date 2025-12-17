@@ -18,8 +18,6 @@ namespace QuanLyQuanCaPhe.Forms
         {
             InitializeComponent();
         }
-
-        // ⭐ Hàm sửa lỗi "sqlCon was null" và "Connection not initialized"
         private void KiemTraKetNoi()
         {
             if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
@@ -43,12 +41,12 @@ namespace QuanLyQuanCaPhe.Forms
             KiemTraKetNoi();
             txtID.ReadOnly = true;
             SetInputReadOnly(true);
-            btnXem_Click(null, null); // Tự động nạp dữ liệu khi mở form
+            btnXem_Click(null, null); 
         }
 
-        // =====================================================================
+        // =====================
         // DỮ LIỆU
-        // =====================================================================
+        // =====================
         private List<Ban> GetListBan()
         {
             List<Ban> list = new List<Ban>();
