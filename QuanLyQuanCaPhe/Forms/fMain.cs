@@ -445,5 +445,10 @@ namespace QuanLyQuanCaPhe
         {
             lblNgayHienTai.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy | HH:mm:ss");
         }
+
+        private void tsmiDangXuat_Click(object sender, EventArgs e)
+        {
+            this.Close();
+        }
     }
 }
