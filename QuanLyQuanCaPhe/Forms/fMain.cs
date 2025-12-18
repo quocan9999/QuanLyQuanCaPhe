@@ -33,7 +33,7 @@ namespace QuanLyQuanCaPhe
             dgvHoaDon.Rows.Clear();
             btnThanhToan.Enabled = false;
 
-            lblTenNhanVien.Text = "Nhân viên: " + LuuTruThongTinDangNhap.HoTen;
+            lblTenNhanVien.Text = "Nhân viên: " + LuuTruThongTinDangNhap.HoTen + " (" + LuuTruThongTinDangNhap.VaiTro + ")";
 
         }
 
