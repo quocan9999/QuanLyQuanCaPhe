@@ -193,7 +193,6 @@ namespace QuanLyQuanCaPhe
             lblMaHoaDon.Text = "Mã hóa đơn: --";
             lblThoiGianBatDau.Text = "GIỜ VÀO\n\nNgày: --/--/----\nGiờ: --:--:--";
             lblTongTien.Text = "TỔNG: 0đ";
-            lblGiamGia.Text = "Giảm giá: 0%";
         }
 
         private void LoadInvoiceData(int banID)
@@ -216,7 +215,6 @@ namespace QuanLyQuanCaPhe
 
                 lblMaHoaDon.Text = "Mã hóa đơn: #" + hoaDonId;
                 lblThoiGianBatDau.Text = $"GIỜ VÀO\n\nNgày: {ngayLap:dd/MM/yyyy}\nGiờ: {ngayLap:HH:mm:ss}";
-                lblGiamGia.Text = $"Giảm giá: {giamGia}%";
                 lblTongTien.Text = $"TỔNG: {tongTien:N0}đ";
 
                 // 2. Load chi tiết hóa đơn

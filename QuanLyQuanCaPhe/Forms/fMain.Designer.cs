@@ -48,7 +48,6 @@
             this.pnlRight = new System.Windows.Forms.Panel();
             this.pnlThongTinHoaDon = new System.Windows.Forms.Panel();
             this.lblTongTien = new System.Windows.Forms.Label();
-            this.lblGiamGia = new System.Windows.Forms.Label();
             this.lblThoiGianBatDau = new System.Windows.Forms.Label();
             this.lblMaHoaDon = new System.Windows.Forms.Label();
             this.btnThanhToan = new System.Windows.Forms.Button();
@@ -464,7 +463,6 @@
             // 
             this.pnlThongTinHoaDon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(240)))), ((int)(((byte)(230)))));
             this.pnlThongTinHoaDon.Controls.Add(this.lblTongTien);
-            this.pnlThongTinHoaDon.Controls.Add(this.lblGiamGia);
             this.pnlThongTinHoaDon.Controls.Add(this.lblThoiGianBatDau);
             this.pnlThongTinHoaDon.Controls.Add(this.lblMaHoaDon);
             this.pnlThongTinHoaDon.Controls.Add(this.btnThanhToan);
@@ -492,31 +490,16 @@
             this.lblTongTien.Text = "TỔNG: 0đ";
             this.lblTongTien.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
             // 
-            // lblGiamGia
-            // 
-            this.lblGiamGia.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)));
-            this.lblGiamGia.BackColor = System.Drawing.Color.White;
-            this.lblGiamGia.Font = new System.Drawing.Font("Segoe UI", 11F);
-            this.lblGiamGia.ForeColor = System.Drawing.Color.Black;
-            this.lblGiamGia.Location = new System.Drawing.Point(8, 273);
-            this.lblGiamGia.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
-            this.lblGiamGia.Name = "lblGiamGia";
-            this.lblGiamGia.Padding = new System.Windows.Forms.Padding(8, 6, 8, 6);
-            this.lblGiamGia.Size = new System.Drawing.Size(160, 32);
-            this.lblGiamGia.TabIndex = 1;
-            this.lblGiamGia.Text = "Giảm giá: 0%";
-            this.lblGiamGia.TextAlign = System.Drawing.ContentAlignment.MiddleLeft;
-            // 
             // lblThoiGianBatDau
             // 
             this.lblThoiGianBatDau.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
-            this.lblThoiGianBatDau.Font = new System.Drawing.Font("Segoe UI", 10F);
+            this.lblThoiGianBatDau.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblThoiGianBatDau.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(125)))), ((int)(((byte)(50)))));
             this.lblThoiGianBatDau.Location = new System.Drawing.Point(8, 49);
             this.lblThoiGianBatDau.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
             this.lblThoiGianBatDau.Name = "lblThoiGianBatDau";
             this.lblThoiGianBatDau.Padding = new System.Windows.Forms.Padding(6);
-            this.lblThoiGianBatDau.Size = new System.Drawing.Size(160, 98);
+            this.lblThoiGianBatDau.Size = new System.Drawing.Size(160, 219);
             this.lblThoiGianBatDau.TabIndex = 4;
             this.lblThoiGianBatDau.Text = "GIỜ VÀO\r\n\r\nNgày: --/--/----\r\nGiờ: --:--:--";
             // 
@@ -714,7 +697,6 @@
         private System.Windows.Forms.Panel pnlRight;
         private System.Windows.Forms.Panel pnlThongTinHoaDon;
         private System.Windows.Forms.Label lblTongTien;
-        private System.Windows.Forms.Label lblGiamGia;
         private System.Windows.Forms.Label lblThoiGianBatDau;
         private System.Windows.Forms.Label lblMaHoaDon;
         private System.Windows.Forms.Button btnThanhToan;
