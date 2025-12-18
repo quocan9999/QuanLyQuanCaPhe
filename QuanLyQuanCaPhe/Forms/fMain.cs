@@ -380,27 +380,37 @@ namespace QuanLyQuanCaPhe
 
         private void btnThanhToan_Click(object sender, EventArgs e)
         {
-            if (_selectedTableId == -1) return;
-
-            string txtTong = lblTongTien.Text.Replace("TỔNG:", "").Replace("đ", "").Replace(",", "").Trim();
-            decimal tongTien = 0;
-            decimal.TryParse(txtTong, out tongTien);
-
-            if (MessageBox.Show($"Thanh toán hóa đơn cho bàn {_selectedTableName}?\nTổng tiền: {tongTien:N0}đ", "Xác nhận thanh toán", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            // 1. kiểm tra xem đã chọn bàn chưa
+            if (_selectedTableId == -1)
             {
-                // cập nhật hóa đơn thành đã thanh toán
-                // trigger sẽ tự động chuyển trạng thái bàn về 'còn trống'
-                string queryHD = "UPDATE HoaDon SET TrangThai = N'Đã thanh toán', TongTien = @tien WHERE MaBan = @ban AND TrangThai = N'Chưa thanh toán'";
-                DataProvider.Instance.ExecuteNonQuery(queryHD, new SqlParameter[]
-                {
-                    new SqlParameter("@tien", tongTien),
-                    new SqlParameter("@ban", _selectedTableId)
-                });
+                MessageBox.Show("Vui lòng chọn bàn cần thanh toán!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
 
-                MessageBox.Show("Thanh toán thành công!", "Thông báo");
+            // 2. khởi tạo form thanh toán và truyền id bàn sang
+            fThanhToan formThanhToan = new fThanhToan(_selectedTableId);
+
+            // 3. hiển thị form và chờ kết quả trả về
+            if (formThanhToan.ShowDialog() == DialogResult.OK)
+            {
+                // nếu thanh toán thành công (bên kia trả về OK):
+
+                // tải lại danh sách bàn để cập nhật màu sắc (bàn chuyển từ xanh sang xám)
                 LoadTables();
+
+                // xóa sạch thông tin hóa đơn đang hiển thị bên phải màn hình
                 ResetInvoiceUI();
+
+                // đặt lại trạng thái về mặc định
                 _selectedTableId = -1;
+                lblInvoiceTitle.Text = "Hóa đơn bàn --";
+
+                // vô hiệu hóa các nút chức năng để tránh lỗi
+                btnMoBan.Enabled = false;
+                btnOrderMon.Enabled = false;
+                btnThanhToan.Enabled = false;
+                btnHuyHoaDon.Enabled = false;
+                btnChuyenBan.Enabled = false;
             }
         }
 

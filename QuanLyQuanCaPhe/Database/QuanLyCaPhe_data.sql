@@ -604,3 +604,109 @@ BEGIN
     WHERE Id = @idBanMoi;
 END
 GO
+
+-- =============================================
+-- 1. SP LẤY THÔNG TIN HÓA ĐƠN ĐỂ HIỂN THỊ
+-- =============================================
+CREATE OR ALTER PROC usp_LayThongTinThanhToan
+    @idBan INT
+AS
+BEGIN
+    -- Lấy thông tin chung của hóa đơn chưa thanh toán
+    SELECT 
+        hd.Id AS MaHoaDon,
+        hd.NgayLap AS GioVao,
+        b.TenBan,
+        b.ViTri,
+        ISNULL(SUM(ct.SoLuong * ct.DonGia), 0) AS TongTienTamTinh
+    FROM dbo.HoaDon hd
+    JOIN dbo.Ban b ON hd.MaBan = b.Id
+    LEFT JOIN dbo.ChiTietHoaDon ct ON hd.Id = ct.MaHoaDon
+    WHERE hd.MaBan = @idBan AND hd.TrangThai = N'Chưa thanh toán'
+    GROUP BY hd.Id, hd.NgayLap, b.TenBan, b.ViTri;
+
+    -- Lấy danh sách món ăn chi tiết
+    SELECT 
+        sp.TenSP,
+        ct.DonGia,
+        ct.SoLuong,
+        ct.ThanhTien
+    FROM dbo.HoaDon hd
+    JOIN dbo.ChiTietHoaDon ct ON hd.Id = ct.MaHoaDon
+    JOIN dbo.SanPham sp ON ct.MaSP = sp.Id
+    WHERE hd.MaBan = @idBan AND hd.TrangThai = N'Chưa thanh toán';
+END
+GO
+
+-- =============================================
+-- 2. SP XỬ LÝ THANH TOÁN (QUAN TRỌNG)
+-- =============================================
+CREATE OR ALTER PROC usp_ThanhToan
+    @idBan INT,
+    @giamGia DECIMAL(18,2), -- Giá trị nhập vào (số % hoặc số tiền)
+    @loaiGiam INT -- 0: Không giảm, 1: Theo %, 2: Theo tiền
+AS
+BEGIN
+    BEGIN TRANSACTION;
+    BEGIN TRY
+        DECLARE @idHoaDon INT;
+
+        -- 1. Tìm hóa đơn chưa thanh toán của bàn này
+        SELECT @idHoaDon = Id
+        FROM dbo.HoaDon
+        WHERE MaBan = @idBan AND TrangThai = N'Chưa thanh toán';
+
+        IF @idHoaDon IS NULL
+        BEGIN
+            ROLLBACK TRANSACTION;
+            RETURN;
+        END
+
+        -- 2. Tính lại tổng tiền gốc từ chi tiết (để đảm bảo chính xác tuyệt đối)
+        DECLARE @tongTienGoc DECIMAL(18,2) = 0;
+        SELECT @tongTienGoc = SUM(ThanhTien)
+        FROM dbo.ChiTietHoaDon
+        WHERE MaHoaDon = @idHoaDon;
+
+        -- 3. Cập nhật hóa đơn dựa trên loại giảm giá
+        -- Lưu ý: Cập nhật 1 cột > 0, cột còn lại phải = 0 để thỏa mãn ràng buộc CHECK trong DB
+        IF @loaiGiam = 1 -- Giảm theo %
+        BEGIN
+            UPDATE dbo.HoaDon
+            SET TrangThai = N'Đã thanh toán',
+                TongTien = @tongTienGoc,
+                GiamGiaPhanTram = @giamGia,
+                GiamGiaTien = 0
+            WHERE Id = @idHoaDon;
+        END
+        ELSE IF @loaiGiam = 2 -- Giảm theo tiền mặt
+        BEGIN
+            UPDATE dbo.HoaDon
+            SET TrangThai = N'Đã thanh toán',
+                TongTien = @tongTienGoc,
+                GiamGiaPhanTram = 0,
+                GiamGiaTien = @giamGia
+            WHERE Id = @idHoaDon;
+        END
+        ELSE -- Không giảm
+        BEGIN
+            UPDATE dbo.HoaDon
+            SET TrangThai = N'Đã thanh toán',
+                TongTien = @tongTienGoc,
+                GiamGiaPhanTram = 0,
+                GiamGiaTien = 0
+            WHERE Id = @idHoaDon;
+        END
+
+        -- Lưu ý: Trigger 'trg_CapNhatTrangThaiBan' (đã tạo trước đó) 
+        -- sẽ tự động bắt sự kiện UPDATE này để chuyển trạng thái bàn về 'Còn trống'.
+
+        COMMIT TRANSACTION;
+    END TRY
+    BEGIN CATCH
+        ROLLBACK TRANSACTION;
+        DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
+        RAISERROR(@ErrorMessage, 16, 1);
+    END CATCH
+END
+GO
