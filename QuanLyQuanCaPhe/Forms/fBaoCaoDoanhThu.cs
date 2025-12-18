@@ -348,8 +348,7 @@ AND hd.NgayLap <= @DenNgay
 
                 // Thêm tiêu đề báo cáo
                 sb.AppendLine("BÁO CÁO DOANH THU");
-                sb.AppendLine("Từ ngày: " + dtpTuNgay.Value.ToString("dd/MM/yyyy") +
-                " - Đến ngày: " + dtpDenNgay.Value.ToString("dd/MM/yyyy"));
+                sb.AppendLine("Từ ngày: " + dtpTuNgay.Value.ToString("dd/MM/yyyy") + " - Đến ngày: " + dtpDenNgay.Value.ToString("dd/MM/yyyy"));
                 sb.AppendLine("Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
                 sb.AppendLine("");
 
