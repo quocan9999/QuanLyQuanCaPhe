@@ -193,13 +193,15 @@ namespace QuanLyQuanCaPhe
             lblMaHoaDon.Text = "Mã hóa đơn: --";
             lblThoiGianBatDau.Text = "GIỜ VÀO\n\nNgày: --/--/----\nGiờ: --:--:--";
             lblTongTien.Text = "TỔNG: 0đ";
+            lblTrangThaiThanhToan.Text = "Trạng thái: --";
+            lblTrangThaiThanhToan.ForeColor = Color.DimGray;
         }
 
         private void LoadInvoiceData(int banID)
         {
             dgvHoaDon.Rows.Clear();
 
-            // 1. Tìm hóa đơn chưa thanh toán của bàn này
+            // 1. tìm hóa đơn chưa thanh toán của bàn này
             string queryHD = "SELECT * FROM HoaDon WHERE MaBan = @id AND TrangThai = N'Chưa thanh toán'";
             SqlParameter[] paramHD = new SqlParameter[] { new SqlParameter("@id", banID) };
 
@@ -212,12 +214,24 @@ namespace QuanLyQuanCaPhe
                 DateTime ngayLap = (DateTime)hd["NgayLap"];
                 decimal giamGia = Convert.ToDecimal(hd["GiamGiaPhanTram"]);
                 decimal tongTien = Convert.ToDecimal(hd["TongTien"]);
+                string trangThai = hd["TrangThai"].ToString(); // lấy trạng thái từ csdl
 
                 lblMaHoaDon.Text = "Mã hóa đơn: #" + hoaDonId;
                 lblThoiGianBatDau.Text = $"GIỜ VÀO\n\nNgày: {ngayLap:dd/MM/yyyy}\nGiờ: {ngayLap:HH:mm:ss}";
                 lblTongTien.Text = $"TỔNG: {tongTien:N0}đ";
 
-                // 2. Load chi tiết hóa đơn
+                // hiển thị trạng thái
+                lblTrangThaiThanhToan.Text = "Trạng thái: " + trangThai;
+                if (trangThai == "Chưa thanh toán")
+                {
+                    lblTrangThaiThanhToan.ForeColor = Color.Red;
+                }
+                else
+                {
+                    lblTrangThaiThanhToan.ForeColor = Color.Green;
+                }
+
+                // 2. load chi tiết hóa đơn
                 string queryCT = @"
                     SELECT c.Id, s.TenSP, c.DonGia, c.SoLuong, c.ThanhTien 
                     FROM ChiTietHoaDon c 
@@ -230,8 +244,8 @@ namespace QuanLyQuanCaPhe
                 foreach (DataRow item in dataCT.Rows)
                 {
                     int index = dgvHoaDon.Rows.Add();
-                    dgvHoaDon.Rows[index].Tag = item["Id"]; // Lưu ID chi tiết hóa đơn để xóa/sửa
-                    dgvHoaDon.Rows[index].Cells[0].Value = item["Id"]; // Cột ẩn
+                    dgvHoaDon.Rows[index].Tag = item["Id"];
+                    dgvHoaDon.Rows[index].Cells[0].Value = item["Id"];
                     dgvHoaDon.Rows[index].Cells[1].Value = item["TenSP"];
                     dgvHoaDon.Rows[index].Cells[2].Value = Convert.ToDecimal(item["DonGia"]).ToString("N0");
                     dgvHoaDon.Rows[index].Cells[3].Value = item["SoLuong"];

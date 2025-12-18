@@ -47,6 +47,7 @@
             this.btnHuyHoaDon = new System.Windows.Forms.Button();
             this.pnlRight = new System.Windows.Forms.Panel();
             this.pnlThongTinHoaDon = new System.Windows.Forms.Panel();
+            this.lblTrangThaiThanhToan = new System.Windows.Forms.Label();
             this.lblTongTien = new System.Windows.Forms.Label();
             this.lblThoiGianBatDau = new System.Windows.Forms.Label();
             this.lblMaHoaDon = new System.Windows.Forms.Label();
@@ -224,8 +225,8 @@
             // dgvHoaDon
             // 
             this.dgvHoaDon.AllowUserToAddRows = false;
-            this.dgvHoaDon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
-            | System.Windows.Forms.AnchorStyles.Left) 
+            this.dgvHoaDon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
+            | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvHoaDon.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvHoaDon.BackgroundColor = System.Drawing.Color.White;
@@ -305,7 +306,7 @@
             // 
             // pnlChonDichVu
             // 
-            this.pnlChonDichVu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.pnlChonDichVu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlChonDichVu.Controls.Add(this.btnXoa);
             this.pnlChonDichVu.Controls.Add(this.btnSua);
@@ -379,7 +380,7 @@
             // 
             // pnlServiceButton
             // 
-            this.pnlServiceButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.pnlServiceButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlServiceButton.Controls.Add(this.tlpActions);
             this.pnlServiceButton.Location = new System.Drawing.Point(8, 391);
@@ -462,6 +463,7 @@
             // pnlThongTinHoaDon
             // 
             this.pnlThongTinHoaDon.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(240)))), ((int)(((byte)(230)))));
+            this.pnlThongTinHoaDon.Controls.Add(this.lblTrangThaiThanhToan);
             this.pnlThongTinHoaDon.Controls.Add(this.lblTongTien);
             this.pnlThongTinHoaDon.Controls.Add(this.lblThoiGianBatDau);
             this.pnlThongTinHoaDon.Controls.Add(this.lblMaHoaDon);
@@ -474,9 +476,23 @@
             this.pnlThongTinHoaDon.Size = new System.Drawing.Size(176, 492);
             this.pnlThongTinHoaDon.TabIndex = 0;
             // 
+            // lblTrangThaiThanhToan
+            // 
+            this.lblTrangThaiThanhToan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            | System.Windows.Forms.AnchorStyles.Right)));
+            this.lblTrangThaiThanhToan.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.lblTrangThaiThanhToan.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
+            this.lblTrangThaiThanhToan.ForeColor = System.Drawing.Color.DimGray;
+            this.lblTrangThaiThanhToan.Location = new System.Drawing.Point(8, 270);
+            this.lblTrangThaiThanhToan.Name = "lblTrangThaiThanhToan";
+            this.lblTrangThaiThanhToan.Size = new System.Drawing.Size(160, 35);
+            this.lblTrangThaiThanhToan.TabIndex = 7;
+            this.lblTrangThaiThanhToan.Text = "Trạng thái: --";
+            this.lblTrangThaiThanhToan.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+            // 
             // lblTongTien
             // 
-            this.lblTongTien.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
+            this.lblTongTien.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTongTien.BackColor = System.Drawing.Color.White;
             this.lblTongTien.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
@@ -717,5 +733,6 @@
         private System.Windows.Forms.ToolStripMenuItem báoCáoDoanhThuToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem tsmiBaoCaoBanChay;
         private System.Windows.Forms.ToolStripMenuItem tsmiBaoCaoDoanhThu;
+        private System.Windows.Forms.Label lblTrangThaiThanhToan;
     }
 }
