@@ -89,7 +89,7 @@ CREATE TABLE HoaDon (
     Id INT IDENTITY(1,1) PRIMARY KEY,
     -- MaHoaDon AS ('HD' + RIGHT('000' + CAST(Id AS VARCHAR(3)), 3)) PERSISTED,
     MaBan INT FOREIGN KEY REFERENCES Ban(Id),
-    MaNhanVien INT FOREIGN KEY REFERENCES NhanVien(Id),
+    NguoiLap INT FOREIGN KEY REFERENCES NhanVien(Id),
     NgayLap DATETIME DEFAULT GETDATE(),
     TongTien DECIMAL(18,2) DEFAULT 0,
 	GiamGiaPhanTram DECIMAL(5,2) CHECK(GiamGiaPhanTram >= 0 AND GiamGiaPhanTram <= 100) DEFAULT 0, -- 💡 Giảm theo % (ví dụ giảm 10%)
@@ -262,17 +262,17 @@ DECLARE @HD1 INT,
         @HD3 INT;
 
 -- Hóa đơn 1: Bàn 1, đã thanh toán, không giảm giá
-INSERT INTO HoaDon (MaBan, MaNhanVien, NgayLap, TongTien, GiamGiaPhanTram, GiamGiaTien, TrangThai)
+INSERT INTO HoaDon (MaBan, NguoiLap, NgayLap, TongTien, GiamGiaPhanTram, GiamGiaTien, TrangThai)
 VALUES (@Ban1, @NV_01, DATEADD(DAY, -1, GETDATE()), 0, 0, 0, N'Đã thanh toán');
 SET @HD1 = SCOPE_IDENTITY();
 
 -- Hóa đơn 2: Bàn 3, đã thanh toán, giảm 10%
-INSERT INTO HoaDon (MaBan, MaNhanVien, NgayLap, TongTien, GiamGiaPhanTram, GiamGiaTien, TrangThai)
+INSERT INTO HoaDon (MaBan, NguoiLap, NgayLap, TongTien, GiamGiaPhanTram, GiamGiaTien, TrangThai)
 VALUES (@Ban3, @NV_Admin, DATEADD(DAY, -2, GETDATE()), 0, 10, 0, N'Đã thanh toán');
 SET @HD2 = SCOPE_IDENTITY();
 
 -- Hóa đơn 3: Bàn 2, chưa thanh toán (đang phục vụ)
-INSERT INTO HoaDon (MaBan, MaNhanVien, NgayLap, TongTien, GiamGiaPhanTram, GiamGiaTien, TrangThai)
+INSERT INTO HoaDon (MaBan, NguoiLap, NgayLap, TongTien, GiamGiaPhanTram, GiamGiaTien, TrangThai)
 VALUES (@Ban2, @NV_01, GETDATE(), 0, 0, 0, N'Chưa thanh toán');
 SET @HD3 = SCOPE_IDENTITY();
 
@@ -521,5 +521,50 @@ BEGIN
         DECLARE @ErrorMessage NVARCHAR(4000) = ERROR_MESSAGE();
         RAISERROR(@ErrorMessage, 16, 1);
     END CATCH
+END
+GO
+
+--                           TRIGGER
+-- Xóa trigger cũ nếu tồn tại để tránh lỗi trùng lặp
+IF OBJECT_ID('trg_CapNhatTrangThaiBan', 'TR') IS NOT NULL
+    DROP TRIGGER trg_CapNhatTrangThaiBan;
+GO
+
+CREATE TRIGGER trg_CapNhatTrangThaiBan
+ON HoaDon
+AFTER INSERT, UPDATE, DELETE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- TRƯỜNG HỢP 1 & 2: KHI THÊM MỚI HOẶC CẬP NHẬT HÓA ĐƠN
+    IF EXISTS (SELECT * FROM inserted)
+    BEGIN
+        -- nếu có hóa đơn mới trạng thái 'chưa thanh toán' -> cập nhật bàn thành 'có người'
+        UPDATE Ban
+        SET TrangThai = N'Có người'
+        FROM Ban b
+        JOIN inserted i ON b.Id = i.MaBan
+        WHERE i.TrangThai = N'Chưa thanh toán';
+
+        -- nếu hóa đơn chuyển sang 'đã thanh toán' -> cập nhật bàn thành 'còn trống'
+        UPDATE Ban
+        SET TrangThai = N'Còn trống'
+        FROM Ban b
+        JOIN inserted i ON b.Id = i.MaBan
+        WHERE i.TrangThai = N'Đã thanh toán';
+    END
+
+    -- TRƯỜNG HỢP 3: KHI XÓA HÓA ĐƠN (HỦY BÀN)
+    -- chỉ chạy khi có bảng deleted mà không có bảng inserted (tức là thao tác delete)
+    IF EXISTS (SELECT * FROM deleted) AND NOT EXISTS (SELECT * FROM inserted)
+    BEGIN
+        -- cập nhật lại trạng thái bàn thành 'còn trống' khi xóa hóa đơn chưa thanh toán
+        UPDATE Ban
+        SET TrangThai = N'Còn trống'
+        FROM Ban b
+        JOIN deleted d ON b.Id = d.MaBan
+        WHERE d.TrangThai = N'Chưa thanh toán';
+    END
 END
 GO

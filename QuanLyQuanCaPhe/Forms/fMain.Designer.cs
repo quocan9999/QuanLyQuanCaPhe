@@ -302,6 +302,7 @@
             this.btnOrderMon.TabIndex = 0;
             this.btnOrderMon.Text = "Thêm món";
             this.btnOrderMon.UseVisualStyleBackColor = false;
+            this.btnOrderMon.Click += new System.EventHandler(this.btnOrderMon_Click);
             // 
             // pnlChonDichVu
             // 
@@ -329,6 +330,7 @@
             this.btnXoa.TabIndex = 1;
             this.btnXoa.Text = "Xóa món";
             this.btnXoa.UseVisualStyleBackColor = false;
+            this.btnXoa.Click += new System.EventHandler(this.BtnXoa_Click);
             // 
             // btnSua
             // 
@@ -341,6 +343,7 @@
             this.btnSua.TabIndex = 0;
             this.btnSua.Text = "Cập nhật số lượng";
             this.btnSua.UseVisualStyleBackColor = false;
+            this.btnSua.Click += new System.EventHandler(this.BtnSua_Click);
             // 
             // lblQuantity
             // 
@@ -416,6 +419,7 @@
             this.btnMoBan.TabIndex = 0;
             this.btnMoBan.Text = "Mở bàn mới";
             this.btnMoBan.UseVisualStyleBackColor = false;
+            this.btnMoBan.Click += new System.EventHandler(this.BtnMoBan_Click);
             // 
             // btnChuyenBan
             // 
@@ -429,6 +433,7 @@
             this.btnChuyenBan.TabIndex = 1;
             this.btnChuyenBan.Text = "Chuyển bàn";
             this.btnChuyenBan.UseVisualStyleBackColor = false;
+            this.btnChuyenBan.Click += new System.EventHandler(this.BtnChuyenBan_Click);
             // 
             // btnHuyHoaDon
             // 
@@ -544,6 +549,7 @@
             this.btnThanhToan.TabIndex = 6;
             this.btnThanhToan.Text = "THANH TOÁN";
             this.btnThanhToan.UseVisualStyleBackColor = false;
+            this.btnThanhToan.Click += new System.EventHandler(this.btnThanhToan_Click);
             // 
             // mnsMain
             // 

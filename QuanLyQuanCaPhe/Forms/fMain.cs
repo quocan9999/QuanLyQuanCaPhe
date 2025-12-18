@@ -34,19 +34,11 @@ namespace QuanLyQuanCaPhe
             btnThanhToan.Enabled = false;
 
             lblTenNhanVien.Text = "Nhân viên: " + LuuTruThongTinDangNhap.HoTen;
-            
+
         }
 
         private void SetupEventHandlers()
         {
-            // Các sự kiện nút bấm
-            btnMoBan.Click += BtnMoBan_Click;
-            btnOrderMon.Click += btnOrderMon_Click;
-            btnSua.Click += BtnSua_Click;
-            btnXoa.Click += BtnXoa_Click;
-            btnThanhToan.Click += btnThanhToan_Click;
-            btnChuyenBan.Click += BtnChuyenBan_Click;
-
             // Sự kiện bộ lọc
             cboLocKhuVuc.SelectedIndexChanged += (s, e) => LoadTables();
 
@@ -57,7 +49,7 @@ namespace QuanLyQuanCaPhe
             timer1.Tick += (s, e) => UpdateDateTime();
         }
 
-        #region 1. QUẢN LÝ BÀN & HIỂN THỊ (Load Tables - ADO.NET DataProvider)
+        #region 1. QUẢN LÝ BÀN & HIỂN THỊ
 
         private void LoadComboBoxKhuVuc()
         {
@@ -271,7 +263,7 @@ namespace QuanLyQuanCaPhe
         {
             if (_selectedTableId == -1) return;
 
-            // Kiểm tra trạng thái
+            // kiểm tra xem bàn có người chưa (đề phòng 2 máy cùng thao tác)
             string queryCheck = "SELECT TrangThai FROM Ban WHERE Id = @id";
             object checkStatus = DataProvider.Instance.ExecuteScalar(queryCheck, new SqlParameter[] { new SqlParameter("@id", _selectedTableId) });
 
@@ -282,19 +274,26 @@ namespace QuanLyQuanCaPhe
                 return;
             }
 
-            // 1. Cập nhật trạng thái bàn
-            string queryUpBan = "UPDATE Ban SET TrangThai = N'Có người' WHERE Id = @id";
-            DataProvider.Instance.ExecuteNonQuery(queryUpBan, new SqlParameter[] { new SqlParameter("@id", _selectedTableId) });
+            // lấy id nhân viên đang đăng nhập để gán vào người lập hóa đơn
+            int idNhanVien = LayIdNhanVienHienTai();
 
-            // 2. Tạo hóa đơn mới (Giả sử MaNhanVien = 1 - Admin)
-            string queryInsertHD = @"INSERT INTO HoaDon (MaBan, MaNhanVien, NgayLap, TongTien, TrangThai) 
-                                     VALUES (@ban, 1, GETDATE(), 0, N'Chưa thanh toán')";
-            DataProvider.Instance.ExecuteNonQuery(queryInsertHD, new SqlParameter[] { new SqlParameter("@ban", _selectedTableId) });
+            if (idNhanVien == -1)
+            {
+                MessageBox.Show("Không tìm thấy thông tin nhân viên của tài khoản này!", "Lỗi");
+                return;
+            }
 
-            LoadTables();
-            // Tự động load lại hóa đơn
+            // tạo hóa đơn mới - trigger sẽ tự động chuyển trạng thái bàn sang 'có người'
+            string queryInsertHD = @"INSERT INTO HoaDon (MaBan, NguoiLap, NgayLap, TongTien, TrangThai) VALUES (@ban, @nguoiLap, GETDATE(), 0, N'Chưa thanh toán')";
+
+            DataProvider.Instance.ExecuteNonQuery(queryInsertHD, new SqlParameter[] { new SqlParameter("@ban", _selectedTableId), new SqlParameter("@nguoiLap", idNhanVien) });
+
+            LoadTables(); // load lại để thấy bàn đổi màu xanh
+
+            // tự động load lại giao diện hóa đơn
             LoadInvoiceData(_selectedTableId);
 
+            // cập nhật trạng thái nút bấm
             btnMoBan.Enabled = false;
             btnOrderMon.Enabled = true;
             btnThanhToan.Enabled = true;
@@ -387,20 +386,16 @@ namespace QuanLyQuanCaPhe
             decimal tongTien = 0;
             decimal.TryParse(txtTong, out tongTien);
 
-            if (MessageBox.Show($"Thanh toán hóa đơn cho bàn {_selectedTableName}?\nTổng tiền: {tongTien:N0}đ",
-                "Xác nhận thanh toán", MessageBoxButtons.OKCancel) == DialogResult.OK)
+            if (MessageBox.Show($"Thanh toán hóa đơn cho bàn {_selectedTableName}?\nTổng tiền: {tongTien:N0}đ", "Xác nhận thanh toán", MessageBoxButtons.OKCancel) == DialogResult.OK)
             {
-                // 1. Update Hóa đơn
-                string qHD = "UPDATE HoaDon SET TrangThai = N'Đã thanh toán', TongTien = @tien WHERE MaBan = @ban AND TrangThai = N'Chưa thanh toán'";
-                DataProvider.Instance.ExecuteNonQuery(qHD, new SqlParameter[]
+                // cập nhật hóa đơn thành đã thanh toán
+                // trigger sẽ tự động chuyển trạng thái bàn về 'còn trống'
+                string queryHD = "UPDATE HoaDon SET TrangThai = N'Đã thanh toán', TongTien = @tien WHERE MaBan = @ban AND TrangThai = N'Chưa thanh toán'";
+                DataProvider.Instance.ExecuteNonQuery(queryHD, new SqlParameter[]
                 {
                     new SqlParameter("@tien", tongTien),
                     new SqlParameter("@ban", _selectedTableId)
                 });
-
-                // 2. Update Bàn -> Trống
-                string qBan = "UPDATE Ban SET TrangThai = N'Còn trống' WHERE Id = @id";
-                DataProvider.Instance.ExecuteNonQuery(qBan, new SqlParameter[] { new SqlParameter("@id", _selectedTableId) });
 
                 MessageBox.Show("Thanh toán thành công!", "Thông báo");
                 LoadTables();
@@ -421,16 +416,20 @@ namespace QuanLyQuanCaPhe
 
             if (MessageBox.Show($"Bạn có chắc muốn hủy bàn {_selectedTableName}?\nHóa đơn hiện tại sẽ bị xóa!", "Cảnh báo", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) == DialogResult.Yes)
             {
-                string qGetID = "SELECT Id FROM HoaDon WHERE MaBan = @id AND TrangThai = N'Chưa thanh toán'";
-                object objId = DataProvider.Instance.ExecuteScalar(qGetID, new SqlParameter[] { new SqlParameter("@id", _selectedTableId) });
+                // lấy id hóa đơn để xóa chi tiết trước
+                string queryGetID = "SELECT Id FROM HoaDon WHERE MaBan = @id AND TrangThai = N'Chưa thanh toán'";
+                object objId = DataProvider.Instance.ExecuteScalar(queryGetID, new SqlParameter[] { new SqlParameter("@id", _selectedTableId) });
 
                 if (objId != null)
                 {
                     int hdId = Convert.ToInt32(objId);
 
+                    // xóa chi tiết hóa đơn
                     DataProvider.Instance.ExecuteNonQuery("DELETE FROM ChiTietHoaDon WHERE MaHoaDon = @hdId", new SqlParameter[] { new SqlParameter("hdId", hdId) });
+
+                    // xóa hóa đơn
+                    // trigger sql sẽ bắt sự kiện delete này để cập nhật bàn về trạng thái 'còn trống'
                     DataProvider.Instance.ExecuteNonQuery("DELETE FROM HoaDon WHERE Id = @hdId", new SqlParameter[] { new SqlParameter("hdId", hdId) });
-                    DataProvider.Instance.ExecuteNonQuery("UPDATE Ban SET TrangThai = N'Còn trống' WHERE Id = @id", new SqlParameter[] { new SqlParameter("@id", _selectedTableId) });
 
                     LoadTables();
                     ResetInvoiceUI();
@@ -531,6 +530,26 @@ namespace QuanLyQuanCaPhe
             {
                 MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
+        }
+
+        // hàm hỗ trợ lấy id nhân viên dựa trên tên đăng nhập hiện tại
+        private int LayIdNhanVienHienTai()
+        {
+            // lấy tên đăng nhập từ biến toàn cục đã lưu lúc login
+            string tenDangNhap = LuuTruThongTinDangNhap.TenDangNhap;
+
+            // truy vấn lấy id nhân viên
+            string queryGetId = "SELECT Id FROM NhanVien WHERE TenDangNhap = @user";
+            object ketQua = DataProvider.Instance.ExecuteScalar(queryGetId, new SqlParameter[] { new SqlParameter("@user", tenDangNhap) });
+
+            if (ketQua != null)
+            {
+                return Convert.ToInt32(ketQua);
+            }
+
+            // trường hợp không tìm thấy (ví dụ admin hệ thống không có trong bảng nhân viên)
+            // trả về 1 hoặc xử lý tùy logic, ở đây mình mặc định trả về null hoặc báo lỗi
+            return -1;
         }
     }
 }
