@@ -184,10 +184,23 @@ namespace QuanLyQuanCaPhe
         // sự kiện nhấn nút in hóa đơn tạm
         private void BtnInTam_Click(object sender, EventArgs e)
         {
-            MessageBox.Show("Chức năng in hóa đơn tạm sẽ được cập nhật sau!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (dgvChiTiet.Rows.Count == 0)
+            {
+                MessageBox.Show("Hóa đơn chưa có món nào!", "Thông báo");
+                return;
+            }
+
+            decimal giaTriGiam = 0;
+            decimal.TryParse(txtGiamGia.Text.Replace(",", ""), out giaTriGiam);
+
+            int loaiGiam = cboLoaiGiamGia.SelectedIndex;
+
+            // truyền dữ liệu sang fInHoaDon
+            fInHoaDon formIn = new fInHoaDon(idBan, giaTriGiam, loaiGiam);
+
+            formIn.ShowDialog();
         }
 
-        // sự kiện nhấn nút quay lại
         private void BtnHuy_Click(object sender, EventArgs e)
         {
             this.Close();

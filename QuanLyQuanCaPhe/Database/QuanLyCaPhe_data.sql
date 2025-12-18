@@ -710,3 +710,32 @@ BEGIN
     END CATCH
 END
 GO
+
+-- Store Procedure lấy toàn bộ thông tin cần thiết để tạo hóa đơn tạm 
+CREATE OR ALTER PROC usp_InHoaDon
+@idBan INT
+AS
+BEGIN
+    SELECT 
+        hd.Id AS MaHoaDon,
+        hd.NgayLap AS GioVao,
+        GETDATE() AS GioRa,
+        b.TenBan,
+        b.ViTri AS KhuVuc,
+        nv.HoTen AS ThuNgan,
+        sp.TenSP AS TenMon,
+        ct.DonGia,
+        ct.SoLuong,
+        ct.ThanhTien,
+        hd.TongTien AS TongTienGoc,       -- Tổng tiền chưa giảm
+        hd.GiamGiaPhanTram,               -- % giảm giá
+        hd.GiamGiaTien,                   -- Tiền giảm trực tiếp
+        hd.ThanhTienSauGiam AS TongThanhToan -- Số tiền khách phải trả cuối cùng
+    FROM dbo.HoaDon hd
+    JOIN dbo.Ban b ON hd.MaBan = b.Id
+    JOIN dbo.NhanVien nv ON hd.NguoiLap = nv.Id
+    JOIN dbo.ChiTietHoaDon ct ON hd.Id = ct.MaHoaDon
+    JOIN dbo.SanPham sp ON ct.MaSP = sp.Id
+    WHERE hd.MaBan = @idBan AND hd.TrangThai = N'Chưa thanh toán'
+END
+GO
