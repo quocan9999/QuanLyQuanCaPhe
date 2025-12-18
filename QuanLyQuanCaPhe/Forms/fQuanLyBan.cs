@@ -18,6 +18,7 @@ namespace QuanLyQuanCaPhe.Forms
         {
             InitializeComponent();
         }
+
         private void KiemTraKetNoi()
         {
             if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
@@ -32,22 +33,30 @@ namespace QuanLyQuanCaPhe.Forms
         private void SetInputReadOnly(bool state)
         {
             txtTenBan.ReadOnly = state;
-            txtViTri.ReadOnly = state;
             txtTrangThai.ReadOnly = state;
+            // ComboBox phải Enabled mới hiện danh sách cho chọn
+            cboViTri.Enabled = !state;
+        }
+
+        private void KhoiTaoComboBoxViTri()
+        {
+            cboViTri.Items.Clear();
+            cboViTri.Items.Add("Tầng trệt");
+            cboViTri.Items.Add("Lầu 1");
+            cboViTri.Items.Add("Lầu 2");
+            cboViTri.DropDownStyle = ComboBoxStyle.DropDownList;
         }
 
         private void fQuanLyBan_Load(object sender, EventArgs e)
         {
             KiemTraKetNoi();
             txtID.ReadOnly = true;
+            KhoiTaoComboBoxViTri();
             SetInputReadOnly(true);
-            btnXem_Click(null, null); 
+            btnXem_Click(null, null);
         }
 
-        // =====================
-        // DỮ LIỆU
-        // =====================
-        private List<Ban> GetListBan()
+        private void LoadListBan()
         {
             List<Ban> list = new List<Ban>();
             string query = "SELECT * FROM Ban ORDER BY Id ASC";
@@ -64,32 +73,24 @@ namespace QuanLyQuanCaPhe.Forms
                         list.Add(new Ban(item));
                     }
                 }
+                grvQuanLyBan.DataSource = list;
             }
             catch (Exception ex) { MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message); }
-            return list;
-        }
-
-        private void LoadListBan()
-        {
-            grvQuanLyBan.DataSource = GetListBan();
         }
 
         private void AddBanBinding()
         {
             txtID.DataBindings.Clear();
             txtTenBan.DataBindings.Clear();
-            txtViTri.DataBindings.Clear();
+            cboViTri.DataBindings.Clear();
             txtTrangThai.DataBindings.Clear();
 
-            txtID.DataBindings.Add("Text", grvQuanLyBan.DataSource, "Id");
-            txtTenBan.DataBindings.Add("Text", grvQuanLyBan.DataSource, "TenBan");
-            txtViTri.DataBindings.Add("Text", grvQuanLyBan.DataSource, "ViTri");
-            txtTrangThai.DataBindings.Add("Text", grvQuanLyBan.DataSource, "TrangThai");
+            txtID.DataBindings.Add("Text", grvQuanLyBan.DataSource, "Id", true, DataSourceUpdateMode.Never);
+            txtTenBan.DataBindings.Add("Text", grvQuanLyBan.DataSource, "TenBan", true, DataSourceUpdateMode.Never);
+            cboViTri.DataBindings.Add("Text", grvQuanLyBan.DataSource, "ViTri", true, DataSourceUpdateMode.OnPropertyChanged);
+            txtTrangThai.DataBindings.Add("Text", grvQuanLyBan.DataSource, "TrangThai", true, DataSourceUpdateMode.Never);
         }
 
-        // =====================================================================
-        // NÚT CHỨC NĂNG
-        // =====================================================================
         private void btnXem_Click(object sender, EventArgs e)
         {
             LoadListBan();
@@ -110,100 +111,92 @@ namespace QuanLyQuanCaPhe.Forms
                 btnThem.Text = "Lưu";
                 btnSua.Enabled = btnXoa.Enabled = false;
 
+                // 1. GỠ BINDING TRƯỚC
                 txtID.DataBindings.Clear();
                 txtTenBan.DataBindings.Clear();
-                txtViTri.DataBindings.Clear();
+                cboViTri.DataBindings.Clear();
                 txtTrangThai.DataBindings.Clear();
 
+                // 2. MỞ KHÓA CONTROL
+                SetInputReadOnly(false);
+
+                // 3. LÀM TRỐNG VÀ GÁN GIÁ TRỊ MẶC ĐỊNH
                 txtID.Text = "";
                 txtTenBan.Text = "";
-                txtViTri.Text = "";
                 txtTrangThai.Text = "Còn trống";
 
-                SetInputReadOnly(false);
+                // ĐẢM BẢO LOAD LẠI DỮ LIỆU CỨNG VÀ CHỌN
+                KhoiTaoComboBoxViTri();
+                if (cboViTri.Items.Count > 0) cboViTri.SelectedIndex = 0;
+
                 LockControls(true);
                 txtTenBan.Focus();
                 return;
             }
-            // xử lý nhập
-            if (string.IsNullOrEmpty(txtTenBan.Text.Trim()))
-            {
-                MessageBox.Show("Tên bàn không được để trống.");
-                return;
-            }
-            if (string.IsNullOrEmpty(txtViTri.Text.Trim()))
-            {
-                MessageBox.Show("Vị trÍ không được để trống.");
-                return;
-            }
+
+            // XỬ LÝ LƯU (INSERT)
+            if (string.IsNullOrEmpty(txtTenBan.Text.Trim())) { MessageBox.Show("Nhập tên bàn!"); return; }
 
             KiemTraKetNoi();
-            string query = "INSERT INTO Ban (TenBan, ViTri, TrangThai) VALUES (@TenBan, @ViTri, @TrangThai)";
+            string query = "INSERT INTO Ban (TenBan, ViTri, TrangThai) VALUES (@Ten, @VT, @TT)";
             using (SqlCommand cmd = new SqlCommand(query, sqlCon))
             {
-                cmd.Parameters.AddWithValue("@TenBan", txtTenBan.Text.Trim());
-                cmd.Parameters.AddWithValue("@ViTri", txtViTri.Text.Trim());
-                cmd.Parameters.AddWithValue("@TrangThai", txtTrangThai.Text.Trim());
-
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Thêm bàn thành công.");
-                    btnXem_Click(null, null);
-                }
+                cmd.Parameters.AddWithValue("@Ten", txtTenBan.Text.Trim());
+                cmd.Parameters.AddWithValue("@VT", cboViTri.Text);
+                cmd.Parameters.AddWithValue("@TT", txtTrangThai.Text.Trim());
+                cmd.ExecuteNonQuery();
             }
+            MessageBox.Show("Thêm thành công!");
+            btnXem_Click(null, null);
         }
 
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (!isEditing)
             {
-                if (string.IsNullOrEmpty(txtID.Text)) { MessageBox.Show("Vui lòng chọn bàn."); return; }
+                if (string.IsNullOrEmpty(txtID.Text)) return;
                 isEditing = true;
                 btnSua.Text = "Lưu";
                 btnThem.Enabled = btnXoa.Enabled = false;
+
+                // Gỡ binding riêng cho cbo để nó không bị nhảy khi chọn
+                string currentVT = cboViTri.Text;
+                cboViTri.DataBindings.Clear();
+                cboViTri.Text = currentVT;
+
                 SetInputReadOnly(false);
                 LockControls(true);
                 return;
             }
 
+            // XỬ LÝ LƯU (UPDATE)
             KiemTraKetNoi();
-            string query = "UPDATE Ban SET TenBan = @TenBan, ViTri = @ViTri, TrangThai = @TrangThai WHERE Id = @Id";
+            string query = "UPDATE Ban SET TenBan = @Ten, ViTri = @VT, TrangThai = @TT WHERE Id = @Id";
             using (SqlCommand cmd = new SqlCommand(query, sqlCon))
             {
-                cmd.Parameters.AddWithValue("@TenBan", txtTenBan.Text.Trim());
-                cmd.Parameters.AddWithValue("@ViTri", txtViTri.Text.Trim());
-                cmd.Parameters.AddWithValue("@TrangThai", txtTrangThai.Text.Trim());
+                cmd.Parameters.AddWithValue("@Ten", txtTenBan.Text.Trim());
+                cmd.Parameters.AddWithValue("@VT", cboViTri.Text);
+                cmd.Parameters.AddWithValue("@TT", txtTrangThai.Text.Trim());
                 cmd.Parameters.AddWithValue("@Id", txtID.Text);
-
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Cập nhật bàn thành công.");
-                    btnXem_Click(null, null);
-                }
+                cmd.ExecuteNonQuery();
             }
+            MessageBox.Show("Sửa thành công!");
+            btnXem_Click(null, null);
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtID.Text)) return;
-
-            if (MessageBox.Show("Bạn có chắc muốn xóa bàn này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
+            if (MessageBox.Show("Xóa bàn?", "Hỏi", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 KiemTraKetNoi();
                 string query = "DELETE FROM Ban WHERE Id = @Id";
                 using (SqlCommand cmd = new SqlCommand(query, sqlCon))
                 {
                     cmd.Parameters.AddWithValue("@Id", txtID.Text);
-                    if (cmd.ExecuteNonQuery() > 0)
-                    {
-                        // ⭐ Reset Identity
-                        string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM Ban; DBCC CHECKIDENT ('Ban', RESEED, @max);";
-                        using (SqlCommand cmdReset = new SqlCommand(resetQuery, sqlCon)) { cmdReset.ExecuteNonQuery(); }
-
-                        MessageBox.Show("Xóa bàn thành công.");
-                        btnXem_Click(null, null);
-                    }
+                    cmd.ExecuteNonQuery();
                 }
+                btnXem_Click(null, null);
             }
         }
     }

@@ -38,7 +38,6 @@
             this.panel2 = new System.Windows.Forms.Panel();
             this.grvQuanLyBan = new System.Windows.Forms.DataGridView();
             this.panel3 = new System.Windows.Forms.Panel();
-            this.txtViTri = new System.Windows.Forms.TextBox();
             this.txtTrangThai = new System.Windows.Forms.TextBox();
             this.panel8 = new System.Windows.Forms.Panel();
             this.label5 = new System.Windows.Forms.Label();
@@ -50,6 +49,7 @@
             this.panel5 = new System.Windows.Forms.Panel();
             this.label4 = new System.Windows.Forms.Label();
             this.txtTenBan = new System.Windows.Forms.TextBox();
+            this.cboViTri = new System.Windows.Forms.ComboBox();
             this.panel1.SuspendLayout();
             this.panel4.SuspendLayout();
             this.panel2.SuspendLayout();
@@ -183,7 +183,7 @@
             this.panel3.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel3.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(255)))), ((int)(((byte)(224)))), ((int)(((byte)(192)))));
-            this.panel3.Controls.Add(this.txtViTri);
+            this.panel3.Controls.Add(this.cboViTri);
             this.panel3.Controls.Add(this.txtTrangThai);
             this.panel3.Controls.Add(this.panel8);
             this.panel3.Controls.Add(this.txtID);
@@ -196,14 +196,6 @@
             this.panel3.Name = "panel3";
             this.panel3.Size = new System.Drawing.Size(433, 434);
             this.panel3.TabIndex = 5;
-            // 
-            // txtViTri
-            // 
-            this.txtViTri.Location = new System.Drawing.Point(212, 86);
-            this.txtViTri.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
-            this.txtViTri.Name = "txtViTri";
-            this.txtViTri.Size = new System.Drawing.Size(151, 22);
-            this.txtViTri.TabIndex = 13;
             // 
             // txtTrangThai
             // 
@@ -306,6 +298,14 @@
             this.txtTenBan.Size = new System.Drawing.Size(151, 22);
             this.txtTenBan.TabIndex = 1;
             // 
+            // cboViTri
+            // 
+            this.cboViTri.FormattingEnabled = true;
+            this.cboViTri.Location = new System.Drawing.Point(212, 84);
+            this.cboViTri.Name = "cboViTri";
+            this.cboViTri.Size = new System.Drawing.Size(151, 24);
+            this.cboViTri.TabIndex = 13;
+            // 
             // fQuanLyBan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
@@ -316,6 +316,7 @@
             this.Controls.Add(this.panel1);
             this.Controls.Add(this.panel4);
             this.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.MinimumSize = new System.Drawing.Size(900, 600);
             this.Name = "fQuanLyBan";
             this.Text = "Quản Lý Bàn";
             this.panel1.ResumeLayout(false);
@@ -334,7 +335,6 @@
             this.panel5.ResumeLayout(false);
             this.panel5.PerformLayout();
             this.ResumeLayout(false);
-            this.MinimumSize = new System.Drawing.Size(900, 600);
 
         }
 
@@ -361,6 +361,6 @@
         private System.Windows.Forms.Panel panel6;
         private System.Windows.Forms.Panel panel5;
         private System.Windows.Forms.TextBox txtTrangThai;
-        private System.Windows.Forms.TextBox txtViTri;
+        private System.Windows.Forms.ComboBox cboViTri;
     }
 }
