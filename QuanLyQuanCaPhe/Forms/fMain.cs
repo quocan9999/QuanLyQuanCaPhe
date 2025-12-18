@@ -406,8 +406,38 @@ namespace QuanLyQuanCaPhe
 
         private void BtnChuyenBan_Click(object sender, EventArgs e)
         {
-            if (_selectedTableId == -1) return;
-            MessageBox.Show("Cần tạo form fChuyenBan để thực hiện chức năng này.", "Thông báo");
+            // kiểm tra xem người dùng đã chọn bàn chưa
+            if (_selectedTableId == -1)
+            {
+                MessageBox.Show("Vui lòng chọn bàn cần chuyển!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // khởi tạo form chuyển bàn và truyền id bàn hiện tại (bàn cũ) sang
+            fChuyenBan formChuyenBan = new fChuyenBan(_selectedTableId);
+
+            // hiển thị form dưới dạng hộp thoại (dialog) và chờ kết quả
+            if (formChuyenBan.ShowDialog() == DialogResult.OK)
+            {
+                // nếu chuyển bàn thành công:
+
+                // 1. tải lại danh sách bàn để cập nhật màu sắc (bàn cũ thành xám, bàn mới thành xanh)
+                LoadTables();
+
+                // 2. xóa thông tin hóa đơn đang hiển thị bên phải (vì bàn cũ giờ đã trống)
+                ResetInvoiceUI();
+
+                // 3. đặt lại trạng thái lựa chọn về mặc định để tránh nhầm lẫn
+                _selectedTableId = -1;
+                lblInvoiceTitle.Text = "Hóa đơn bàn --";
+
+                // 4. vô hiệu hóa các nút chức năng (vì chưa chọn lại bàn nào)
+                btnMoBan.Enabled = false;
+                btnOrderMon.Enabled = false;
+                btnThanhToan.Enabled = false;
+                btnHuyHoaDon.Enabled = false;
+                btnChuyenBan.Enabled = false;
+            }
         }
 
         private void btnHuyHoaDon_Click(object sender, EventArgs e)

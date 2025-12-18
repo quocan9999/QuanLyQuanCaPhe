@@ -568,3 +568,39 @@ BEGIN
     END
 END
 GO
+
+-- Store Procedure chuyển bàn
+CREATE OR ALTER PROC usp_ChuyenBan
+@idBanCu INT,
+@idBanMoi INT
+AS
+BEGIN
+    DECLARE @idHoaDon INT;
+
+    -- lấy id hóa đơn chưa thanh toán của bàn cũ
+    SELECT @idHoaDon = Id
+    FROM dbo.HoaDon
+    WHERE MaBan = @idBanCu AND TrangThai = N'Chưa thanh toán';
+
+    -- kiểm tra nếu không có hóa đơn thì dừng lại
+    IF (@idHoaDon IS NULL)
+    BEGIN
+        RETURN; 
+    END
+
+    -- chuyển hóa đơn sang bàn mới
+    UPDATE dbo.HoaDon
+    SET MaBan = @idBanMoi
+    WHERE Id = @idHoaDon;
+
+    -- cập nhật trạng thái bàn cũ thành 'còn trống'
+    UPDATE dbo.Ban
+    SET TrangThai = N'Còn trống'
+    WHERE Id = @idBanCu;
+
+    -- cập nhật trạng thái bàn mới thành 'có người'
+    UPDATE dbo.Ban
+    SET TrangThai = N'Có người'
+    WHERE Id = @idBanMoi;
+END
+GO
