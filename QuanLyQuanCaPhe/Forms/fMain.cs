@@ -487,6 +487,19 @@ namespace QuanLyQuanCaPhe
 
                     LoadTables();
                     ResetInvoiceUI();
+
+                    // Reset lại trạng thái lựa chọn để tránh lỗi khi nhấn các nút chức năng
+                    _selectedTableId = -1;
+                    _selectedTableName = "";
+                    lblInvoiceTitle.Text = "Hóa đơn bàn --";
+
+                    // Vô hiệu hóa các nút chức năng vì không còn bàn nào được chọn
+                    btnMoBan.Enabled = false;
+                    btnOrderMon.Enabled = false;
+                    btnThanhToan.Enabled = false;
+                    btnHuyHoaDon.Enabled = false;
+                    btnChuyenBan.Enabled = false;
+
                     MessageBox.Show("Đã hủy bàn thành công.");
                 }
             }
