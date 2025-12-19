@@ -336,6 +336,66 @@ BEGIN
 END
 GO
 
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 4.2. Trigger: Tự động tạo hồ sơ nhân viên khi tạo tài khoản mới
+-- ═══════════════════════════════════════════════════════════════════════════════
+CREATE OR ALTER TRIGGER trg_TaoNhanVienKhiTaoTaiKhoan
+ON NguoiDung
+AFTER INSERT
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Tạo hồ sơ nhân viên mặc định cho tài khoản mới
+    INSERT INTO NhanVien (HoTen, GioiTinh, NgaySinh, SDT, Email, DiaChi, Luong, TenDangNhap, TrangThai)
+    SELECT 
+        N'Nhân viên mới - ' + i.TenDangNhap,    -- Họ tên mặc định
+        N'Nam',                                   -- Giới tính mặc định
+        DATEADD(YEAR, -20, GETDATE()),           -- Ngày sinh mặc định (20 tuổi)
+        '0000000000',                             -- SĐT tạm thời (cần cập nhật sau)
+        i.TenDangNhap + '@coffee.vn',            -- Email tạm thời
+        N'Chưa cập nhật',                        -- Địa chỉ mặc định
+        0,                                        -- Lương mặc định
+        i.TenDangNhap,                           -- Liên kết với tài khoản
+        CASE 
+            WHEN i.TrangThai = N'Hoạt động' THEN N'Hoạt động'
+            ELSE N'Đã nghỉ việc'
+        END                                      -- Trạng thái theo tài khoản
+    FROM inserted i
+    WHERE NOT EXISTS (
+        SELECT 1 FROM NhanVien nv WHERE nv.TenDangNhap = i.TenDangNhap
+    );
+END
+GO
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 4.3. Trigger: Tự động cập nhật trạng thái nhân viên khi khóa tài khoản
+-- ═══════════════════════════════════════════════════════════════════════════════
+CREATE OR ALTER TRIGGER trg_CapNhatTrangThaiNhanVien
+ON NguoiDung
+AFTER UPDATE
+AS
+BEGIN
+    SET NOCOUNT ON;
+
+    -- Nếu tài khoản bị khóa, cập nhật nhân viên thành "Đã nghỉ việc"
+    UPDATE NhanVien
+    SET TrangThai = N'Đã nghỉ việc'
+    FROM NhanVien nv
+    INNER JOIN inserted i ON nv.TenDangNhap = i.TenDangNhap
+    INNER JOIN deleted d ON i.TenDangNhap = d.TenDangNhap
+    WHERE i.TrangThai = N'Đã khóa' AND d.TrangThai = N'Hoạt động';
+
+    -- Nếu tài khoản được mở khóa, cập nhật nhân viên thành "Hoạt động"
+    UPDATE NhanVien
+    SET TrangThai = N'Hoạt động'
+    FROM NhanVien nv
+    INNER JOIN inserted i ON nv.TenDangNhap = i.TenDangNhap
+    INNER JOIN deleted d ON i.TenDangNhap = d.TenDangNhap
+    WHERE i.TrangThai = N'Hoạt động' AND d.TrangThai = N'Đã khóa';
+END
+GO
+
 
 -- ████████████████████████████████████████████████████████████████████████████████
 -- █                         5. STORED PROCEDURES                                 █

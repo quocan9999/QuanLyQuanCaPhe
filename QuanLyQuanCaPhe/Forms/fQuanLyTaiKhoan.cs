@@ -225,6 +225,12 @@ namespace QuanLyQuanCaPhe.Forms
 
             try
             {
+                // Lấy trạng thái cũ để so sánh
+                string queryGetOldStatus = "SELECT TrangThai FROM NguoiDung WHERE TenDangNhap = @TenDangNhap";
+                object oldStatusObj = dataProvider.ExecuteScalar(queryGetOldStatus, new SqlParameter[] { new SqlParameter("@TenDangNhap", selectedTenDangNhap) });
+                string trangThaiCu = oldStatusObj?.ToString() ?? "";
+                string trangThaiMoi = cboTrangThai.Text;
+
                 // Cập nhật TenDangNhap, MatKhau, VaiTro và TrangThai
                 string query = "UPDATE NguoiDung SET TenDangNhap = @TenDangNhapMoi, MatKhau = @MatKhau, VaiTro = @VaiTro, TrangThai = @TrangThai WHERE TenDangNhap = @TenDangNhapCu";
                 SqlParameter[] parameters = new SqlParameter[]
@@ -233,12 +239,36 @@ namespace QuanLyQuanCaPhe.Forms
                     new SqlParameter("@TenDangNhapMoi", txtTenDangNhap.Text.Trim()),
                     new SqlParameter("@MatKhau", txtMatKhau.Text),
                     new SqlParameter("@VaiTro", cboVaiTro.Text),
-                    new SqlParameter("@TrangThai", cboTrangThai.Text)
+                    new SqlParameter("@TrangThai", trangThaiMoi)
                 };
 
                 int result = dataProvider.ExecuteNonQuery(query, parameters);
                 if (result > 0)
                 {
+                    // Nếu trạng thái thay đổi, cập nhật trạng thái nhân viên tương ứng
+                    if (trangThaiCu != trangThaiMoi)
+                    {
+                        string trangThaiNhanVien = "";
+                        if (trangThaiMoi == "Đã khóa")
+                        {
+                            trangThaiNhanVien = "Đã nghỉ việc";
+                        }
+                        else if (trangThaiMoi == "Hoạt động")
+                        {
+                            trangThaiNhanVien = "Hoạt động";
+                        }
+
+                        if (!string.IsNullOrEmpty(trangThaiNhanVien))
+                        {
+                            string queryUpdateNV = "UPDATE NhanVien SET TrangThai = @TrangThai WHERE TenDangNhap = @TenDangNhap";
+                            dataProvider.ExecuteNonQuery(queryUpdateNV, new SqlParameter[]
+                            {
+                                new SqlParameter("@TrangThai", trangThaiNhanVien),
+                                new SqlParameter("@TenDangNhap", txtTenDangNhap.Text.Trim())
+                            });
+                        }
+                    }
+
                     MessageBox.Show("Cập nhật tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
                     LoadDanhSachNguoiDung();
                     SetDefaultValues();

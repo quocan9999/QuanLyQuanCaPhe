@@ -179,6 +179,12 @@
     <Compile Include="Forms\fQuanLyDanhMuc.Designer.cs">
       <DependentUpon>fQuanLyDanhMuc.cs</DependentUpon>
     </Compile>
+    <Compile Include="Forms\fQuanLyNhanVien.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Forms\fQuanLyNhanVien.Designer.cs">
+      <DependentUpon>fQuanLyNhanVien.cs</DependentUpon>
+    </Compile>
     <Compile Include="Forms\fQuanLySanPham.cs">
       <SubType>Form</SubType>
     </Compile>
@@ -308,6 +314,7 @@
   <ItemGroup>
     <Content Include="Database\DuLieuMau.sql" />
     <Content Include="Database\newquery.sql" />
+    <Content Include="Database\Procedure\trg_TaoNhanVienKhiTaoTaiKhoan.sql" />
     <Content Include="Database\Procedure\usp_GetTableList.sql" />
     <Content Include="Database\Procedure\usp_Login.sql" />
     <Content Include="Database\QuanLyCaPhe_data.sql" />

@@ -741,5 +741,18 @@ namespace QuanLyQuanCaPhe
         {
             if (string.IsNullOrWhiteSpace(txtChatInput.Text)) txtChatInput.Text = "Nhập câu hỏi...";
         }
+
+        private void tsmiQuanLyNhanVien_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fQuanLyNhanVien f = new fQuanLyNhanVien();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
     }
 }
