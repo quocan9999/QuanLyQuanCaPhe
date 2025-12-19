@@ -97,6 +97,29 @@ namespace QuanLyQuanCaPhe.Forms
             catch { }
         }
 
+        // Kiểm tra tên sản phẩm đã tồn tại chưa
+        private bool KiemTraTrungTenSanPham(string tenSanPham, int? idHienTai = null)
+        {
+            string querySanPham = "SELECT COUNT(*) FROM SanPham WHERE LOWER(LTRIM(RTRIM(TenSP))) = LOWER(@ten)";
+
+            // Nếu đang sửa, loại trừ bản ghi hiện tại
+            if (idHienTai.HasValue)
+            {
+                querySanPham += " AND Id != @id";
+                SqlParameter[] paramsSanPham = new SqlParameter[]
+                {
+                    new SqlParameter("@ten", tenSanPham.Trim()),
+                    new SqlParameter("@id", idHienTai.Value)
+                };
+                return (int)DataProvider.Instance.ExecuteScalar(querySanPham, paramsSanPham) > 0;
+            }
+            else
+            {
+                SqlParameter[] paramsSanPham = new SqlParameter[] { new SqlParameter("@ten", tenSanPham.Trim()) };
+                return (int)DataProvider.Instance.ExecuteScalar(querySanPham, paramsSanPham) > 0;
+            }
+        }
+
         // ================
         // NÚT XEM
         // ==================
@@ -147,6 +170,14 @@ namespace QuanLyQuanCaPhe.Forms
             if (!float.TryParse(txtGia.Text, out float gia)) { MessageBox.Show("Nhập giá là số ."); return; }
             if (string.IsNullOrEmpty(txtDVT.Text)) { MessageBox.Show(" Đon vị tính không được để trống."); return; }
 
+            // Kiểm tra trùng tên sản phẩm
+            if (KiemTraTrungTenSanPham(txtTenSanPham.Text))
+            {
+                MessageBox.Show($"Sản phẩm '{txtTenSanPham.Text.Trim()}' đã tồn tại.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenSanPham.Focus();
+                return;
+            }
+
             try
             {
                 string query = "INSERT INTO SanPham (TenSP, DonGia, DonViTinh, MaDanhMuc, TrangThai) VALUES (@ten, @gia, @dvt, @madm, @tt)";
@@ -186,6 +217,15 @@ namespace QuanLyQuanCaPhe.Forms
 
             // Xử lý LƯU SỬA
             if (!int.TryParse(txtID.Text, out int id)) return;
+
+            // Kiểm tra trùng tên sản phẩm
+            if (KiemTraTrungTenSanPham(txtTenSanPham.Text, id))
+            {
+                MessageBox.Show($"Sản phẩm '{txtTenSanPham.Text.Trim()}' đã tồn tại.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenSanPham.Focus();
+                return;
+            }
+
             try
             {
                 string query = "UPDATE SanPham SET TenSP=@ten, DonGia=@gia, DonViTinh=@dvt, MaDanhMuc=@madm, TrangThai=@tt WHERE Id=@id";

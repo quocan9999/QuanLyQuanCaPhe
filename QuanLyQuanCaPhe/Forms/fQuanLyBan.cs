@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.SqlClient;
+using System.Text.RegularExpressions;
 using System.Windows.Forms;
 
 namespace QuanLyQuanCaPhe.Forms
@@ -73,6 +74,43 @@ namespace QuanLyQuanCaPhe.Forms
             txtTrangThai.DataBindings.Add("Text", grvQuanLyBan.DataSource, "TrangThai");
         }
 
+        // Chuyển tên bàn nếu là bàn 01, 001, .... thì chuyển thành bàn 1
+        private string ChuanHoaTenBan(string tenBan)
+        {
+            if (string.IsNullOrEmpty(tenBan)) return "";
+
+            // Loại bỏ số 0 đứng trước, còn lại giữ nguyên
+            return Regex.Replace(tenBan.Trim(), @"(\d+)", m =>
+            {
+                return int.Parse(m.Value).ToString();
+            });
+        }
+
+        // Kiểm tra tên bàn đã tồn tại trong cùng khu vực chưa
+        private bool KiemTraTrungTenBan(string tenBan, string viTri, int? idHienTai = null)
+        {
+            string tenBanChuanHoa = ChuanHoaTenBan(tenBan).ToLower();
+
+            string query = "SELECT Id, TenBan FROM Ban WHERE ViTri = @ViTri";
+            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@ViTri", viTri.Trim()) };
+            DataTable data = DataProvider.Instance.ExecuteQuery(query, parameters);
+
+            foreach (DataRow row in data.Rows)
+            {
+                int id = Convert.ToInt32(row["Id"]);
+                string tenBanTrongDB = row["TenBan"].ToString();
+
+                if (idHienTai.HasValue && id == idHienTai.Value)
+                    continue;
+
+                // So sánh tên đã chuẩn hóa (không phân biệt hoa thường)
+                if (ChuanHoaTenBan(tenBanTrongDB).ToLower() == tenBanChuanHoa)
+                    return true;
+            }
+
+            return false;
+        }
+
         // =====================================================================
         // NÚT CHỨC NĂNG
         // =====================================================================
@@ -123,10 +161,20 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
+            string tenBanDaXuLy = ChuanHoaTenBan(txtTenBan.Text);
+
+            // Kiểm tra trùng tên bàn trong cùng khu vực
+            if (KiemTraTrungTenBan(tenBanDaXuLy, txtViTri.Text))
+            {
+                MessageBox.Show($"Tên bàn '{tenBanDaXuLy}' đã tồn tại trong khu vực '{txtViTri.Text.Trim()}'.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenBan.Focus();
+                return;
+            }
+
             string query = "INSERT INTO Ban (TenBan, ViTri, TrangThai) VALUES (@TenBan, @ViTri, @TrangThai)";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@TenBan", txtTenBan.Text.Trim()),
+                new SqlParameter("@TenBan", tenBanDaXuLy),
                 new SqlParameter("@ViTri", txtViTri.Text.Trim()),
                 new SqlParameter("@TrangThai", txtTrangThai.Text.Trim())
             };
@@ -151,10 +199,20 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
+            string tenBanDaXuLy = ChuanHoaTenBan(txtTenBan.Text);
+
+            int idHienTai = int.Parse(txtID.Text);
+            if (KiemTraTrungTenBan(tenBanDaXuLy, txtViTri.Text, idHienTai))
+            {
+                MessageBox.Show($"Tên bàn '{tenBanDaXuLy}' đã tồn tại trong khu vực '{txtViTri.Text.Trim()}'.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                txtTenBan.Focus();
+                return;
+            }
+
             string query = "UPDATE Ban SET TenBan = @TenBan, ViTri = @ViTri, TrangThai = @TrangThai WHERE Id = @Id";
             SqlParameter[] parameters = new SqlParameter[]
             {
-                new SqlParameter("@TenBan", txtTenBan.Text.Trim()),
+                new SqlParameter("@TenBan", tenBanDaXuLy),
                 new SqlParameter("@ViTri", txtViTri.Text.Trim()),
                 new SqlParameter("@TrangThai", txtTrangThai.Text.Trim()),
                 new SqlParameter("@Id", txtID.Text)
