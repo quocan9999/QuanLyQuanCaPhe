@@ -16,6 +16,8 @@ namespace QuanLyQuanCaPhe.Forms
             _tenDangNhap = tenDangNhap;
         }
 
+        #region TẢI VÀ HIỂN THỊ THÔNG TIN NHÂN VIÊN
+
         private void fThongTinCaNhan_Load(object sender, EventArgs e)
         {
             HienThiThongTinNhanVien();
@@ -63,9 +65,15 @@ namespace QuanLyQuanCaPhe.Forms
             lblDiaChiValue.Text = dongThongTin["DiaChi"]?.ToString() ?? "--";
         }
 
+        #endregion
+
+        #region ĐÓNG FORM
+
         private void btnDong_Click(object sender, EventArgs e)
         {
             Close();
         }
+
+        #endregion
     }
 }

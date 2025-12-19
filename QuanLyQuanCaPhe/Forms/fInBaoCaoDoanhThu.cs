@@ -21,6 +21,8 @@ namespace QuanLyQuanCaPhe.Forms
             this.dtDoanhThu = dtDoanhThu;
         }
 
+        #region TẢI VÀ HIỂN THỊ BÁO CÁO
+
         private void fInBaoCaoDoanhThu_Load(object sender, EventArgs e)
         {
             TaiBaoCaoLenReport();
@@ -78,5 +80,7 @@ namespace QuanLyQuanCaPhe.Forms
                 MessageBox.Show("Lỗi khi tải báo cáo: " + ex.Message, "Lỗi");
             }
         }
+
+        #endregion
     }
 }

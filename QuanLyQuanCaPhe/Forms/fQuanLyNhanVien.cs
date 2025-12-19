@@ -18,13 +18,47 @@ namespace QuanLyQuanCaPhe.Forms
             dataProvider = DataProvider.Instance;
         }
 
+        #region KHỞI TẠO VÀ TẢI FORM
+
         private void fQuanLyNhanVien_Load(object sender, EventArgs e)
         {
             LoadDanhSachNhanVien();
             SetDefaultValues();
         }
 
-        // Load danh sách nhân viên từ database
+        private void SetDefaultValues()
+        {
+            txtHoTen.Clear();
+            cboGioiTinh.SelectedIndex = 0;
+            dtpNgaySinh.Value = DateTime.Now.AddYears(-20);
+            txtSDT.Clear();
+            txtEmail.Clear();
+            txtDiaChi.Clear();
+            nudLuong.Value = 0;
+            txtTenDangNhap.Clear();
+            txtTrangThai.Clear();
+            selectedNhanVienId = -1;
+            SetControlsEnabled(false);
+        }
+
+        private void SetControlsEnabled(bool enabled)
+        {
+            txtHoTen.Enabled = enabled;
+            cboGioiTinh.Enabled = enabled;
+            dtpNgaySinh.Enabled = enabled;
+            txtSDT.Enabled = enabled;
+            txtEmail.Enabled = enabled;
+            txtDiaChi.Enabled = enabled;
+            nudLuong.Enabled = enabled;
+            txtTenDangNhap.Enabled = false;
+            txtTrangThai.Enabled = false;
+            btnSua.Enabled = enabled;
+        }
+
+        #endregion
+
+        #region TẢI DỮ LIỆU
+
         private void LoadDanhSachNhanVien()
         {
             try
@@ -47,8 +81,6 @@ namespace QuanLyQuanCaPhe.Forms
                     dgvNhanVien.Columns["Luong"].HeaderText = "Lương";
                     dgvNhanVien.Columns["TenDangNhap"].HeaderText = "Tên đăng nhập";
                     dgvNhanVien.Columns["TrangThai"].HeaderText = "Trạng thái";
-
-                    // Định dạng cột lương
                     dgvNhanVien.Columns["Luong"].DefaultCellStyle.Format = "N0";
                     dgvNhanVien.Columns["Luong"].DefaultCellStyle.Alignment = DataGridViewContentAlignment.MiddleRight;
                 }
@@ -59,42 +91,10 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
-        // Đặt giá trị mặc định cho các controls
-        private void SetDefaultValues()
-        {
-            txtHoTen.Clear();
-            cboGioiTinh.SelectedIndex = 0;
-            dtpNgaySinh.Value = DateTime.Now.AddYears(-20);
-            txtSDT.Clear();
-            txtEmail.Clear();
-            txtDiaChi.Clear();
-            nudLuong.Value = 0;
-            txtTenDangNhap.Clear();
-            txtTrangThai.Clear();
-            selectedNhanVienId = -1;
+        #endregion
 
-            // Disable các control cho đến khi chọn nhân viên
-            SetControlsEnabled(false);
-        }
+        #region KIỂM TRA DỮ LIỆU
 
-        private void SetControlsEnabled(bool enabled)
-        {
-            txtHoTen.Enabled = enabled;
-            cboGioiTinh.Enabled = enabled;
-            dtpNgaySinh.Enabled = enabled;
-            txtSDT.Enabled = enabled;
-            txtEmail.Enabled = enabled;
-            txtDiaChi.Enabled = enabled;
-            nudLuong.Enabled = enabled;
-            
-            // Tên đăng nhập và trạng thái không được sửa
-            txtTenDangNhap.Enabled = false;
-            txtTrangThai.Enabled = false;
-            
-            btnSua.Enabled = enabled;
-        }
-
-        // Xác thực dữ liệu nhập vào
         private bool ValidateInput()
         {
             if (string.IsNullOrWhiteSpace(txtHoTen.Text))
@@ -103,39 +103,37 @@ namespace QuanLyQuanCaPhe.Forms
                 txtHoTen.Focus();
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtSDT.Text))
             {
                 MessageBox.Show("Vui lòng nhập số điện thoại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtSDT.Focus();
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtEmail.Text))
             {
                 MessageBox.Show("Vui lòng nhập email!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtEmail.Focus();
                 return false;
             }
-
             if (string.IsNullOrWhiteSpace(txtDiaChi.Text))
             {
                 MessageBox.Show("Vui lòng nhập địa chỉ!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 txtDiaChi.Focus();
                 return false;
             }
-
             if (dtpNgaySinh.Value >= DateTime.Now)
             {
                 MessageBox.Show("Ngày sinh phải nhỏ hơn ngày hiện tại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 dtpNgaySinh.Focus();
                 return false;
             }
-
             return true;
         }
 
-        // Sự kiện click vào cell trong DataGridView
+        #endregion
+
+        #region CHỌN VÀ CẬP NHẬT NHÂN VIÊN
+
         private void dgvNhanVien_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0)
@@ -151,13 +149,10 @@ namespace QuanLyQuanCaPhe.Forms
                 nudLuong.Value = Convert.ToDecimal(row.Cells["Luong"].Value);
                 txtTenDangNhap.Text = row.Cells["TenDangNhap"].Value?.ToString() ?? "";
                 txtTrangThai.Text = row.Cells["TrangThai"].Value.ToString();
-
-                // Bật các control để sửa
                 SetControlsEnabled(true);
             }
         }
 
-        // Sửa thông tin nhân viên
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (selectedNhanVienId == -1)
@@ -165,50 +160,27 @@ namespace QuanLyQuanCaPhe.Forms
                 MessageBox.Show("Vui lòng chọn nhân viên cần sửa!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
-            if (!ValidateInput())
-                return;
+            if (!ValidateInput()) return;
 
             try
             {
-                // Kiểm tra trùng SĐT
                 string queryCheckSDT = "SELECT COUNT(*) FROM NhanVien WHERE SDT = @SDT AND Id != @Id";
-                object resultSDT = dataProvider.ExecuteScalar(queryCheckSDT, new SqlParameter[]
-                {
-                    new SqlParameter("@SDT", txtSDT.Text.Trim()),
-                    new SqlParameter("@Id", selectedNhanVienId)
-                });
+                object resultSDT = dataProvider.ExecuteScalar(queryCheckSDT, new SqlParameter[] { new SqlParameter("@SDT", txtSDT.Text.Trim()), new SqlParameter("@Id", selectedNhanVienId) });
                 if (Convert.ToInt32(resultSDT) > 0)
                 {
                     MessageBox.Show("Số điện thoại đã tồn tại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    txtSDT.Focus();
                     return;
                 }
 
-                // Kiểm tra trùng Email
                 string queryCheckEmail = "SELECT COUNT(*) FROM NhanVien WHERE Email = @Email AND Id != @Id";
-                object resultEmail = dataProvider.ExecuteScalar(queryCheckEmail, new SqlParameter[]
-                {
-                    new SqlParameter("@Email", txtEmail.Text.Trim()),
-                    new SqlParameter("@Id", selectedNhanVienId)
-                });
+                object resultEmail = dataProvider.ExecuteScalar(queryCheckEmail, new SqlParameter[] { new SqlParameter("@Email", txtEmail.Text.Trim()), new SqlParameter("@Id", selectedNhanVienId) });
                 if (Convert.ToInt32(resultEmail) > 0)
                 {
                     MessageBox.Show("Email đã tồn tại!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-                    txtEmail.Focus();
                     return;
                 }
 
-                // Cập nhật thông tin nhân viên
-                string query = @"UPDATE NhanVien SET 
-                                HoTen = @HoTen, 
-                                GioiTinh = @GioiTinh, 
-                                NgaySinh = @NgaySinh, 
-                                SDT = @SDT, 
-                                Email = @Email, 
-                                DiaChi = @DiaChi, 
-                                Luong = @Luong 
-                                WHERE Id = @Id";
+                string query = @"UPDATE NhanVien SET HoTen = @HoTen, GioiTinh = @GioiTinh, NgaySinh = @NgaySinh, SDT = @SDT, Email = @Email, DiaChi = @DiaChi, Luong = @Luong WHERE Id = @Id";
                 SqlParameter[] parameters = new SqlParameter[]
                 {
                     new SqlParameter("@HoTen", txtHoTen.Text.Trim()),
@@ -235,7 +207,10 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
-        // Làm mới form
+        #endregion
+
+        #region TÌM KIẾM VÀ LÀM MỚI
+
         private void btnLamMoi_Click(object sender, EventArgs e)
         {
             SetDefaultValues();
@@ -243,43 +218,25 @@ namespace QuanLyQuanCaPhe.Forms
             LoadDanhSachNhanVien();
         }
 
-        // Tìm kiếm nhân viên
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             try
             {
                 string searchText = txtTimKiem.Text.Trim();
-                if (string.IsNullOrEmpty(searchText))
-                {
-                    LoadDanhSachNhanVien();
-                    return;
-                }
+                if (string.IsNullOrEmpty(searchText)) { LoadDanhSachNhanVien(); return; }
 
-                string query = @"SELECT nv.Id, nv.HoTen, nv.GioiTinh, nv.NgaySinh, nv.SDT, nv.Email, 
-                                nv.DiaChi, nv.Luong, nv.TenDangNhap, nv.TrangThai 
-                                FROM NhanVien nv 
-                                WHERE nv.HoTen LIKE @SearchText 
-                                OR nv.SDT LIKE @SearchText 
-                                OR nv.Email LIKE @SearchText 
-                                OR nv.TenDangNhap LIKE @SearchText
-                                ORDER BY nv.Id";
-                SqlParameter[] parameters = new SqlParameter[]
-                {
-                    new SqlParameter("@SearchText", "%" + searchText + "%")
-                };
-
+                string query = @"SELECT nv.Id, nv.HoTen, nv.GioiTinh, nv.NgaySinh, nv.SDT, nv.Email, nv.DiaChi, nv.Luong, nv.TenDangNhap, nv.TrangThai FROM NhanVien nv WHERE nv.HoTen LIKE @SearchText OR nv.SDT LIKE @SearchText OR nv.Email LIKE @SearchText OR nv.TenDangNhap LIKE @SearchText ORDER BY nv.Id";
+                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@SearchText", "%" + searchText + "%") };
                 DataTable dt = dataProvider.ExecuteQuery(query, parameters);
                 dgvNhanVien.DataSource = dt;
-
-                if (dt.Rows.Count == 0)
-                {
-                    MessageBox.Show("Không tìm thấy kết quả!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-                }
+                if (dt.Rows.Count == 0) MessageBox.Show("Không tìm thấy kết quả!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
             }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi tìm kiếm: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion
     }
 }

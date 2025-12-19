@@ -30,6 +30,8 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
+        #region TẢI DỮ LIỆU BÁO CÁO
+
         private void BaoCaoBanChay_Load(object sender, EventArgs e)
         {
             try
@@ -96,6 +98,24 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
+        // Nút Tải lại dữ liệu
+        private void btnTaiLai_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadBaoCao();
+                MessageBox.Show("Đã tải lại dữ liệu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải lại dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #endregion
+
+        #region THỐNG KÊ & HIỂN THỊ
+
         // Tính toán thống kê
         private void CalculateStatistics(DataTable dt)
         {
@@ -149,6 +169,10 @@ namespace QuanLyQuanCaPhe.Forms
                 // Không cần hiển thị lỗi cho việc tô màu
             }
         }
+
+        #endregion
+
+        #region VẼ BIỂU ĐỒ
 
         // Vẽ biểu đồ
         private void DrawChart(DataTable dt)
@@ -217,19 +241,9 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
-        // Nút Tải lại dữ liệu
-        private void btnTaiLai_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                LoadBaoCao();
-                MessageBox.Show("Đã tải lại dữ liệu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi khi tải lại dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        #endregion
+
+        #region XUẤT BÁO CÁO
 
         // Nút Xuất Excel
         private void btnXuatExcel_Click(object sender, EventArgs e)
@@ -323,5 +337,7 @@ namespace QuanLyQuanCaPhe.Forms
                 throw new Exception("Lỗi khi ghi file: " + ex.Message);
             }
         }
+
+        #endregion
     }
 }

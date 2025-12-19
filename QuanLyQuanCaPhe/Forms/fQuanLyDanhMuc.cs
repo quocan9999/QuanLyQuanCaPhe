@@ -17,6 +17,8 @@ namespace QuanLyQuanCaPhe.Forms
             InitializeComponent();
         }
 
+        #region XỬ LÝ GIAO DIỆN
+
         private void SetInputReadOnly(bool state)
         {
             txtDanhMuc.ReadOnly = state;
@@ -34,11 +36,10 @@ namespace QuanLyQuanCaPhe.Forms
             LoadData();
         }
 
-        // ===================
-        // DỮ LIỆU
-        // ===================
+        #endregion
 
-        // Load dữ liệu và reset trạng thái form
+        #region TẢI DỮ LIỆU
+
         private void LoadData()
         {
             LoadListDanhMuc();
@@ -76,9 +77,9 @@ namespace QuanLyQuanCaPhe.Forms
             txtDanhMuc.DataBindings.Add("Text", grvDanhMuc.DataSource, "TenDanhMuc");
         }
 
-        // ========================
-        // CÁC NÚT CHỨC NĂNG
-        // ========================
+        #endregion
+
+        #region THÊM - SỬA - XÓA DANH MỤC
 
         private void btnThem_Click(object sender, EventArgs e)
         {
@@ -87,12 +88,10 @@ namespace QuanLyQuanCaPhe.Forms
                 isAdding = true;
                 btnThem.Text = "Lưu";
                 btnSua.Enabled = btnXoa.Enabled = false;
-
                 txtID.DataBindings.Clear();
                 txtDanhMuc.DataBindings.Clear();
                 txtID.Text = "";
                 txtDanhMuc.Text = "";
-
                 SetInputReadOnly(false);
                 LockControls(true);
                 txtDanhMuc.Focus();
@@ -102,7 +101,6 @@ namespace QuanLyQuanCaPhe.Forms
             string ten = txtDanhMuc.Text.Trim();
             if (string.IsNullOrEmpty(ten)) { MessageBox.Show("Tên danh mục không được trống."); return; }
 
-            // Kiểm tra trùng tên
             string checkQuery = "SELECT COUNT(*) FROM DanhMuc WHERE TenDanhMuc = @ten";
             SqlParameter[] checkParams = new SqlParameter[] { new SqlParameter("@ten", ten) };
             if ((int)DataProvider.Instance.ExecuteScalar(checkQuery, checkParams) > 0)
@@ -113,7 +111,6 @@ namespace QuanLyQuanCaPhe.Forms
 
             string query = "INSERT INTO DanhMuc (TenDanhMuc) VALUES (@ten)";
             SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@ten", ten) };
-
             if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
             {
                 MessageBox.Show("Thêm thành công.");
@@ -140,7 +137,6 @@ namespace QuanLyQuanCaPhe.Forms
                 new SqlParameter("@ten", txtDanhMuc.Text.Trim()),
                 new SqlParameter("@id", txtID.Text)
             };
-
             if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
             {
                 MessageBox.Show("Cập nhật thành công.");
@@ -151,20 +147,16 @@ namespace QuanLyQuanCaPhe.Forms
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtID.Text)) return;
-
             if (MessageBox.Show("Bạn có chắc muốn xóa?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 try
                 {
                     string query = "DELETE FROM DanhMuc WHERE Id = @id";
                     SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@id", txtID.Text) };
-
                     if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
                     {
-                        // Reset ID
                         string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM DanhMuc; DBCC CHECKIDENT ('DanhMuc', RESEED, @max);";
                         DataProvider.Instance.ExecuteNonQuery(resetQuery);
-
                         MessageBox.Show("Xóa thành công.");
                         LoadData();
                     }
@@ -175,5 +167,7 @@ namespace QuanLyQuanCaPhe.Forms
                 }
             }
         }
+
+        #endregion
     }
 }

@@ -20,6 +20,8 @@ namespace QuanLyQuanCaPhe
             this.loaiGiamInput = loaiGiam;
         }
 
+        #region TẢI VÀ HIỂN THỊ BÁO CÁO HÓA ĐƠN
+
         private void fInHoaDon_Load(object sender, EventArgs e)
         {
             TaiHoaDonLenBaoCao();
@@ -92,5 +94,7 @@ namespace QuanLyQuanCaPhe
                 MessageBox.Show("Lỗi: " + ex.Message);
             }
         }
+
+        #endregion
     }
 }

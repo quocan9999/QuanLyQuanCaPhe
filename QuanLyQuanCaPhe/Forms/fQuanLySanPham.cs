@@ -18,19 +18,17 @@ namespace QuanLyQuanCaPhe.Forms
             InitializeComponent();
         }
 
+        #region XỬ LÝ GIAO DIỆN
+
         private void fQuanLySanPham_Load(object sender, EventArgs e)
         {
             txtID.ReadOnly = true;
             SetInputReadOnly(true);
             LockControls(false);
-
             LoadDanhMucComBoBox(cboDanhMuc);
             LoadData();
         }
 
-        // ==========================
-        //QUẢN LÝ GIAO DIỆN 
-        // ==========================
         private void SetInputReadOnly(bool state)
         {
             txtTenSanPham.ReadOnly = state;
@@ -45,11 +43,10 @@ namespace QuanLyQuanCaPhe.Forms
             grvMon.Enabled = !lockState; 
         }
 
-        // ===========================
-        // DỮ LIỆU 
-        // ===========================
+        #endregion
 
-        // Load dữ liệu và reset trạng thái form
+        #region TẢI DỮ LIỆU
+
         private void LoadData()
         {
             LoadListSanPham();
@@ -112,20 +109,17 @@ namespace QuanLyQuanCaPhe.Forms
             catch { }
         }
 
-        // Kiểm tra tên sản phẩm đã tồn tại chưa
+        #endregion
+
+        #region KIỂM TRA DỮ LIỆU
+
         private bool KiemTraTrungTenSanPham(string tenSanPham, int? idHienTai = null)
         {
             string querySanPham = "SELECT COUNT(*) FROM SanPham WHERE LOWER(LTRIM(RTRIM(TenSP))) = LOWER(@ten)";
-
-            // Nếu đang sửa, loại trừ bản ghi hiện tại
             if (idHienTai.HasValue)
             {
                 querySanPham += " AND Id != @id";
-                SqlParameter[] paramsSanPham = new SqlParameter[]
-                {
-                    new SqlParameter("@ten", tenSanPham.Trim()),
-                    new SqlParameter("@id", idHienTai.Value)
-                };
+                SqlParameter[] paramsSanPham = new SqlParameter[] { new SqlParameter("@ten", tenSanPham.Trim()), new SqlParameter("@id", idHienTai.Value) };
                 return (int)DataProvider.Instance.ExecuteScalar(querySanPham, paramsSanPham) > 0;
             }
             else
@@ -135,9 +129,9 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
-        // =====================================================================
-        // NÚT CHỨC NĂNG
-        // =====================================================================
+        #endregion
+
+        #region THÊM SẢN PHẨM
 
         private void btnThem_Click(object sender, EventArgs e)
         {
@@ -146,36 +140,29 @@ namespace QuanLyQuanCaPhe.Forms
                 isAdding = true;
                 btnThem.Text = "Lưu";
                 btnSua.Enabled = btnXoa.Enabled = false;
-
                 txtID.DataBindings.Clear();
                 txtTenSanPham.DataBindings.Clear();
                 txtGia.DataBindings.Clear();
                 txtDVT.DataBindings.Clear();
                 txtTrangThai.DataBindings.Clear();
                 cboDanhMuc.DataBindings.Clear();
-
                 txtID.Text = "";
                 txtTenSanPham.Text = "";
                 txtGia.Text = "";
                 txtDVT.Text = "";
                 txtTrangThai.Text = "Còn bán";
-
                 SetInputReadOnly(false);
                 LockControls(true);
                 txtTenSanPham.Focus();
                 return;
             }
 
-            // Xử lý LƯU THÊM
             if (string.IsNullOrEmpty(txtTenSanPham.Text)) { MessageBox.Show("Tên không được để trống."); return; }
-            if (!float.TryParse(txtGia.Text, out float gia)) { MessageBox.Show("Nhập giá là số ."); return; }
-            if (string.IsNullOrEmpty(txtDVT.Text)) { MessageBox.Show(" Đon vị tính không được để trống."); return; }
-
-            // Kiểm tra trùng tên sản phẩm
+            if (!float.TryParse(txtGia.Text, out float gia)) { MessageBox.Show("Nhập giá là số."); return; }
+            if (string.IsNullOrEmpty(txtDVT.Text)) { MessageBox.Show("Đơn vị tính không được để trống."); return; }
             if (KiemTraTrungTenSanPham(txtTenSanPham.Text))
             {
-                MessageBox.Show($"Sản phẩm '{txtTenSanPham.Text.Trim()}' đã tồn tại.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtTenSanPham.Focus();
+                MessageBox.Show($"Sản phẩm '{txtTenSanPham.Text.Trim()}' đã tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -190,19 +177,15 @@ namespace QuanLyQuanCaPhe.Forms
                     new SqlParameter("@madm", cboDanhMuc.SelectedValue),
                     new SqlParameter("@tt", txtTrangThai.Text.Trim())
                 };
-
-                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
-                {
-                    MessageBox.Show("Thêm thành công.");
-                    LoadData();
-                }
+                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0) { MessageBox.Show("Thêm thành công."); LoadData(); }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
         }
 
-        // ==============
-        // NÚT SỬA
-        // ==============
+        #endregion
+
+        #region SỬA SẢN PHẨM
+
         private void btnSua_Click(object sender, EventArgs e)
         {
             if (!isEditing)
@@ -216,14 +199,10 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
-            // Xử lý LƯU SỬA
             if (!int.TryParse(txtID.Text, out int id)) return;
-
-            // Kiểm tra trùng tên sản phẩm
             if (KiemTraTrungTenSanPham(txtTenSanPham.Text, id))
             {
-                MessageBox.Show($"Sản phẩm '{txtTenSanPham.Text.Trim()}' đã tồn tại.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtTenSanPham.Focus();
+                MessageBox.Show($"Sản phẩm '{txtTenSanPham.Text.Trim()}' đã tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -239,19 +218,15 @@ namespace QuanLyQuanCaPhe.Forms
                     new SqlParameter("@madm", cboDanhMuc.SelectedValue),
                     new SqlParameter("@tt", txtTrangThai.Text.Trim())
                 };
-
-                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
-                {
-                    MessageBox.Show("Sửa thành công.");
-                    LoadData();
-                }
+                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0) { MessageBox.Show("Sửa thành công."); LoadData(); }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
         }
 
-        // ==============
-        // NÚT XÓA
-        // ==============
+        #endregion
+
+        #region XÓA VÀ TÌM KIẾM SẢN PHẨM
+
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (!int.TryParse(txtID.Text, out int id)) return;
@@ -261,12 +236,10 @@ namespace QuanLyQuanCaPhe.Forms
             {
                 string query = "DELETE FROM SanPham WHERE Id = @id";
                 SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@id", id) };
-
                 if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
                 {
                     string reset = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM SanPham; DBCC CHECKIDENT ('SanPham', RESEED, @max);";
                     DataProvider.Instance.ExecuteNonQuery(reset);
-
                     MessageBox.Show("Xóa thành công.");
                     LoadData();
                 }
@@ -289,5 +262,7 @@ namespace QuanLyQuanCaPhe.Forms
             }
             catch { }
         }
+
+        #endregion
     }
 }

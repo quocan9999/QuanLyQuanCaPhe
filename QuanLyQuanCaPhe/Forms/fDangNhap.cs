@@ -19,6 +19,9 @@ namespace QuanLyQuanCaPhe.Forms
         {
             InitializeComponent();
         }
+
+        #region KIỂM TRA DỮ LIỆU NHẬP
+
         public bool Login(string username, string password)
         {
             string query = "usp_Login @userName, @passWord";
@@ -63,6 +66,11 @@ namespace QuanLyQuanCaPhe.Forms
 
             return true;
         }
+
+        #endregion
+
+        #region XỬ LÝ ĐĂNG NHẬP
+
         private void btnDangNhap_Click(object sender, EventArgs e)
         {
             string userName = txtTenDangNhap.Text;
@@ -115,6 +123,10 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
+        #endregion
+
+        #region ĐÓNG FORM
+
         private void fDangNhap_FormClosing(object sender, FormClosingEventArgs e)
         {
             if (MessageBox.Show("Bạn có chắc chắn muốn thoát chương trình?", "Thông báo", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) != DialogResult.OK)
@@ -127,5 +139,7 @@ namespace QuanLyQuanCaPhe.Forms
         {
             this.Close();
         }
+
+        #endregion
     }
 }

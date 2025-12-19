@@ -17,7 +17,14 @@ namespace QuanLyQuanCaPhe
             InitializeComponent();
             this.idBan = idBanNhanVao;
         }
-        #region Phương thức (hàm)
+
+        #region TẢI DANH SÁCH THỰC ĐƠN
+
+        private void fOrder_Load(object sender, EventArgs e)
+        {
+            TaiDanhSachThucDon();
+        }
+
         // hàm tải danh sách danh mục và sản phẩm lên giao diện
         private void TaiDanhSachThucDon()
         {
@@ -76,28 +83,9 @@ namespace QuanLyQuanCaPhe
             }
         }
 
-        // hàm hiển thị danh sách order lên dgv
-        private void HienThiDanhSachOrder()
-        {
-            dgvOrderTemp.Rows.Clear();
-            foreach (var item in danhSachMonTam)
-            {
-                int index = dgvOrderTemp.Rows.Add();
-                dgvOrderTemp.Rows[index].Cells[0].Value = item.IdSanPham;
-                dgvOrderTemp.Rows[index].Cells[1].Value = item.TenSP;
-                dgvOrderTemp.Rows[index].Cells[2].Value = item.DonGia.ToString("N0");
-                dgvOrderTemp.Rows[index].Cells[3].Value = item.SoLuong;
-                dgvOrderTemp.Rows[index].Cells[4].Value = (item.SoLuong * item.DonGia).ToString("N0");
-                dgvOrderTemp.Rows[index].Tag = item;
-            }
-        }
         #endregion
 
-        #region Event
-        private void fOrder_Load(object sender, EventArgs e)
-        {
-            TaiDanhSachThucDon();
-        }
+        #region CHỌN MÓN & HIỂN THỊ DANH SÁCH ORDER
 
         private void NutMonAn_Click(object sender, EventArgs e)
         {
@@ -130,6 +118,22 @@ namespace QuanLyQuanCaPhe
             HienThiDanhSachOrder();
         }
 
+        // hàm hiển thị danh sách order lên dgv
+        private void HienThiDanhSachOrder()
+        {
+            dgvOrderTemp.Rows.Clear();
+            foreach (var item in danhSachMonTam)
+            {
+                int index = dgvOrderTemp.Rows.Add();
+                dgvOrderTemp.Rows[index].Cells[0].Value = item.IdSanPham;
+                dgvOrderTemp.Rows[index].Cells[1].Value = item.TenSP;
+                dgvOrderTemp.Rows[index].Cells[2].Value = item.DonGia.ToString("N0");
+                dgvOrderTemp.Rows[index].Cells[3].Value = item.SoLuong;
+                dgvOrderTemp.Rows[index].Cells[4].Value = (item.SoLuong * item.DonGia).ToString("N0");
+                dgvOrderTemp.Rows[index].Tag = item;
+            }
+        }
+
         private void dgvOrderTemp_CellClick(object sender, DataGridViewCellEventArgs e)
         {
             if (e.RowIndex >= 0 && dgvOrderTemp.CurrentRow != null)
@@ -144,6 +148,10 @@ namespace QuanLyQuanCaPhe
                 }
             }
         }
+
+        #endregion
+
+        #region SỬA & XÓA MÓN TRONG ORDER
 
         private void btnSua_Click(object sender, EventArgs e)
         {
@@ -170,6 +178,10 @@ namespace QuanLyQuanCaPhe
                 nudSoLuong.Value = 1;
             }
         }
+
+        #endregion
+
+        #region XÁC NHẬN ORDER
 
         private void btnXacNhanOrder_Click(object sender, EventArgs e)
         {
@@ -225,7 +237,6 @@ namespace QuanLyQuanCaPhe
                 MessageBox.Show("Có lỗi xảy ra khi gọi món: " + ex.Message, "Lỗi");
             }
         }
-
 
         #endregion
 

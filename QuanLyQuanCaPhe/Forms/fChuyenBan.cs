@@ -20,6 +20,8 @@ namespace QuanLyQuanCaPhe
             TaiDanhSachBanTrong();
         }
 
+        #region TẢI DỮ LIỆU BÀN
+
         // hàm lấy tên và vị trí của bàn hiện tại để hiển thị
         private void TaiThongTinBanHienTai()
         {
@@ -79,6 +81,10 @@ namespace QuanLyQuanCaPhe
             }
         }
 
+        #endregion
+
+        #region XỬ LÝ CHUYỂN BÀN
+
         // sự kiện nhấn nút xác nhận chuyển bàn
         private void BtnXacNhan_Click(object sender, EventArgs e)
         {
@@ -125,5 +131,7 @@ namespace QuanLyQuanCaPhe
         {
             this.Close();
         }
+
+        #endregion
     }
 }

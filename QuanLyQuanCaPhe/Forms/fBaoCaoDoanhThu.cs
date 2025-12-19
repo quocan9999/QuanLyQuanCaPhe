@@ -35,6 +35,8 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
+        #region KHỞI TẠO & TẢI FORM
+
         private void BaoCaoDoanhThu_Load(object sender, EventArgs e)
         {
             try
@@ -105,6 +107,10 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
+        #endregion
+
+        #region TẢI DỮ LIỆU BÁO CÁO
+
         // Nút Xem Báo Cáo
         private void btnXemBaoCao_Click(object sender, EventArgs e)
         {
@@ -136,7 +142,7 @@ namespace QuanLyQuanCaPhe.Forms
 
                 // Query lấy doanh thu theo ngày
                 string query = @"
-  SELECT 
+   SELECT 
          CAST(hd.NgayLap AS DATE) AS Ngay,
          COUNT(DISTINCT hd.Id) AS SoHoaDon,
      SUM(hd.TongTien) AS DoanhThu
@@ -186,6 +192,24 @@ AND hd.NgayLap <= @DenNgay
             }
         }
 
+        // Nút Tải lại dữ liệu
+        private void btnTaiLai_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                LoadBaoCao();
+                MessageBox.Show("Đã tải lại dữ liệu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi tải lại dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+
+        #endregion
+
+        #region THỐNG KÊ & TÍNH TOÁN
+
         // Tính toán thống kê
         private void CalculateStatistics(DataTable dt)
         {
@@ -213,6 +237,10 @@ AND hd.NgayLap <= @DenNgay
                 MessageBox.Show("Lỗi khi tính toán thống kê: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion
+
+        #region VẼ BIỂU ĐỒ
 
         // Vẽ biểu đồ
         private void DrawChart(DataTable dt)
@@ -298,19 +326,9 @@ AND hd.NgayLap <= @DenNgay
             }
         }
 
-        // Nút Tải lại dữ liệu
-        private void btnTaiLai_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                LoadBaoCao();
-                MessageBox.Show("Đã tải lại dữ liệu thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi khi tải lại dữ liệu: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        #endregion
+
+        #region LƯU & IN BÁO CÁO
 
         // Nút Xuất Excel
         //private void btnXuatExcel_Click(object sender, EventArgs e)
@@ -491,5 +509,7 @@ AND hd.NgayLap <= @DenNgay
                     MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
+
+        #endregion
     }
 }

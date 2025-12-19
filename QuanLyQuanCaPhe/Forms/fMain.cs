@@ -507,10 +507,36 @@ namespace QuanLyQuanCaPhe
 
         #endregion
 
+        #region 4. CẬP NHẬT THỜI GIAN & TIỆN ÍCH
+
         private void UpdateDateTime()
         {
             lblNgayHienTai.Text = DateTime.Now.ToString("dddd, dd/MM/yyyy | HH:mm:ss");
         }
+
+        // hàm hỗ trợ lấy id nhân viên dựa trên tên đăng nhập hiện tại
+        private int LayIdNhanVienHienTai()
+        {
+            // lấy tên đăng nhập từ biến toàn cục đã lưu lúc login
+            string tenDangNhap = LuuTruThongTinDangNhap.TenDangNhap;
+
+            // truy vấn lấy id nhân viên
+            string queryGetId = "SELECT Id FROM NhanVien WHERE TenDangNhap = @user";
+            object ketQua = DataProvider.Instance.ExecuteScalar(queryGetId, new SqlParameter[] { new SqlParameter("@user", tenDangNhap) });
+
+            if (ketQua != null)
+            {
+                return Convert.ToInt32(ketQua);
+            }
+
+            // trường hợp không tìm thấy (ví dụ admin hệ thống không có trong bảng nhân viên)
+            // trả về 1 hoặc xử lý tùy logic, ở đây mình mặc định trả về null hoặc báo lỗi
+            return -1;
+        }
+
+        #endregion
+
+        #region 5. MENU - QUẢN LÝ HỆ THỐNG
 
         private void tsmiDangXuat_Click(object sender, EventArgs e)
         {
@@ -575,6 +601,37 @@ namespace QuanLyQuanCaPhe
             }
         }
 
+        private void tsmiQuanLyNhanVien_Click(object sender, EventArgs e)
+        {
+            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
+            {
+                fQuanLyNhanVien f = new fQuanLyNhanVien();
+                f.ShowDialog();
+            }
+            else
+            {
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
+        }
+
+        private void tsmiThongTinCaNhan_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(LuuTruThongTinDangNhap.TenDangNhap))
+            {
+                MessageBox.Show("Không tìm thấy thông tin đăng nhập hiện tại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (fThongTinCaNhan formThongTin = new fThongTinCaNhan(LuuTruThongTinDangNhap.TenDangNhap))
+            {
+                formThongTin.ShowDialog();
+            }
+        }
+
+        #endregion
+
+        #region 6. BÁO CÁO THỐNG KÊ
+
         private void tsmiBaoCaoBanChay_Click(object sender, EventArgs e)
         {
             if (LuuTruThongTinDangNhap.VaiTro == "Admin")
@@ -601,38 +658,20 @@ namespace QuanLyQuanCaPhe
             }
         }
 
-        // hàm hỗ trợ lấy id nhân viên dựa trên tên đăng nhập hiện tại
-        private int LayIdNhanVienHienTai()
+        #endregion
+
+        #region 7. CHATBOT AI
+
+        private void InitializeChatBot()
         {
-            // lấy tên đăng nhập từ biến toàn cục đã lưu lúc login
-            string tenDangNhap = LuuTruThongTinDangNhap.TenDangNhap;
-
-            // truy vấn lấy id nhân viên
-            string queryGetId = "SELECT Id FROM NhanVien WHERE TenDangNhap = @user";
-            object ketQua = DataProvider.Instance.ExecuteScalar(queryGetId, new SqlParameter[] { new SqlParameter("@user", tenDangNhap) });
-
-            if (ketQua != null)
+            txtChatInput.KeyPress += (s, e) =>
             {
-                return Convert.ToInt32(ketQua);
-            }
-
-            // trường hợp không tìm thấy (ví dụ admin hệ thống không có trong bảng nhân viên)
-            // trả về 1 hoặc xử lý tùy logic, ở đây mình mặc định trả về null hoặc báo lỗi
-            return -1;
-        }
-
-        private void tsmiThongTinCaNhan_Click(object sender, EventArgs e)
-        {
-            if (string.IsNullOrWhiteSpace(LuuTruThongTinDangNhap.TenDangNhap))
-            {
-                MessageBox.Show("Không tìm thấy thông tin đăng nhập hiện tại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                return;
-            }
-
-            using (fThongTinCaNhan formThongTin = new fThongTinCaNhan(LuuTruThongTinDangNhap.TenDangNhap))
-            {
-                formThongTin.ShowDialog();
-            }
+                if (e.KeyChar == (char)Keys.Enter)
+                {
+                    e.Handled = true;
+                    SendChatMessage();
+                }
+            };
         }
 
         // Event handlers cho chatbot
@@ -722,17 +761,6 @@ namespace QuanLyQuanCaPhe
             }
         }
 
-        private void InitializeChatBot()
-        {
-            txtChatInput.KeyPress += (s, e) =>
-            {
-                if (e.KeyChar == (char)Keys.Enter)
-                {
-                    e.Handled = true;
-                    SendChatMessage();
-                }
-            };
-        }
         private void txtChatInput_GotFocus(object sender, EventArgs e)
         {
             if (txtChatInput.Text == "Nhập câu hỏi...") txtChatInput.Text = "";
@@ -742,17 +770,6 @@ namespace QuanLyQuanCaPhe
             if (string.IsNullOrWhiteSpace(txtChatInput.Text)) txtChatInput.Text = "Nhập câu hỏi...";
         }
 
-        private void tsmiQuanLyNhanVien_Click(object sender, EventArgs e)
-        {
-            if (LuuTruThongTinDangNhap.VaiTro == "Admin")
-            {
-                fQuanLyNhanVien f = new fQuanLyNhanVien();
-                f.ShowDialog();
-            }
-            else
-            {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
-            }
-        }
+        #endregion
     }
 }

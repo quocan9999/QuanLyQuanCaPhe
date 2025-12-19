@@ -18,6 +18,8 @@ namespace QuanLyQuanCaPhe.Forms
             InitializeComponent();
         }
 
+        #region XỬ LÝ GIAO DIỆN
+
         private void LockControls(bool lockState)
         {
             grvQuanLyBan.Enabled = !lockState;
@@ -37,11 +39,10 @@ namespace QuanLyQuanCaPhe.Forms
             LoadData();
         }
 
-        // =====================
-        // DỮ LIỆU
-        // =====================
+        #endregion
 
-        // Load dữ liệu và reset trạng thái form
+        #region TẢI DỮ LIỆU
+
         private void LoadData()
         {
             LoadListBan();
@@ -88,23 +89,19 @@ namespace QuanLyQuanCaPhe.Forms
             txtTrangThai.DataBindings.Add("Text", grvQuanLyBan.DataSource, "TrangThai");
         }
 
-        // Chuyển tên bàn nếu là bàn 01, 001, .... thì chuyển thành bàn 1
+        #endregion
+
+        #region KIỂM TRA DỮ LIỆU
+
         private string ChuanHoaTenBan(string tenBan)
         {
             if (string.IsNullOrEmpty(tenBan)) return "";
-
-            // Loại bỏ số 0 đứng trước, còn lại giữ nguyên
-            return Regex.Replace(tenBan.Trim(), @"(\d+)", m =>
-            {
-                return int.Parse(m.Value).ToString();
-            });
+            return Regex.Replace(tenBan.Trim(), @"(\d+)", m => int.Parse(m.Value).ToString());
         }
 
-        // Kiểm tra tên bàn đã tồn tại trong cùng khu vực chưa
         private bool KiemTraTrungTenBan(string tenBan, string viTri, int? idHienTai = null)
         {
             string tenBanChuanHoa = ChuanHoaTenBan(tenBan).ToLower();
-
             string query = "SELECT Id, TenBan FROM Ban WHERE ViTri = @ViTri";
             SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@ViTri", viTri.Trim()) };
             DataTable data = DataProvider.Instance.ExecuteQuery(query, parameters);
@@ -113,21 +110,15 @@ namespace QuanLyQuanCaPhe.Forms
             {
                 int id = Convert.ToInt32(row["Id"]);
                 string tenBanTrongDB = row["TenBan"].ToString();
-
-                if (idHienTai.HasValue && id == idHienTai.Value)
-                    continue;
-
-                // So sánh tên đã chuẩn hóa (không phân biệt hoa thường)
-                if (ChuanHoaTenBan(tenBanTrongDB).ToLower() == tenBanChuanHoa)
-                    return true;
+                if (idHienTai.HasValue && id == idHienTai.Value) continue;
+                if (ChuanHoaTenBan(tenBanTrongDB).ToLower() == tenBanChuanHoa) return true;
             }
-
             return false;
         }
 
-        // =====================================================================
-        // NÚT CHỨC NĂNG
-        // =====================================================================
+        #endregion
+
+        #region THÊM - SỬA - XÓA BÀN
 
         private void btnThem_Click(object sender, EventArgs e)
         {
@@ -136,41 +127,26 @@ namespace QuanLyQuanCaPhe.Forms
                 isAdding = true;
                 btnThem.Text = "Lưu";
                 btnSua.Enabled = btnXoa.Enabled = false;
-
                 txtID.DataBindings.Clear();
                 txtTenBan.DataBindings.Clear();
                 txtViTri.DataBindings.Clear();
                 txtTrangThai.DataBindings.Clear();
-
                 txtID.Text = "";
                 txtTenBan.Text = "";
                 txtViTri.Text = "";
                 txtTrangThai.Text = "Còn trống";
-
                 SetInputReadOnly(false);
                 LockControls(true);
                 txtTenBan.Focus();
                 return;
             }
-            // xử lý nhập
-            if (string.IsNullOrEmpty(txtTenBan.Text.Trim()))
-            {
-                MessageBox.Show("Tên bàn không được để trống.");
-                return;
-            }
-            if (string.IsNullOrEmpty(txtViTri.Text.Trim()))
-            {
-                MessageBox.Show("Vị trÍ không được để trống.");
-                return;
-            }
+            if (string.IsNullOrEmpty(txtTenBan.Text.Trim())) { MessageBox.Show("Tên bàn không được để trống."); return; }
+            if (string.IsNullOrEmpty(txtViTri.Text.Trim())) { MessageBox.Show("Vị trí không được để trống."); return; }
 
             string tenBanDaXuLy = ChuanHoaTenBan(txtTenBan.Text);
-
-            // Kiểm tra trùng tên bàn trong cùng khu vực
             if (KiemTraTrungTenBan(tenBanDaXuLy, txtViTri.Text))
             {
-                MessageBox.Show($"Tên bàn '{tenBanDaXuLy}' đã tồn tại trong khu vực '{txtViTri.Text.Trim()}'.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtTenBan.Focus();
+                MessageBox.Show($"Tên bàn '{tenBanDaXuLy}' đã tồn tại trong khu vực '{txtViTri.Text.Trim()}'.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
 
@@ -181,12 +157,7 @@ namespace QuanLyQuanCaPhe.Forms
                 new SqlParameter("@ViTri", txtViTri.Text.Trim()),
                 new SqlParameter("@TrangThai", txtTrangThai.Text.Trim())
             };
-
-            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
-            {
-                MessageBox.Show("Thêm bàn thành công.");
-                LoadData();
-            }
+            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0) { MessageBox.Show("Thêm bàn thành công."); LoadData(); }
         }
 
         private void btnSua_Click(object sender, EventArgs e)
@@ -201,17 +172,13 @@ namespace QuanLyQuanCaPhe.Forms
                 LockControls(true);
                 return;
             }
-
             string tenBanDaXuLy = ChuanHoaTenBan(txtTenBan.Text);
-
             int idHienTai = int.Parse(txtID.Text);
             if (KiemTraTrungTenBan(tenBanDaXuLy, txtViTri.Text, idHienTai))
             {
-                MessageBox.Show($"Tên bàn '{tenBanDaXuLy}' đã tồn tại trong khu vực '{txtViTri.Text.Trim()}'.\nVui lòng nhập tên khác.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                txtTenBan.Focus();
+                MessageBox.Show($"Tên bàn '{tenBanDaXuLy}' đã tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-
             string query = "UPDATE Ban SET TenBan = @TenBan, ViTri = @ViTri, TrangThai = @TrangThai WHERE Id = @Id";
             SqlParameter[] parameters = new SqlParameter[]
             {
@@ -220,33 +187,26 @@ namespace QuanLyQuanCaPhe.Forms
                 new SqlParameter("@TrangThai", txtTrangThai.Text.Trim()),
                 new SqlParameter("@Id", txtID.Text)
             };
-
-            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
-            {
-                MessageBox.Show("Cập nhật bàn thành công.");
-                LoadData();
-            }
+            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0) { MessageBox.Show("Cập nhật thành công."); LoadData(); }
         }
 
         private void btnXoa_Click(object sender, EventArgs e)
         {
             if (string.IsNullOrEmpty(txtID.Text)) return;
-
             if (MessageBox.Show("Bạn có chắc muốn xóa bàn này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
                 string query = "DELETE FROM Ban WHERE Id = @Id";
                 SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@Id", txtID.Text) };
-
                 if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
                 {
-                    // Reset Identity
                     string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM Ban; DBCC CHECKIDENT ('Ban', RESEED, @max);";
                     DataProvider.Instance.ExecuteNonQuery(resetQuery);
-
                     MessageBox.Show("Xóa bàn thành công.");
                     LoadData();
                 }
             }
         }
+
+        #endregion
     }
 }

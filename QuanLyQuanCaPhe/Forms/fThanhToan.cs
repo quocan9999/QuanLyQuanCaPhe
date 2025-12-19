@@ -23,6 +23,8 @@ namespace QuanLyQuanCaPhe
             this.Load += FThanhToan_Load;
         }
 
+        #region TẢI DỮ LIỆU HÓA ĐƠN
+
         private void FThanhToan_Load(object sender, EventArgs e)
         {
             // mặc định chọn loại giảm giá là "Không giảm"
@@ -77,6 +79,10 @@ namespace QuanLyQuanCaPhe
                 this.Close();
             }
         }
+
+        #endregion
+
+        #region TÍNH TOÁN GIẢM GIÁ
 
         // hàm tính toán số tiền cuối cùng dựa trên giảm giá
         private void TinhToanTien()
@@ -144,6 +150,10 @@ namespace QuanLyQuanCaPhe
             }
         }
 
+        #endregion
+
+        #region XÁC NHẬN THANH TOÁN & IN HÓA ĐƠN
+
         // sự kiện nhấn nút xác nhận thanh toán
         private void BtnXacNhan_Click(object sender, EventArgs e)
         {
@@ -205,5 +215,7 @@ namespace QuanLyQuanCaPhe
         {
             this.Close();
         }
+
+        #endregion
     }
 }
