@@ -512,6 +512,8 @@ namespace QuanLyQuanCaPhe
             {
                 fQuanLyBan f = new fQuanLyBan();
                 f.ShowDialog();
+                LoadComboBoxKhuVuc();
+                LoadTables();
             }
             else
             {

@@ -9,7 +9,7 @@ namespace QuanLyQuanCaPhe.Forms
 {
     public partial class fQuanLySanPham : Form
     {
-        private string connectionString = "Server=.;Database=QuanLyCaPhe;Trusted_Connection=True;";
+        private string connectionString = "Data Source = .\\SQLEXPRESS; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
         private SqlConnection sqlCon = null;
         private bool isAdding = false;
         private bool isEditing = false;
