@@ -313,102 +313,102 @@ AND hd.NgayLap <= @DenNgay
         }
 
         // Nút Xuất Excel
-        private void btnXuatExcel_Click(object sender, EventArgs e)
-        {
-            try
-            {
-                if (dgvDoanhThu.Rows.Count == 0)
-                {
-                    MessageBox.Show("Không có dữ liệu để xuất!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                    return;
-                }
+        //private void btnXuatExcel_Click(object sender, EventArgs e)
+        //{
+        //    try
+        //    {
+        //        if (dgvDoanhThu.Rows.Count == 0)
+        //        {
+        //            MessageBox.Show("Không có dữ liệu để xuất!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+        //            return;
+        //        }
 
-                // Tạo SaveFileDialog
-                SaveFileDialog saveDialog = new SaveFileDialog();
-                saveDialog.Filter = "Excel Files|*.xls;*.xlsx|CSV Files|*.csv|All Files|*.*";
-                saveDialog.Title = "Lưu báo cáo";
-                saveDialog.FileName = "BaoCao_DoanhThu_" +
-                dtpTuNgay.Value.ToString("yyyyMMdd") + "_" +
-                dtpDenNgay.Value.ToString("yyyyMMdd");
+        //        // Tạo SaveFileDialog
+        //        SaveFileDialog saveDialog = new SaveFileDialog();
+        //        saveDialog.Filter = "Excel Files|*.xls;*.xlsx|CSV Files|*.csv|All Files|*.*";
+        //        saveDialog.Title = "Lưu báo cáo";
+        //        saveDialog.FileName = "BaoCao_DoanhThu_" +
+        //        dtpTuNgay.Value.ToString("yyyyMMdd") + "_" +
+        //        dtpDenNgay.Value.ToString("yyyyMMdd");
 
-                if (saveDialog.ShowDialog() == DialogResult.OK)
-                {
-                    // Xuất ra file CSV (có thể mở bằng Excel)
-                    ExportToCSV(saveDialog.FileName);
-                    MessageBox.Show("Xuất báo cáo thành công!\nFile: " + saveDialog.FileName,
-                    "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        //        if (saveDialog.ShowDialog() == DialogResult.OK)
+        //        {
+        //            // Xuất ra file CSV (có thể mở bằng Excel)
+        //            ExportToCSV(saveDialog.FileName);
+        //            MessageBox.Show("Xuất báo cáo thành công!\nFile: " + saveDialog.FileName,
+        //            "Thành công", MessageBoxButtons.OK, MessageBoxIcon.Information);
 
-                    // Mở file sau khi xuất
-                    if (MessageBox.Show("Bạn có muốn mở file vừa xuất không?", "Xác nhận",
-                     MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
-                    {
-                        System.Diagnostics.Process.Start(saveDialog.FileName);
-                    }
-                }
-            }
-            catch (Exception ex)
-            {
-                MessageBox.Show("Lỗi khi xuất Excel: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            }
-        }
+        //            // Mở file sau khi xuất
+        //            if (MessageBox.Show("Bạn có muốn mở file vừa xuất không?", "Xác nhận",
+        //             MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
+        //            {
+        //                System.Diagnostics.Process.Start(saveDialog.FileName);
+        //            }
+        //        }
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        MessageBox.Show("Lỗi khi xuất Excel: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+        //    }
+        //}
 
         // Xuất dữ liệu ra file CSV
-        private void ExportToCSV(string filePath)
-        {
-            try
-            {
-                StringBuilder sb = new StringBuilder();
+        //private void ExportToCSV(string filePath)
+        //{
+        //    try
+        //    {
+        //        StringBuilder sb = new StringBuilder();
 
-                // Thêm tiêu đề báo cáo
-                sb.AppendLine("BÁO CÁO DOANH THU");
-                sb.AppendLine("Từ ngày: " + dtpTuNgay.Value.ToString("dd/MM/yyyy") +
-                " - Đến ngày: " + dtpDenNgay.Value.ToString("dd/MM/yyyy"));
-                sb.AppendLine("Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
-                sb.AppendLine("");
+        //        // Thêm tiêu đề báo cáo
+        //        sb.AppendLine("BÁO CÁO DOANH THU");
+        //        sb.AppendLine("Từ ngày: " + dtpTuNgay.Value.ToString("dd/MM/yyyy") +
+        //        " - Đến ngày: " + dtpDenNgay.Value.ToString("dd/MM/yyyy"));
+        //        sb.AppendLine("Ngày xuất: " + DateTime.Now.ToString("dd/MM/yyyy HH:mm:ss"));
+        //        sb.AppendLine("");
 
-                // Thêm header
-                for (int i = 0; i < dgvDoanhThu.Columns.Count; i++)
-                {
-                    sb.Append(dgvDoanhThu.Columns[i].HeaderText);
-                    if (i < dgvDoanhThu.Columns.Count - 1)
-                        sb.Append(",");
-                }
-                sb.AppendLine();
+        //        // Thêm header
+        //        for (int i = 0; i < dgvDoanhThu.Columns.Count; i++)
+        //        {
+        //            sb.Append(dgvDoanhThu.Columns[i].HeaderText);
+        //            if (i < dgvDoanhThu.Columns.Count - 1)
+        //                sb.Append(",");
+        //        }
+        //        sb.AppendLine();
 
-                // Thêm dữ liệu
-                foreach (DataGridViewRow row in dgvDoanhThu.Rows)
-                {
-                    for (int i = 0; i < dgvDoanhThu.Columns.Count; i++)
-                    {
-                        if (row.Cells[i].Value != null)
-                        {
-                            string value = row.Cells[i].Value.ToString();
-                            // Xử lý giá trị có dấu phẩy
-                            if (value.Contains(","))
-                                value = "\"" + value + "\"";
-                            sb.Append(value);
-                        }
-                        if (i < dgvDoanhThu.Columns.Count - 1)
-                            sb.Append(",");
-                    }
-                    sb.AppendLine();
-                }
+        //        // Thêm dữ liệu
+        //        foreach (DataGridViewRow row in dgvDoanhThu.Rows)
+        //        {
+        //            for (int i = 0; i < dgvDoanhThu.Columns.Count; i++)
+        //            {
+        //                if (row.Cells[i].Value != null)
+        //                {
+        //                    string value = row.Cells[i].Value.ToString();
+        //                    // Xử lý giá trị có dấu phẩy
+        //                    if (value.Contains(","))
+        //                        value = "\"" + value + "\"";
+        //                    sb.Append(value);
+        //                }
+        //                if (i < dgvDoanhThu.Columns.Count - 1)
+        //                    sb.Append(",");
+        //            }
+        //            sb.AppendLine();
+        //        }
 
-                // Thêm thống kê
-                sb.AppendLine("");
-                sb.AppendLine("THỐNG KÊ TỔNG HỢP");
-                sb.AppendLine("Tổng doanh thu," + lblTongDoanhThu.Text);
-                sb.AppendLine("Số hóa đơn," + lblSoHoaDon.Text);
-                sb.AppendLine("Doanh thu trung bình," + lblDoanhThuTrungBinh.Text);
+        //        // Thêm thống kê
+        //        sb.AppendLine("");
+        //        sb.AppendLine("THỐNG KÊ TỔNG HỢP");
+        //        sb.AppendLine("Tổng doanh thu," + lblTongDoanhThu.Text);
+        //        sb.AppendLine("Số hóa đơn," + lblSoHoaDon.Text);
+        //        sb.AppendLine("Doanh thu trung bình," + lblDoanhThuTrungBinh.Text);
 
-                // Ghi file với encoding UTF-8 (có BOM để Excel đọc được tiếng Việt)
-                System.IO.File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception("Lỗi khi ghi file: " + ex.Message);
-            }
-        }
+        //        // Ghi file với encoding UTF-8 (có BOM để Excel đọc được tiếng Việt)
+        //        System.IO.File.WriteAllText(filePath, sb.ToString(), Encoding.UTF8);
+        //    }
+        //    catch (Exception ex)
+        //    {
+        //        throw new Exception("Lỗi khi ghi file: " + ex.Message);
+        //    }
+        //}
 
         // Nút Lưu Báo Cáo vào database
         private void btnLuuBaoCao_Click(object sender, EventArgs e)
@@ -463,6 +463,32 @@ AND hd.NgayLap <= @DenNgay
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi lưu báo cáo: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
+        }
+        private void btnInBaoCao_Click(object sender, EventArgs e)
+        {
+            try
+            {
+                if (dgvDoanhThu.Rows.Count == 0)
+                {
+                    MessageBox.Show("Không có dữ liệu để in!", "Thông báo",
+                        MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    return;
+                }
+
+                DataTable dt = (DataTable)dgvDoanhThu.DataSource;
+
+                fInBaoCaoDoanhThu formIn = new fInBaoCaoDoanhThu(
+                    dtpTuNgay.Value.Date,
+                    dtpDenNgay.Value.Date,
+                    dt
+                );
+                formIn.ShowDialog();
+            }
+            catch (Exception ex)
+            {
+                MessageBox.Show("Lỗi khi in báo cáo: " + ex.Message, "Lỗi",
+                    MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }
