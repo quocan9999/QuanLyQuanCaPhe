@@ -3,7 +3,7 @@
 <div align="center">
 
 ![.NET Framework](https://img.shields.io/badge/.NET%20Framework-4.8-purple?style=for-the-badge&logo=dotnet)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2019+-red?style=for-the-badge&logo=microsoftsqlserver)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-red?style=for-the-badge&logo=microsoftsqlserver)
 ![Windows Forms](https://img.shields.io/badge/Windows%20Forms-Desktop-blue?style=for-the-badge&logo=windows)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
@@ -21,25 +21,57 @@ Hệ thống Quản Lý Quán Cà Phê là một ứng dụng desktop được p
 
 ## ✨ Tính năng chính
 
+### 🔐 Xác thực & Phân quyền
 | Tính năng | Mô tả |
 |-----------|-------|
-| 🔐 **Đăng nhập/Phân quyền** | Hệ thống xác thực với phân quyền Admin/Nhân viên |
-| 🍵 **Quản lý sản phẩm** | Thêm, sửa, xóa các món đồ uống và thức ăn |
-| 📂 **Quản lý danh mục** | Phân loại sản phẩm theo danh mục |
-| 🪑 **Quản lý bàn** | Quản lý trạng thái các bàn trong quán |
-| 📝 **Đặt món (Order)** | Tạo order cho từng bàn, thêm/xóa món |
-| 🔄 **Chuyển bàn** | Hỗ trợ chuyển order giữa các bàn |
-| 💰 **Thanh toán** | Xử lý thanh toán với hỗ trợ giảm giá |
-| 🧾 **In hóa đơn** | Xuất hóa đơn bằng Crystal Reports |
-| 📊 **Báo cáo doanh thu** | Thống kê doanh thu theo thời gian |
-| 🏆 **Báo cáo bán chạy** | Xem các sản phẩm bán chạy nhất |
-| 👥 **Quản lý tài khoản** | Quản lý tài khoản người dùng hệ thống |
+| **Đăng nhập** | Xác thực người dùng với mã hóa mật khẩu |
+| **Phân quyền** | Phân quyền Admin/Nhân viên với các chức năng riêng biệt |
+| **Xem thông tin cá nhân** | Nhân viên xem được thông tin hồ sơ của mình |
+
+### 🛒 Nghiệp vụ bán hàng
+| Tính năng | Mô tả |
+|-----------|-------|
+| **Đặt món (Order)** | Tạo order cho từng bàn, thêm/xóa/sửa số lượng món |
+| **Chuyển bàn** | Hỗ trợ chuyển order giữa các bàn |
+| **Thanh toán** | Xử lý thanh toán với hỗ trợ giảm giá theo % hoặc tiền mặt |
+| **In hóa đơn** | Xuất hóa đơn tạm bằng Crystal Reports |
+
+### 📦 Quản lý dữ liệu (Admin)
+| Tính năng | Mô tả |
+|-----------|-------|
+| **Quản lý sản phẩm** | Thêm, sửa, xóa sản phẩm với trạng thái còn bán/tạm ngưng |
+| **Quản lý danh mục** | Phân loại sản phẩm theo danh mục |
+| **Quản lý bàn** | Quản lý thông tin và vị trí các bàn trong quán |
+| **Quản lý nhân viên** | Xem và cập nhật thông tin nhân viên |
+| **Quản lý tài khoản** | Thêm, sửa, khóa/mở khóa tài khoản người dùng |
+
+### 📊 Báo cáo & Thống kê (Admin)
+| Tính năng | Mô tả |
+|-----------|-------|
+| **Báo cáo doanh thu** | Thống kê doanh thu theo khoảng thời gian, xuất báo cáo Crystal Reports |
+| **Báo cáo bán chạy** | Xem top 10 sản phẩm bán chạy nhất |
+
+### 🤖 Trợ lý AI gợi ý món (Gemini API)
+| Tính năng | Mô tả |
+|-----------|-------|
+| **Chat AI gợi ý món** | Trợ lý AI hỗ trợ nhân viên tư vấn món cho khách hàng |
+| **Gợi ý theo bối cảnh** | AI phân tích và đề xuất món phù hợp với tình huống |
+| **Món bán chạy nhất** | AI tổng hợp và gợi ý các món được yêu thích |
+| **Món lợi nhuận cao** | Gợi ý món có doanh thu cao cho quán |
+| **Món theo thời gian** | Đề xuất món phù hợp theo buổi sáng/trưa/chiều/tối |
+
+### ⚙️ Tính năng tự động (Database Trigger)
+| Tính năng | Mô tả |
+|-----------|-------|
+| **Tự động tạo hồ sơ nhân viên** | Khi tạo tài khoản mới, hệ thống tự động tạo hồ sơ nhân viên |
+| **Đồng bộ trạng thái** | Khi khóa/mở tài khoản, trạng thái nhân viên được cập nhật tương ứng |
+| **Cập nhật trạng thái bàn** | Tự động chuyển trạng thái bàn khi có order/thanh toán |
 
 ## 🛠️ Yêu cầu hệ thống
 
 - **Hệ điều hành:** Windows 10/11
 - **Framework:** .NET Framework 4.8
-- **Database:** SQL Server 2019 trở lên (hoặc SQL Server Express)
+- **Database:** SQL Server 2022 (hoặc SQL Server Express 2022)
 - **IDE:** Visual Studio 2019/2022 (khuyến nghị)
 - **Công cụ:** SQL Server Management Studio (SSMS)
 
@@ -52,17 +84,28 @@ git clone https://github.com/quocan9999/QuanLyQuanCaPhe.git
 cd QuanLyQuanCaPhe
 ```
 
-### Bước 2: Tạo Database
+### Bước 2: Restore Database từ file Backup
 
 1. Mở **SQL Server Management Studio (SSMS)**
 2. Kết nối đến SQL Server của bạn
-3. Mở file `QuanLyQuanCaPhe/Database/QuanLyCaPhe_data.sql`
-4. Thực thi script để tạo database và dữ liệu mẫu
+3. **Chuột phải** vào **Databases** trong Object Explorer
+4. Chọn **Restore Database...**
 
-```sql
--- Chạy script trong SSMS
--- File: QuanLyQuanCaPhe/Database/QuanLyCaPhe_data.sql
-```
+5. **Trong cửa sổ Restore Database:**
+   - Chọn **Device** → Click nút **`...`** (Browse)
+   - Click **Add** → Điều hướng đến thư mục project → `QuanLyQuanCaPhe/Database/`
+   - Chọn file **`QuanLyCaPhe.bak`** → Click **OK**
+   - Click **OK** lần nữa để quay lại cửa sổ Restore Database
+
+6. **Kiểm tra thông tin:**
+   - **Database:** Sẽ tự động điền `QuanLyCaPhe`
+   - **Destination → Database:** `QuanLyCaPhe`
+
+7. Click **OK** để bắt đầu restore
+
+8. Đợi thông báo **"Database 'QuanLyCaPhe' restored successfully"** → Click **OK**
+
+> 💡 **Mẹo:** Nếu gặp lỗi "tail of the log backup", vào **Options** bên trái và check **"Overwrite the existing database"**
 
 ### Bước 3: Cấu hình Connection String
 
@@ -85,7 +128,7 @@ Chi tiết xem phần [Cấu hình Connection String](#%EF%B8%8F-cấu-hình-con
 1. Mở **SQL Server Management Studio (SSMS)**
 2. Trong cửa sổ **Connect to Server**, ghi nhớ giá trị **Server name**
 
-   ![SSMS Connection](https://i.imgur.com/example.png)
+   ![SSMS Connection](QuanLyQuanCaPhe\HinhAnh\servername.png)
 
    Ví dụ các giá trị thường gặp:
    - `.` hoặc `localhost` → SQL Server mặc định
@@ -135,11 +178,11 @@ private DataProvider()
 <details>
 <summary><b>❌ Lỗi: "Cannot open database 'QuanLyCaPhe'"</b></summary>
 
-**Nguyên nhân:** Database chưa được tạo.
+**Nguyên nhân:** Database chưa được restore.
 
 **Cách khắc phục:**
 1. Mở SSMS, kết nối đến server
-2. Chạy script `Database/QuanLyCaPhe_data.sql` để tạo database
+2. Restore database từ file `Database/QuanLyCaPhe.bak` (xem Bước 2 ở trên)
 
 </details>
 
@@ -192,34 +235,39 @@ Sau khi đăng nhập thành công, bạn sẽ thấy giao diện chính với:
 
 ```
 QuanLyQuanCaPhe/
-├── 📂 Class/                    # Các class model
+├── 📂 Class/                    # Các class model và service
+│   ├── AIService.cs             # Service gọi Gemini API cho AI gợi ý món
 │   ├── Ban.cs                   # Model bàn
 │   ├── DanhMuc.cs               # Model danh mục
-│   ├── Mon.cs                   # Model sản phẩm
-│   └── LuuTruThongTinDangNhap.cs # Lưu thông tin session
+│   ├── SanPham.cs               # Model sản phẩm
+│   ├── NguoiDung.cs             # Model người dùng/tài khoản
+│   ├── NhanVien.cs              # Model nhân viên
+│   └── LuuTruThongTinDangNhap.cs # Lưu thông tin session đăng nhập
 │
-├── 📂 Database/                 # Scripts SQL
-│   ├── QuanLyCaPhe_data.sql     # Script tạo DB + dữ liệu
-│   ├── DuLieuMau.sql            # Dữ liệu mẫu
-│   └── Procedure/               # Stored Procedures
+├── 📂 Database/                 # Database Backup
+│   └── QuanLyCaPhe.bak          # File backup database (restore để sử dụng)
 │
 ├── 📂 Forms/                    # Các Windows Forms
 │   ├── fDangNhap.cs             # Form đăng nhập
-│   ├── fMain.cs                 # Form chính
+│   ├── fMain.cs                 # Form chính (có tích hợp AI Chat)
 │   ├── fOrder.cs                # Form đặt món
 │   ├── fThanhToan.cs            # Form thanh toán
+│   ├── fChuyenBan.cs            # Form chuyển bàn
+│   ├── fInHoaDon.cs             # Form in hóa đơn tạm
 │   ├── fQuanLySanPham.cs        # Quản lý sản phẩm
-│   ├── fQuanLyBan.cs            # Quản lý bàn
 │   ├── fQuanLyDanhMuc.cs        # Quản lý danh mục
+│   ├── fQuanLyBan.cs            # Quản lý bàn
+│   ├── fQuanLyNhanVien.cs       # Quản lý nhân viên
 │   ├── fQuanLyTaiKhoan.cs       # Quản lý tài khoản
+│   ├── fThongTinCaNhan.cs       # Xem thông tin cá nhân
 │   ├── fBaoCaoDoanhThu.cs       # Báo cáo doanh thu
 │   ├── fBaoCaoBanChay.cs        # Báo cáo bán chạy
-│   ├── fChuyenBan.cs            # Chuyển bàn
-│   └── fInHoaDon.cs             # In hóa đơn
+│   └── fInBaoCaoDoanhThu.cs     # In báo cáo doanh thu
 │
 ├── 📄 DataProvider.cs           # Singleton quản lý DB connection
 ├── 📄 Program.cs                # Entry point
-├── 📄 rptHoaDon.rpt             # Crystal Report template
+├── 📄 rptHoaDon.rpt             # Crystal Report - Hóa đơn
+├── 📄 rptBaoCaoDoanhThu.rpt     # Crystal Report - Báo cáo doanh thu
 └── 📄 App.config                # Cấu hình ứng dụng
 ```
 
