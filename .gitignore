@@ -364,3 +364,5 @@ FodyWeavers.xsd
 
 # Bỏ qua file newquery.sql nằm trong thư mục Database
 Database/newquery.sql
+
+.github/copilot-instructions.md
