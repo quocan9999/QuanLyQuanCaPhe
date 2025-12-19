@@ -19,6 +19,7 @@ namespace QuanLyQuanCaPhe.Class
 
         // Gemini API endpoint
         private const string API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
+
         /// <summary>
         /// Gọi Gemini API để gợi ý món ăn (Async)
         /// </summary>
@@ -53,7 +54,7 @@ namespace QuanLyQuanCaPhe.Class
                         temperature = 0.7,
                         topK = 40,
                         topP = 0.95,
-                        maxOutputTokens = 500,
+                        maxOutputTokens = 2048,
                         stopSequences = new string[] { }
                     },
                     safetySettings = new[]
@@ -148,14 +149,13 @@ namespace QuanLyQuanCaPhe.Class
                 switch (mode)
                 {
                     case "Gợi ý theo bối cảnh":
-                        // Lấy thông tin toàn bộ sản phẩm
-                        sb.AppendLine("=== DANH SÁCH SẢN PHẨM CỦA QUÁN ===");
+                        sb.AppendLine("=== DANH SÁCH SẢN PHẨM PHỔ BIẾN ===");
                         string querySP = @"
-                            SELECT sp.TenSP, sp.Gia, dm.TenDM, sp.DVT
+                            SELECT TOP 5 sp.TenSP, sp.Gia, dm.TenDM, sp.DVT
                             FROM SanPham sp
                             INNER JOIN DanhMuc dm ON sp.IdDanhMuc = dm.Id
                             WHERE sp.TrangThai = N'Còn'
-                            ORDER BY dm.TenDM, sp.TenSP";
+                            ORDER BY sp.Id DESC";
 
                         DataTable dtSP = DataProvider.Instance.ExecuteQuery(querySP);
                         string currentCategory = "";
@@ -173,123 +173,95 @@ namespace QuanLyQuanCaPhe.Class
                         break;
 
                     case "Món bán chạy nhất":
-                        // Lấy top 10 món bán chạy trong 30 ngày gần nhất
-                        sb.AppendLine("=== TOP 10 MÓN BÁN CHẠY (30 NGÀY GẦN NHẤT) ===");
-                        string queryBC = @"
-                            SELECT TOP 10 
-                                sp.TenSP, 
+                        sb.AppendLine("=== TOP 8 MÓN BÁN CHẠY (30 NGÀY GẦN NHẤT) ===");
+                        string queryBanChay = @"
+                            SELECT TOP 8
+                                sp.TenSP,
+                                sp.Gia,
                                 dm.TenDM,
-                                SUM(cthd.SoLuong) AS TongSoLuong, 
-                                SUM(cthd.ThanhTien) AS TongDoanhThu,
-                                COUNT(DISTINCT cthd.IdHoaDon) AS SoLanGoi
+                                SUM(cthd.SoLuong) AS TongSoLuong,
+                                SUM(cthd.ThanhTien) AS DoanhThu
                             FROM ChiTietHoaDon cthd
+                            INNER JOIN HoaDon hd ON cthd.IdHoaDon = hd.Id
                             INNER JOIN SanPham sp ON cthd.IdSanPham = sp.Id
                             INNER JOIN DanhMuc dm ON sp.IdDanhMuc = dm.Id
-                            INNER JOIN HoaDon hd ON cthd.IdHoaDon = hd.Id
-                            WHERE hd.TrangThai = N'Đã thanh toán'
-                                AND hd.NgayVao >= DATEADD(DAY, -30, GETDATE())
-                            GROUP BY sp.TenSP, dm.TenDM
+                            WHERE hd.NgayVao >= DATEADD(DAY, -30, GETDATE())
+                              AND hd.TrangThai = N'Đã thanh toán'
+                            GROUP BY sp.TenSP, sp.Gia, dm.TenDM
                             ORDER BY TongSoLuong DESC";
 
-                        DataTable dtBC = DataProvider.Instance.ExecuteQuery(queryBC);
-                        int rank = 1;
+                        DataTable dtBanChay = DataProvider.Instance.ExecuteQuery(queryBanChay);
 
-                        foreach (DataRow row in dtBC.Rows)
+                        foreach (DataRow row in dtBanChay.Rows)
                         {
-                            string medal = rank == 1 ? "🥇" : rank == 2 ? "🥈" : rank == 3 ? "🥉" : $"#{rank}";
-                            sb.AppendLine($"{medal} {row["TenSP"]} ({row["TenDM"]})");
-                            sb.AppendLine($"    • Số lượng bán: {row["TongSoLuong"]} phần");
-                            sb.AppendLine($"    • Doanh thu: {Convert.ToDecimal(row["TongDoanhThu"]):N0}đ");
-                            sb.AppendLine($"    • Được gọi: {row["SoLanGoi"]} lần\n");
-                            rank++;
-                        }
-
-                        if (dtBC.Rows.Count == 0)
-                        {
-                            sb.AppendLine("(Chưa có dữ liệu bán hàng trong 30 ngày qua)");
+                            sb.AppendLine($"   {row["TenSP"]} ({row["TenDM"]}): " +
+                                        $"{Convert.ToDecimal(row["Gia"]):N0}đ - " +
+                                        $"Bán {row["TongSoLuong"]} phần");
                         }
                         break;
 
                     case "Món lợi nhuận cao":
-                        // Lấy món có giá cao và phân tích
-                        sb.AppendLine("=== MÓN GIÁ CAO - LỢI NHUẬN TỐT ===");
-                        string queryGiaCao = @"
-                            SELECT TOP 15 
-                                sp.TenSP, 
-                                sp.Gia, 
+                        sb.AppendLine("=== TOP 8 MÓN LỢI NHUẬN CAO ===");
+                        string queryLoiNhuan = @"
+                            SELECT TOP 8
+                                sp.TenSP,
+                                sp.Gia,
                                 dm.TenDM,
-                                ISNULL(SUM(cthd.SoLuong), 0) AS DaBan
-                            FROM SanPham sp
+                                SUM(cthd.ThanhTien) AS DoanhThu
+                            FROM ChiTietHoaDon cthd
+                            INNER JOIN HoaDon hd ON cthd.IdHoaDon = hd.Id
+                            INNER JOIN SanPham sp ON cthd.IdSanPham = sp.Id
                             INNER JOIN DanhMuc dm ON sp.IdDanhMuc = dm.Id
-                            LEFT JOIN ChiTietHoaDon cthd ON sp.Id = cthd.IdSanPham
-                            LEFT JOIN HoaDon hd ON cthd.IdHoaDon = hd.Id 
-                                AND hd.TrangThai = N'Đã thanh toán'
-                                AND hd.NgayVao >= DATEADD(DAY, -30, GETDATE())
-                            WHERE sp.TrangThai = N'Còn'
+                            WHERE hd.NgayVao >= DATEADD(DAY, -30, GETDATE())
+                              AND hd.TrangThai = N'Đã thanh toán'
                             GROUP BY sp.TenSP, sp.Gia, dm.TenDM
-                            ORDER BY sp.Gia DESC";
+                            ORDER BY DoanhThu DESC";
 
-                        DataTable dtGC = DataProvider.Instance.ExecuteQuery(queryGiaCao);
+                        DataTable dtLoiNhuan = DataProvider.Instance.ExecuteQuery(queryLoiNhuan);
 
-                        foreach (DataRow row in dtGC.Rows)
+                        foreach (DataRow row in dtLoiNhuan.Rows)
                         {
-                            decimal gia = Convert.ToDecimal(row["Gia"]);
-                            int daBan = Convert.ToInt32(row["DaBan"]);
-                            string popularity = daBan > 50 ? "🔥 Rất phổ biến" :
-                                               daBan > 20 ? "✨ Phổ biến" :
-                                               daBan > 0 ? "💡 Ít người biết" : "🆕 Chưa bán";
-
-                            sb.AppendLine($"💎 {row["TenSP"]} ({row["TenDM"]})");
-                            sb.AppendLine($"    • Giá: {gia:N0}đ - {popularity}");
-                            if (daBan > 0)
-                            {
-                                sb.AppendLine($"    • Đã bán: {daBan} phần (30 ngày)\n");
-                            }
-                            else
-                            {
-                                sb.AppendLine($"    • Món mới hoặc chưa có khách thử\n");
-                            }
+                            sb.AppendLine($"   {row["TenSP"]} ({row["TenDM"]}): " +
+                                        $"{Convert.ToDecimal(row["Gia"]):N0}đ - " +
+                                        $"Doanh thu {Convert.ToDecimal(row["DoanhThu"]):N0}đ");
                         }
                         break;
 
                     case "Món theo thời gian":
-                        // Phân tích theo giờ hiện tại
-                        DateTime now = DateTime.Now;
-                        int hour = now.Hour;
-                        string timeContext = "";
-                        string[] recommendations;
+                        int currentHour = DateTime.Now.Hour;
+                        string timeOfDay = "";
+                        List<string> recommendations = new List<string>();
 
-                        if (hour >= 6 && hour < 11)
+                        if (currentHour >= 6 && currentHour < 11)
                         {
-                            timeContext = "🌅 BUỔI SÁNG (6h-11h)";
-                            recommendations = new[] { "Cà phê phin", "Bạc xỉu", "Cà phê sữa", "Bánh mì", "Sandwich", "Trứng", "Sữa chua" };
+                            timeOfDay = "BUỔI SÁNG (6h-11h)";
+                            recommendations.AddRange(new[] { "cafe", "bánh mì", "trà", "sandwich" });
                         }
-                        else if (hour >= 11 && hour < 14)
+                        else if (currentHour >= 11 && currentHour < 14)
                         {
-                            timeContext = "☀️ BUỔI TRƯA (11h-14h)";
-                            recommendations = new[] { "Cơm", "Bún", "Phở", "Nước ép", "Trà đá", "Sinh tố", "Món ăn nhanh" };
+                            timeOfDay = "BUỔI TRƯA (11h-14h)";
+                            recommendations.AddRange(new[] { "cơm", "mì", "phở", "bún" });
                         }
-                        else if (hour >= 14 && hour < 18)
+                        else if (currentHour >= 14 && currentHour < 18)
                         {
-                            timeContext = "🌤️ BUỔI CHIỀU (14h-18h)";
-                            recommendations = new[] { "Cà phê", "Trà sữa", "Bánh ngọt", "Kem", "Nước trái cây", "Smoothie" };
+                            timeOfDay = "BUỔI CHIỀU (14h-18h)";
+                            recommendations.AddRange(new[] { "cafe", "trà", "bánh ngọt", "sinh tố" });
                         }
                         else
                         {
-                            timeContext = "🌙 BUỔI TỐI (18h-22h)";
-                            recommendations = new[] { "Trà sữa", "Sinh tố", "Nước ép", "Món nhẹ", "Dessert", "Cocktail không cồn" };
+                            timeOfDay = "BUỔI TỐI (18h-23h)";
+                            recommendations.AddRange(new[] { "cơm", "lẩu", "nướng", "bia" });
                         }
 
-                        sb.AppendLine($"=== {timeContext} ===");
-                        sb.AppendLine($"Thời gian hiện tại: {now:HH:mm}, {now:dddd, dd/MM/yyyy}\n");
+                        sb.AppendLine($"⏰ THỜI GIAN HIỆN TẠI: {timeOfDay}");
 
-                        // Lấy món phù hợp với thời gian
+                        // Lấy món phù hợp theo thời gian
                         string queryTheoGio = @"
-                            SELECT sp.TenSP, sp.Gia, dm.TenDM
+                            SELECT TOP 8 sp.TenSP, sp.Gia, dm.TenDM
                             FROM SanPham sp
                             INNER JOIN DanhMuc dm ON sp.IdDanhMuc = dm.Id
                             WHERE sp.TrangThai = N'Còn'
-                            ORDER BY sp.TenSP";
+                            ORDER BY sp.Id DESC";
 
                         DataTable dtTG = DataProvider.Instance.ExecuteQuery(queryTheoGio);
                         sb.AppendLine("💡 GỢI Ý THEO THỜI GIAN:");
@@ -299,7 +271,7 @@ namespace QuanLyQuanCaPhe.Class
                             var matchingProducts = dtTG.AsEnumerable()
                                 .Where(r => r["TenSP"].ToString().ToLower().Contains(keyword.ToLower()) ||
                                            r["TenDM"].ToString().ToLower().Contains(keyword.ToLower()))
-                                .Take(3);
+                                .Take(2); // Giảm từ 3 xuống 2 món
 
                             foreach (var product in matchingProducts)
                             {
