@@ -1,4 +1,5 @@
-﻿using System;
+﻿using QuanLyQuanCaPhe.Class;
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Data;
@@ -68,16 +69,27 @@ namespace QuanLyQuanCaPhe.Forms
         }
 
         // Lấy ID người dùng hiện tại (có thể lấy từ session hoặc biến toàn cục)
+        // Lấy ID người dùng hiện tại từ thông tin đăng nhập
         private int? GetCurrentUserId()
         {
             try
             {
-                // TODO: Thay thế bằng cách lấy ID người dùng thực tế từ session/login
-                // Ví dụ: return UserSession.CurrentUserId;
+                // Lấy tên đăng nhập từ biến toàn cục đã lưu lúc login
+                string tenDangNhap = LuuTruThongTinDangNhap.TenDangNhap;
 
-                // Tạm thời lấy ID đầu tiên từ bảng NhanVien
-                string query = "SELECT TOP 1 Id FROM NhanVien WHERE TrangThai = N'Đang làm'";
-                object result = dataProvider.ExecuteScalar(query);
+                if (string.IsNullOrEmpty(tenDangNhap))
+                {
+                    return null;
+                }
+
+                // Truy vấn lấy id nhân viên từ tên đăng nhập
+                string query = "SELECT Id FROM NhanVien WHERE TenDangNhap = @TenDangNhap";
+                SqlParameter[] parameters = new SqlParameter[]
+                {
+                    new SqlParameter("@TenDangNhap", tenDangNhap)
+                };
+
+                object result = dataProvider.ExecuteScalar(query, parameters);
 
                 if (result != null && result != DBNull.Value)
                 {
@@ -86,8 +98,9 @@ namespace QuanLyQuanCaPhe.Forms
 
                 return null;
             }
-            catch
+            catch (Exception ex)
             {
+                MessageBox.Show("Lỗi khi lấy thông tin người dùng: " + ex.Message);
                 return null;
             }
         }
@@ -410,8 +423,7 @@ AND hd.NgayLap <= @DenNgay
 
                 if (currentUserId == null || currentUserId <= 0)
                 {
-                    MessageBox.Show("Không xác định được người lập báo cáo!",
-       "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    MessageBox.Show("Không xác định được người lập báo cáo!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     return;
                 }
 
@@ -426,17 +438,16 @@ AND hd.NgayLap <= @DenNgay
                 }
 
                 // Lưu vào bảng BaoCao_DoanhThu
-                string query = @"
-         INSERT INTO BaoCao_DoanhThu (TuNgay, DenNgay, TongDoanhThu, NguoiLap)
-           VALUES (@TuNgay, @DenNgay, @TongDoanhThu, @NguoiLap)";
+                string query = @"INSERT INTO BaoCao_DoanhThu (TuNgay, DenNgay, TongDoanhThu, NguoiLap)
+                               VALUES (@TuNgay, @DenNgay, @TongDoanhThu, @NguoiLap)";
 
                 SqlParameter[] parameters = new SqlParameter[]
                 {
-   new SqlParameter("@TuNgay", dtpTuNgay.Value.Date),
-     new SqlParameter("@DenNgay", dtpDenNgay.Value.Date),
- new SqlParameter("@TongDoanhThu", tongDoanhThu),
-         new SqlParameter("@NguoiLap", currentUserId.Value)
-         };
+                        new SqlParameter("@TuNgay", dtpTuNgay.Value.Date),
+                        new SqlParameter("@DenNgay", dtpDenNgay.Value.Date),
+                        new SqlParameter("@TongDoanhThu", tongDoanhThu),
+                        new SqlParameter("@NguoiLap", currentUserId.Value)
+                };
 
                 int result = dataProvider.ExecuteNonQuery(query, parameters);
 
