@@ -73,6 +73,30 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
+            // Kiểm tra tài khoản có tồn tại và lấy trạng thái
+            string queryKiemTra = "SELECT TrangThai FROM NguoiDung WHERE TenDangNhap = @userName AND MatKhau = @passWord";
+            SqlParameter[] paramsKiemTra = new SqlParameter[]
+            {
+                new SqlParameter("@userName", userName),
+                new SqlParameter("@passWord", passWord)
+            };
+            DataTable ketQuaKiemTra = DataProvider.Instance.ExecuteQuery(queryKiemTra, paramsKiemTra);
+
+            // Nếu không tìm thấy tài khoản thì thông báo sai
+            if (ketQuaKiemTra.Rows.Count == 0)
+            {
+                MessageBox.Show("Sai tên đăng nhập hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return;
+            }
+
+            // Nếu tài khoản bị khóa thì thông báo tài khoản bị khóa
+            string trangThai = ketQuaKiemTra.Rows[0]["TrangThai"].ToString();
+            if (trangThai == "Đã khóa")
+            {
+                MessageBox.Show("Tài khoản của bạn đã bị khóa!\nVui lòng liên hệ quản trị viên để được hỗ trợ.", "Tài khoản bị khóa", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
             string query = "EXEC usp_Login @userName = '" + userName + "' , @passWord = '" + passWord + "'";
             DataTable duLieu = DataProvider.Instance.ExecuteQuery(query);
 
@@ -88,10 +112,6 @@ namespace QuanLyQuanCaPhe.Forms
                 this.Hide();
                 f.ShowDialog();
                 this.Show();
-            }
-            else
-            {
-                MessageBox.Show("Sai tên tài khoản hoặc mật khẩu!", "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
