@@ -25,6 +25,7 @@ namespace QuanLyQuanCaPhe.Forms
             LockControls(false);
 
             LoadDanhMucComBoBox(cboDanhMuc);
+            LoadData();
         }
 
         // ==========================
@@ -46,7 +47,21 @@ namespace QuanLyQuanCaPhe.Forms
 
         // ===========================
         // DỮ LIỆU 
-        // ==========================
+        // ===========================
+
+        // Load dữ liệu và reset trạng thái form
+        private void LoadData()
+        {
+            LoadListSanPham();
+            AddSanPhamBinding();
+            SetInputReadOnly(true);
+            LockControls(false);
+            isAdding = isEditing = false;
+            btnThem.Text = "Thêm";
+            btnSua.Text = "Sửa";
+            btnThem.Enabled = btnSua.Enabled = btnXoa.Enabled = true;
+        }
+
         private List<SanPham> GetListSanPham()
         {
             List<SanPham> list = new List<SanPham>();
@@ -120,24 +135,10 @@ namespace QuanLyQuanCaPhe.Forms
             }
         }
 
-        // ================
-        // NÚT XEM
-        // ==================
-        private void btnXem_Click(object sender, EventArgs e)
-        {
-            LoadListSanPham();
-            AddSanPhamBinding();
-            SetInputReadOnly(true);
-            LockControls(false);
-            isAdding = isEditing = false;
-            btnThem.Text = "Thêm";
-            btnSua.Text = "Sửa";
-            btnThem.Enabled = btnSua.Enabled = btnXoa.Enabled = true;
-        }
+        // =====================================================================
+        // NÚT CHỨC NĂNG
+        // =====================================================================
 
-        // ==============
-        // NÚT THÊM
-        // ==============
         private void btnThem_Click(object sender, EventArgs e)
         {
             if (!isAdding)
@@ -193,7 +194,7 @@ namespace QuanLyQuanCaPhe.Forms
                 if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
                 {
                     MessageBox.Show("Thêm thành công.");
-                    btnXem_Click(null, null);
+                    LoadData();
                 }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
@@ -242,7 +243,7 @@ namespace QuanLyQuanCaPhe.Forms
                 if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
                 {
                     MessageBox.Show("Sửa thành công.");
-                    btnXem_Click(null, null);
+                    LoadData();
                 }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
@@ -267,7 +268,7 @@ namespace QuanLyQuanCaPhe.Forms
                     DataProvider.Instance.ExecuteNonQuery(reset);
 
                     MessageBox.Show("Xóa thành công.");
-                    btnXem_Click(null, null);
+                    LoadData();
                 }
             }
             catch { MessageBox.Show("Không thể xóa món này."); }
@@ -276,7 +277,7 @@ namespace QuanLyQuanCaPhe.Forms
         private void btnTimKiem_Click(object sender, EventArgs e)
         {
             string keyword = txtTimKiemMon.Text.Trim();
-            if (string.IsNullOrEmpty(keyword)) { btnXem_Click(null, null); return; }
+            if (string.IsNullOrEmpty(keyword)) { LoadData(); return; }
 
             string query = "SELECT * FROM SanPham WHERE TenSP LIKE @ten ORDER BY Id ASC";
             try

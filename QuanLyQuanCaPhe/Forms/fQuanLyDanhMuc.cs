@@ -31,11 +31,26 @@ namespace QuanLyQuanCaPhe.Forms
         {
             txtID.ReadOnly = true;
             SetInputReadOnly(true);
+            LoadData();
         }
 
         // ===================
         // DỮ LIỆU
         // ===================
+
+        // Load dữ liệu và reset trạng thái form
+        private void LoadData()
+        {
+            LoadListDanhMuc();
+            AddDanhMucBinding();
+            SetInputReadOnly(true);
+            LockControls(false);
+            isAdding = isEditing = false;
+            btnThem.Text = "Thêm";
+            btnSua.Text = "Sửa";
+            btnThem.Enabled = btnSua.Enabled = btnXoa.Enabled = true;
+        }
+
         private List<DanhMuc> GetListDanhMuc()
         {
             List<DanhMuc> list = new List<DanhMuc>();
@@ -64,17 +79,6 @@ namespace QuanLyQuanCaPhe.Forms
         // ========================
         // CÁC NÚT CHỨC NĂNG
         // ========================
-        private void btnXem_Click(object sender, EventArgs e)
-        {
-            LoadListDanhMuc();
-            AddDanhMucBinding();
-            SetInputReadOnly(true);
-            LockControls(false);
-            isAdding = isEditing = false;
-            btnThem.Text = "Thêm";
-            btnSua.Text = "Sửa";
-            btnThem.Enabled = btnSua.Enabled = btnXoa.Enabled = true;
-        }
 
         private void btnThem_Click(object sender, EventArgs e)
         {
@@ -113,7 +117,7 @@ namespace QuanLyQuanCaPhe.Forms
             if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
             {
                 MessageBox.Show("Thêm thành công.");
-                btnXem_Click(null, null);
+                LoadData();
             }
         }
 
@@ -140,7 +144,7 @@ namespace QuanLyQuanCaPhe.Forms
             if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
             {
                 MessageBox.Show("Cập nhật thành công.");
-                btnXem_Click(null, null);
+                LoadData();
             }
         }
 
@@ -162,7 +166,7 @@ namespace QuanLyQuanCaPhe.Forms
                         DataProvider.Instance.ExecuteNonQuery(resetQuery);
 
                         MessageBox.Show("Xóa thành công.");
-                        btnXem_Click(null, null);
+                        LoadData();
                     }
                 }
                 catch

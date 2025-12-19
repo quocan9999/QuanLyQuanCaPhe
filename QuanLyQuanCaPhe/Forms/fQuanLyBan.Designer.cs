@@ -31,7 +31,6 @@
             this.panel1 = new System.Windows.Forms.Panel();
             this.label1 = new System.Windows.Forms.Label();
             this.panel4 = new System.Windows.Forms.Panel();
-            this.btnXem = new System.Windows.Forms.Button();
             this.btnSua = new System.Windows.Forms.Button();
             this.btnXoa = new System.Windows.Forms.Button();
             this.btnThem = new System.Windows.Forms.Button();
@@ -89,7 +88,6 @@
             this.panel4.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.panel4.BackColor = System.Drawing.Color.SaddleBrown;
-            this.panel4.Controls.Add(this.btnXem);
             this.panel4.Controls.Add(this.btnSua);
             this.panel4.Controls.Add(this.btnXoa);
             this.panel4.Controls.Add(this.btnThem);
@@ -98,24 +96,6 @@
             this.panel4.Name = "panel4";
             this.panel4.Size = new System.Drawing.Size(957, 96);
             this.panel4.TabIndex = 3;
-            // 
-            // btnXem
-            // 
-            this.btnXem.Anchor = System.Windows.Forms.AnchorStyles.Bottom;
-            this.btnXem.BackColor = System.Drawing.Color.SteelBlue;
-            this.btnXem.FlatAppearance.BorderColor = System.Drawing.Color.White;
-            this.btnXem.FlatAppearance.BorderSize = 2;
-            this.btnXem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnXem.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.btnXem.ForeColor = System.Drawing.Color.White;
-            this.btnXem.Location = new System.Drawing.Point(590, 23);
-            this.btnXem.Margin = new System.Windows.Forms.Padding(2);
-            this.btnXem.Name = "btnXem";
-            this.btnXem.Size = new System.Drawing.Size(110, 50);
-            this.btnXem.TabIndex = 3;
-            this.btnXem.Text = "Xem";
-            this.btnXem.UseVisualStyleBackColor = false;
-            this.btnXem.Click += new System.EventHandler(this.btnXem_Click);
             // 
             // btnSua
             // 
@@ -126,7 +106,7 @@
             this.btnSua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnSua.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnSua.ForeColor = System.Drawing.Color.White;
-            this.btnSua.Location = new System.Drawing.Point(460, 23);
+            this.btnSua.Location = new System.Drawing.Point(618, 23);
             this.btnSua.Margin = new System.Windows.Forms.Padding(2);
             this.btnSua.Name = "btnSua";
             this.btnSua.Size = new System.Drawing.Size(110, 50);
@@ -144,7 +124,7 @@
             this.btnXoa.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnXoa.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnXoa.ForeColor = System.Drawing.Color.White;
-            this.btnXoa.Location = new System.Drawing.Point(330, 23);
+            this.btnXoa.Location = new System.Drawing.Point(419, 23);
             this.btnXoa.Margin = new System.Windows.Forms.Padding(2);
             this.btnXoa.Name = "btnXoa";
             this.btnXoa.Size = new System.Drawing.Size(110, 50);
@@ -162,7 +142,7 @@
             this.btnThem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnThem.Font = new System.Drawing.Font("Microsoft Sans Serif", 10.8F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.btnThem.ForeColor = System.Drawing.Color.White;
-            this.btnThem.Location = new System.Drawing.Point(200, 23);
+            this.btnThem.Location = new System.Drawing.Point(202, 23);
             this.btnThem.Margin = new System.Windows.Forms.Padding(2);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(110, 50);
@@ -346,6 +326,7 @@
             this.Name = "fQuanLyBan";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản Lý Bàn";
+            this.Load += new System.EventHandler(this.fQuanLyBan_Load);
             this.panel1.ResumeLayout(false);
             this.panel1.PerformLayout();
             this.panel4.ResumeLayout(false);
@@ -375,7 +356,6 @@
         private System.Windows.Forms.DataGridView grvQuanLyBan;
         private System.Windows.Forms.TextBox txtTenBan;
         private System.Windows.Forms.Label label2;
-        private System.Windows.Forms.Button btnXem;
         private System.Windows.Forms.Button btnSua;
         private System.Windows.Forms.Button btnXoa;
         private System.Windows.Forms.Button btnThem;
