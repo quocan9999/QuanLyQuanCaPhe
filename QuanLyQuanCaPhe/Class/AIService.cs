@@ -18,8 +18,7 @@ namespace QuanLyQuanCaPhe.Class
         private const string GEMINI_API_KEY = "AIzaSyC8TxTKmESTXIQo7YKBpdGfsHHuEU65Z-I";
 
         // Gemini API endpoint
-        private const string API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent";
-
+        private const string API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
         /// <summary>
         /// Gọi Gemini API để gợi ý món ăn (Async)
         /// </summary>
@@ -148,7 +147,7 @@ namespace QuanLyQuanCaPhe.Class
             {
                 switch (mode)
                 {
-                    case "🎯 Gợi ý theo bối cảnh":
+                    case "Gợi ý theo bối cảnh":
                         // Lấy thông tin toàn bộ sản phẩm
                         sb.AppendLine("=== DANH SÁCH SẢN PHẨM CỦA QUÁN ===");
                         string querySP = @"
@@ -173,7 +172,7 @@ namespace QuanLyQuanCaPhe.Class
                         }
                         break;
 
-                    case "📊 Món bán chạy nhất":
+                    case "Món bán chạy nhất":
                         // Lấy top 10 món bán chạy trong 30 ngày gần nhất
                         sb.AppendLine("=== TOP 10 MÓN BÁN CHẠY (30 NGÀY GẦN NHẤT) ===");
                         string queryBC = @"
@@ -211,7 +210,7 @@ namespace QuanLyQuanCaPhe.Class
                         }
                         break;
 
-                    case "💰 Món lợi nhuận cao":
+                    case "Món lợi nhuận cao":
                         // Lấy món có giá cao và phân tích
                         sb.AppendLine("=== MÓN GIÁ CAO - LỢI NHUẬN TỐT ===");
                         string queryGiaCao = @"
@@ -253,7 +252,7 @@ namespace QuanLyQuanCaPhe.Class
                         }
                         break;
 
-                    case "⏰ Món theo thời gian":
+                    case "Món theo thời gian":
                         // Phân tích theo giờ hiện tại
                         DateTime now = DateTime.Now;
                         int hour = now.Hour;

@@ -624,18 +624,15 @@ namespace QuanLyQuanCaPhe
                 return;
             }
 
-            // Hiển thị tin nhắn người dùng
             AppendChatMessage("👤 Bạn: " + userMessage, Color.Blue);
             txtChatInput.Clear();
 
-            // Hiển thị loading
             AppendChatMessage("⏳ Đang suy nghĩ...", Color.Gray);
             btnSendChat.Enabled = false;
 
             try
             {
-                // Lấy mode đã chọn
-                string mode = cboChatMode.SelectedItem?.ToString() ?? "🎯 Gợi ý theo bối cảnh";
+                string mode = cboChatMode.SelectedItem?.ToString() ?? "Gợi ý theo bối cảnh";
 
                 // Gọi AI (async để không block UI)
                 string aiResponse = await Task.Run(() =>
@@ -694,14 +691,12 @@ namespace QuanLyQuanCaPhe
             if (result == DialogResult.Yes)
             {
                 rtbChatHistory.Clear();
-                rtbChatHistory.Text = "Xin chào! Tôi có thể giúp gì cho bạn?\n\n💡 Thử hỏi:\n- \"Món bán chạy nhất hôm nay?\"\n- \"Gợi ý món cho khách nữ?\"\n- \"Món phù hợp buổi sáng?\"";
+                rtbChatHistory.Text = "Xin chào! Tôi có thể giúp gì cho bạn?\n\nThử hỏi:\n- \"Món bán chạy nhất hôm nay?\"\n- \"Gợi ý món cho khách nữ?\"\n- \"Món phù hợp buổi sáng?\"";
             }
         }
 
-        // Thêm vào constructor hoặc InitializeForm()
         private void InitializeChatBot()
         {
-            // Enter key để gửi tin nhắn
             txtChatInput.KeyPress += (s, e) =>
             {
                 if (e.KeyChar == (char)Keys.Enter)
