@@ -204,7 +204,7 @@
             // 
             this.btnLamMoi.BackColor = System.Drawing.Color.LightGray;
             this.btnLamMoi.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnLamMoi.Location = new System.Drawing.Point(20, 130);
+            this.btnLamMoi.Location = new System.Drawing.Point(20, 156);
             this.btnLamMoi.Name = "btnLamMoi";
             this.btnLamMoi.Size = new System.Drawing.Size(300, 35);
             this.btnLamMoi.TabIndex = 4;
@@ -217,9 +217,9 @@
             this.btnXoa.BackColor = System.Drawing.Color.IndianRed;
             this.btnXoa.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnXoa.ForeColor = System.Drawing.Color.White;
-            this.btnXoa.Location = new System.Drawing.Point(20, 95);
+            this.btnXoa.Location = new System.Drawing.Point(20, 108);
             this.btnXoa.Name = "btnXoa";
-            this.btnXoa.Size = new System.Drawing.Size(300, 33);
+            this.btnXoa.Size = new System.Drawing.Size(300, 38);
             this.btnXoa.TabIndex = 2;
             this.btnXoa.Text = "Xóa";
             this.btnXoa.UseVisualStyleBackColor = false;
@@ -229,7 +229,7 @@
             // 
             this.btnSua.BackColor = System.Drawing.Color.LightGray;
             this.btnSua.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
-            this.btnSua.Location = new System.Drawing.Point(20, 60);
+            this.btnSua.Location = new System.Drawing.Point(20, 64);
             this.btnSua.Name = "btnSua";
             this.btnSua.Size = new System.Drawing.Size(300, 37);
             this.btnSua.TabIndex = 1;
@@ -242,9 +242,9 @@
             this.btnThem.BackColor = System.Drawing.Color.ForestGreen;
             this.btnThem.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
             this.btnThem.ForeColor = System.Drawing.Color.White;
-            this.btnThem.Location = new System.Drawing.Point(20, 25);
+            this.btnThem.Location = new System.Drawing.Point(20, 19);
             this.btnThem.Name = "btnThem";
-            this.btnThem.Size = new System.Drawing.Size(300, 30);
+            this.btnThem.Size = new System.Drawing.Size(300, 39);
             this.btnThem.TabIndex = 0;
             this.btnThem.Text = "Thêm";
             this.btnThem.UseVisualStyleBackColor = false;
