@@ -139,7 +139,7 @@
             this.label5.AutoSize = true;
             this.label5.Location = new System.Drawing.Point(20, 168);
             this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(62, 13);
+            this.label5.Size = new System.Drawing.Size(58, 13);
             this.label5.TabIndex = 4;
             this.label5.Text = "Trạng thái:";
             // 
@@ -148,7 +148,7 @@
             this.label4.AutoSize = true;
             this.label4.Location = new System.Drawing.Point(20, 133);
             this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(56, 13);
+            this.label4.Size = new System.Drawing.Size(53, 13);
             this.label4.TabIndex = 3;
             this.label4.Text = "Ngày tạo:";
             // 
@@ -157,7 +157,7 @@
             this.label3.AutoSize = true;
             this.label3.Location = new System.Drawing.Point(20, 98);
             this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(43, 13);
+            this.label3.Size = new System.Drawing.Size(40, 13);
             this.label3.TabIndex = 2;
             this.label3.Text = "Vai trò:";
             // 
@@ -194,9 +194,9 @@
             // 
             // btnLamMoi
             // 
-            this.btnLamMoi.Location = new System.Drawing.Point(20, 130);
+            this.btnLamMoi.Location = new System.Drawing.Point(20, 157);
             this.btnLamMoi.Name = "btnLamMoi";
-            this.btnLamMoi.Size = new System.Drawing.Size(300, 30);
+            this.btnLamMoi.Size = new System.Drawing.Size(300, 35);
             this.btnLamMoi.TabIndex = 4;
             this.btnLamMoi.Text = "Làm mới";
             this.btnLamMoi.UseVisualStyleBackColor = true;
@@ -204,9 +204,9 @@
             // 
             // btnXoa
             // 
-            this.btnXoa.Location = new System.Drawing.Point(20, 95);
+            this.btnXoa.Location = new System.Drawing.Point(20, 118);
             this.btnXoa.Name = "btnXoa";
-            this.btnXoa.Size = new System.Drawing.Size(300, 30);
+            this.btnXoa.Size = new System.Drawing.Size(300, 33);
             this.btnXoa.TabIndex = 2;
             this.btnXoa.Text = "Xóa";
             this.btnXoa.UseVisualStyleBackColor = true;
@@ -214,9 +214,9 @@
             // 
             // btnSua
             // 
-            this.btnSua.Location = new System.Drawing.Point(20, 60);
+            this.btnSua.Location = new System.Drawing.Point(20, 74);
             this.btnSua.Name = "btnSua";
-            this.btnSua.Size = new System.Drawing.Size(300, 30);
+            this.btnSua.Size = new System.Drawing.Size(300, 37);
             this.btnSua.TabIndex = 1;
             this.btnSua.Text = "Sửa";
             this.btnSua.UseVisualStyleBackColor = true;
@@ -224,7 +224,7 @@
             // 
             // btnThem
             // 
-            this.btnThem.Location = new System.Drawing.Point(20, 25);
+            this.btnThem.Location = new System.Drawing.Point(20, 38);
             this.btnThem.Name = "btnThem";
             this.btnThem.Size = new System.Drawing.Size(300, 30);
             this.btnThem.TabIndex = 0;
@@ -258,7 +258,7 @@
             this.btnTimKiem.UseVisualStyleBackColor = true;
             this.btnTimKiem.Click += new System.EventHandler(this.btnTimKiem_Click);
             // 
-            // QuanLyTaiKhoan
+            // fQuanLyTaiKhoan
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
@@ -271,7 +271,7 @@
             this.Controls.Add(this.dgvNguoiDung);
             this.FormBorderStyle = System.Windows.Forms.FormBorderStyle.FixedDialog;
             this.MaximizeBox = false;
-            this.Name = "QuanLyTaiKhoan";
+            this.Name = "fQuanLyTaiKhoan";
             this.StartPosition = System.Windows.Forms.FormStartPosition.CenterScreen;
             this.Text = "Quản Lý Tài Khoản";
             this.Load += new System.EventHandler(this.QuanLyTaiKhoan_Load);
