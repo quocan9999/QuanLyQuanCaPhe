@@ -271,10 +271,7 @@
       <Generator>CrystalDecisions.VSDesigner.CodeGen.ReportCodeGenerator</Generator>
       <LastGenOutput>rptHoaDon.cs</LastGenOutput>
     </EmbeddedResource>
-    <None Include="Docs\BaoCaoDoanhThu_HuongDan.md" />
-    <None Include="Docs\BaoCaoDoanhThu_README.md" />
-    <None Include="Docs\Comparison_BaoCao.md" />
-    <None Include="Docs\COMPLETED_BaoCaoDoanhThu.md" />
+    <None Include="Database\QuanLyCaPhe.bak" />
     <None Include="dsBaoCaoDoanhThu.xsc">
       <DependentUpon>dsBaoCaoDoanhThu.xsd</DependentUpon>
     </None>
@@ -312,14 +309,8 @@
     <None Include="App.config" />
   </ItemGroup>
   <ItemGroup>
-    <Content Include="Database\DuLieuMau.sql" />
-    <Content Include="Database\newquery.sql" />
-    <Content Include="Database\Procedure\trg_TaoNhanVienKhiTaoTaiKhoan.sql" />
-    <Content Include="Database\Procedure\usp_GetTableList.sql" />
-    <Content Include="Database\Procedure\usp_Login.sql" />
-    <Content Include="Database\QuanLyCaPhe_data.sql" />
     <Content Include="HinhAnh\coffeesidebar.png" />
-    <Content Include="SQL\Create_View_BaoCaoDoanhThu.sql" />
+    <Content Include="HinhAnh\servername.png" />
   </ItemGroup>
   <ItemGroup>
     <Service Include="{C0C07587-41A7-46C8-8FBD-3F9C8EBE2DDC}" />
