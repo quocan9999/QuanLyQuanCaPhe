@@ -509,7 +509,7 @@
             // lblThoiGianBatDau
             // 
             this.lblThoiGianBatDau.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(232)))), ((int)(((byte)(245)))), ((int)(((byte)(233)))));
-            this.lblThoiGianBatDau.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.lblThoiGianBatDau.Font = new System.Drawing.Font("Segoe UI", 14.25F, System.Drawing.FontStyle.Bold, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
             this.lblThoiGianBatDau.ForeColor = System.Drawing.Color.FromArgb(((int)(((byte)(46)))), ((int)(((byte)(125)))), ((int)(((byte)(50)))));
             this.lblThoiGianBatDau.Location = new System.Drawing.Point(8, 49);
             this.lblThoiGianBatDau.Margin = new System.Windows.Forms.Padding(2, 0, 2, 0);
@@ -576,14 +576,14 @@
             // tsmiThongTinCaNhan
             // 
             this.tsmiThongTinCaNhan.Name = "tsmiThongTinCaNhan";
-            this.tsmiThongTinCaNhan.Size = new System.Drawing.Size(180, 22);
+            this.tsmiThongTinCaNhan.Size = new System.Drawing.Size(170, 22);
             this.tsmiThongTinCaNhan.Text = "Thông tin cá nhân";
             this.tsmiThongTinCaNhan.Click += new System.EventHandler(this.tsmiThongTinCaNhan_Click);
             // 
             // tsmiDangXuat
             // 
             this.tsmiDangXuat.Name = "tsmiDangXuat";
-            this.tsmiDangXuat.Size = new System.Drawing.Size(180, 22);
+            this.tsmiDangXuat.Size = new System.Drawing.Size(170, 22);
             this.tsmiDangXuat.Text = "Đăng xuất";
             this.tsmiDangXuat.Click += new System.EventHandler(this.tsmiDangXuat_Click);
             // 
