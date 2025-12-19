@@ -49,7 +49,7 @@
             this.label3 = new System.Windows.Forms.Label();
             this.panel5 = new System.Windows.Forms.Panel();
             this.label7 = new System.Windows.Forms.Label();
-            this.txtTrangThai = new System.Windows.Forms.TextBox();
+            this.cboTrangThai = new System.Windows.Forms.ComboBox();
             this.txtDVT = new System.Windows.Forms.TextBox();
             this.btnTimKiem = new System.Windows.Forms.Button();
             this.txtGia = new System.Windows.Forms.TextBox();
@@ -197,7 +197,7 @@
             this.panel4.Controls.Add(this.panel7);
             this.panel4.Controls.Add(this.panel6);
             this.panel4.Controls.Add(this.panel5);
-            this.panel4.Controls.Add(this.txtTrangThai);
+            this.panel4.Controls.Add(this.cboTrangThai);
             this.panel4.Controls.Add(this.txtDVT);
             this.panel4.Controls.Add(this.btnTimKiem);
             this.panel4.Controls.Add(this.txtGia);
@@ -331,14 +331,16 @@
             this.label7.TabIndex = 19;
             this.label7.Text = "Trạng thái";
             // 
-            // txtTrangThai
+            // cboTrangThai
             // 
-            this.txtTrangThai.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
-            this.txtTrangThai.Location = new System.Drawing.Point(130, 284);
-            this.txtTrangThai.Margin = new System.Windows.Forms.Padding(2);
-            this.txtTrangThai.Name = "txtTrangThai";
-            this.txtTrangThai.Size = new System.Drawing.Size(130, 21);
-            this.txtTrangThai.TabIndex = 12;
+            this.cboTrangThai.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboTrangThai.Font = new System.Drawing.Font("Microsoft Sans Serif", 9F, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, ((byte)(0)));
+            this.cboTrangThai.FormattingEnabled = true;
+            this.cboTrangThai.Location = new System.Drawing.Point(130, 284);
+            this.cboTrangThai.Margin = new System.Windows.Forms.Padding(2);
+            this.cboTrangThai.Name = "cboTrangThai";
+            this.cboTrangThai.Size = new System.Drawing.Size(130, 23);
+            this.cboTrangThai.TabIndex = 12;
             // 
             // txtDVT
             // 
@@ -473,7 +475,7 @@
         private System.Windows.Forms.ComboBox cboDanhMuc;
         private System.Windows.Forms.TextBox txtID;
         private System.Windows.Forms.Button btnTimKiem;
-        private System.Windows.Forms.TextBox txtTrangThai;
+        private System.Windows.Forms.ComboBox cboTrangThai;
         private System.Windows.Forms.Label label7;
         private System.Windows.Forms.TextBox txtDVT;
         private System.Windows.Forms.Label label5;

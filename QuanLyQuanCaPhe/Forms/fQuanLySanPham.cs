@@ -26,6 +26,7 @@ namespace QuanLyQuanCaPhe.Forms
             SetInputReadOnly(true);
             LockControls(false);
             LoadDanhMucComBoBox(cboDanhMuc);
+            LoadTrangThaiComboBox(cboTrangThai);
             LoadData();
         }
 
@@ -34,7 +35,7 @@ namespace QuanLyQuanCaPhe.Forms
             txtTenSanPham.ReadOnly = state;
             txtGia.ReadOnly = state;
             txtDVT.ReadOnly = state;
-            txtTrangThai.ReadOnly = state;
+            cboTrangThai.Enabled = !state;
             cboDanhMuc.Enabled = !state;
         }
 
@@ -85,14 +86,14 @@ namespace QuanLyQuanCaPhe.Forms
             txtTenSanPham.DataBindings.Clear();
             txtGia.DataBindings.Clear();
             txtDVT.DataBindings.Clear();
-            txtTrangThai.DataBindings.Clear();
+            cboTrangThai.DataBindings.Clear();
             cboDanhMuc.DataBindings.Clear();
 
             txtID.DataBindings.Add("Text", monList, "Id", true, DataSourceUpdateMode.Never);
             txtTenSanPham.DataBindings.Add("Text", monList, "TenSP", true, DataSourceUpdateMode.Never);
             txtGia.DataBindings.Add("Text", monList, "DonGia", true, DataSourceUpdateMode.Never);
             txtDVT.DataBindings.Add("Text", monList, "DonViTinh", true, DataSourceUpdateMode.Never);
-            txtTrangThai.DataBindings.Add("Text", monList, "TrangThai", true, DataSourceUpdateMode.Never);
+            cboTrangThai.DataBindings.Add("Text", monList, "TrangThai", true, DataSourceUpdateMode.Never);
             cboDanhMuc.DataBindings.Add(new Binding("SelectedValue", monList, "MaDanhMuc", true, DataSourceUpdateMode.Never));
         }
 
@@ -105,6 +106,20 @@ namespace QuanLyQuanCaPhe.Forms
                 cb.DataSource = data;
                 cb.DisplayMember = "TenDanhMuc";
                 cb.ValueMember = "Id";
+            }
+            catch { }
+        }
+
+        // Load danh sách trạng thái sản phẩm từ database
+        private void LoadTrangThaiComboBox(ComboBox cb)
+        {
+            string query = "SELECT TenTrangThai FROM TrangThaiSanPham ORDER BY Id";
+            try
+            {
+                DataTable data = DataProvider.Instance.ExecuteQuery(query);
+                cb.DataSource = data;
+                cb.DisplayMember = "TenTrangThai";
+                cb.ValueMember = "TenTrangThai";
             }
             catch { }
         }
@@ -144,13 +159,13 @@ namespace QuanLyQuanCaPhe.Forms
                 txtTenSanPham.DataBindings.Clear();
                 txtGia.DataBindings.Clear();
                 txtDVT.DataBindings.Clear();
-                txtTrangThai.DataBindings.Clear();
+                cboTrangThai.DataBindings.Clear();
                 cboDanhMuc.DataBindings.Clear();
                 txtID.Text = "";
                 txtTenSanPham.Text = "";
                 txtGia.Text = "";
                 txtDVT.Text = "";
-                txtTrangThai.Text = "Còn bán";
+                cboTrangThai.SelectedValue = "Còn bán";
                 SetInputReadOnly(false);
                 LockControls(true);
                 txtTenSanPham.Focus();
@@ -175,7 +190,7 @@ namespace QuanLyQuanCaPhe.Forms
                     new SqlParameter("@gia", gia),
                     new SqlParameter("@dvt", txtDVT.Text.Trim()),
                     new SqlParameter("@madm", cboDanhMuc.SelectedValue),
-                    new SqlParameter("@tt", txtTrangThai.Text.Trim())
+                    new SqlParameter("@tt", cboTrangThai.SelectedValue.ToString())
                 };
                 if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0) { MessageBox.Show("Thêm thành công."); LoadData(); }
             }
@@ -216,7 +231,7 @@ namespace QuanLyQuanCaPhe.Forms
                     new SqlParameter("@gia", float.Parse(txtGia.Text.Trim())),
                     new SqlParameter("@dvt", txtDVT.Text.Trim()),
                     new SqlParameter("@madm", cboDanhMuc.SelectedValue),
-                    new SqlParameter("@tt", txtTrangThai.Text.Trim())
+                    new SqlParameter("@tt", cboTrangThai.SelectedValue.ToString())
                 };
                 if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0) { MessageBox.Show("Sửa thành công."); LoadData(); }
             }

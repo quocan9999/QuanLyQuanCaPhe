@@ -558,7 +558,7 @@ namespace QuanLyQuanCaPhe
             }
             else
             {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -571,7 +571,7 @@ namespace QuanLyQuanCaPhe
             }
             else
             {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -584,7 +584,7 @@ namespace QuanLyQuanCaPhe
             }
             else
             {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -597,7 +597,7 @@ namespace QuanLyQuanCaPhe
             }
             else
             {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -610,7 +610,7 @@ namespace QuanLyQuanCaPhe
             }
             else
             {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -641,7 +641,7 @@ namespace QuanLyQuanCaPhe
             }
             else
             {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -654,7 +654,7 @@ namespace QuanLyQuanCaPhe
             }
             else
             {
-                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                MessageBox.Show("Bạn không có quyền truy cập chức năng này!", "Thông báo!", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 

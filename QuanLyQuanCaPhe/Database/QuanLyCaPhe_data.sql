@@ -112,7 +112,16 @@ CREATE TABLE DanhMuc (
 GO
 
 -- ═══════════════════════════════════════════════════════════════════════════════
--- 2.4. Bảng SANPHAM - Thông tin sản phẩm
+-- 2.4. Bảng TRANGTHAISANPHAM - Trạng thái sản phẩm (Còn bán, Tạm ngưng)
+-- ═══════════════════════════════════════════════════════════════════════════════
+CREATE TABLE TrangThaiSanPham (
+    Id INT IDENTITY(1,1) PRIMARY KEY,
+    TenTrangThai NVARCHAR(20) NOT NULL UNIQUE
+);
+GO
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 2.5. Bảng SANPHAM - Thông tin sản phẩm
 -- ═══════════════════════════════════════════════════════════════════════════════
 CREATE TABLE SanPham (
     Id INT IDENTITY(1,1) PRIMARY KEY,
@@ -352,7 +361,7 @@ BEGIN
         N'Nhân viên mới - ' + i.TenDangNhap,    -- Họ tên mặc định
         N'Nam',                                   -- Giới tính mặc định
         DATEADD(YEAR, -20, GETDATE()),           -- Ngày sinh mặc định (20 tuổi)
-        '0000000000',                             -- SĐT tạm thời (cần cập nhật sau)
+        '0' + RIGHT('000000000' + CAST(ABS(CHECKSUM(NEWID())) % 1000000000 AS VARCHAR(9)), 9), -- Tạo các sđt ngẫu nhiên tạm thời
         i.TenDangNhap + '@coffee.vn',            -- Email tạm thời
         N'Chưa cập nhật',                        -- Địa chỉ mặc định
         0,                                        -- Lương mặc định
@@ -726,13 +735,11 @@ VALUES
 GO
 
 -- ═══════════════════════════════════════════════════════════════════════════════
--- 6.2. Dữ liệu mẫu: NHANVIEN
+-- 6.2. Dữ liệu mẫu: NHANVIEN (Cập nhật thông tin nhân viên đã được tạo bởi trigger)
 -- ═══════════════════════════════════════════════════════════════════════════════
-INSERT INTO NhanVien (HoTen, GioiTinh, NgaySinh, SDT, Email, DiaChi, Luong, TenDangNhap, TrangThai)
-VALUES
-    (N'Nguyễn Văn A', N'Nam', '1999-05-10', '0901111222', N'nguyenvana@coffee.vn', N'Quận 1, TP. HCM',   8000000, N'admin',      N'Hoạt động'),
-    (N'Trần Thị B',   N'Nữ',  '2000-08-21', '0902222333', N'tranthib@coffee.vn',   N'Quận 3, TP. HCM',   6000000, N'nhanvien1',  N'Hoạt động'),
-    (N'Lê Quốc C',    N'Nam', '1998-12-01', '0903333444', N'lequocc@coffee.vn',    N'Thủ Đức, TP. HCM',  5500000, N'nhanvien2',  N'Hoạt động');
+UPDATE NhanVien SET HoTen = N'Nguyễn Văn A', GioiTinh = N'Nam', NgaySinh = '1999-05-10', SDT = '0901111222', Email = N'nguyenvana@coffee.vn', DiaChi = N'Quận 1, TP. HCM', Luong = 8000000 WHERE TenDangNhap = N'admin';
+UPDATE NhanVien SET HoTen = N'Trần Thị B',   GioiTinh = N'Nữ',  NgaySinh = '2000-08-21', SDT = '0902222333', Email = N'tranthib@coffee.vn',   DiaChi = N'Quận 3, TP. HCM', Luong = 6000000 WHERE TenDangNhap = N'nhanvien1';
+UPDATE NhanVien SET HoTen = N'Lê Quốc C',    GioiTinh = N'Nam', NgaySinh = '1998-12-01', SDT = '0903333444', Email = N'lequocc@coffee.vn',    DiaChi = N'Thủ Đức, TP. HCM', Luong = 5500000 WHERE TenDangNhap = N'nhanvien2';
 GO
 
 -- ═══════════════════════════════════════════════════════════════════════════════
@@ -747,7 +754,16 @@ VALUES
 GO
 
 -- ═══════════════════════════════════════════════════════════════════════════════
--- 6.4. Dữ liệu mẫu: SANPHAM
+-- 6.4. Dữ liệu mẫu: TRANGTHAISANPHAM
+-- ═══════════════════════════════════════════════════════════════════════════════
+INSERT INTO TrangThaiSanPham (TenTrangThai)
+VALUES
+    (N'Còn bán'),
+    (N'Tạm ngưng');
+GO
+
+-- ═══════════════════════════════════════════════════════════════════════════════
+-- 6.5. Dữ liệu mẫu: SANPHAM
 -- ═══════════════════════════════════════════════════════════════════════════════
 DECLARE @DM_CaPhe    INT,
         @DM_TraSua   INT,
