@@ -9,19 +9,12 @@ namespace QuanLyQuanCaPhe.Forms
 {
     public partial class fQuanLyDanhMuc : Form
     {
-        private string connectionString = "Data Source = .\\SQLEXPRESS; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
-        private SqlConnection sqlCon = null;
         private bool isAdding = false;
         private bool isEditing = false;
 
         public fQuanLyDanhMuc()
         {
             InitializeComponent();
-        }
-        private void KiemTraKetNoi()
-        {
-            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
-            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
         }
 
         private void SetInputReadOnly(bool state)
@@ -36,7 +29,6 @@ namespace QuanLyQuanCaPhe.Forms
 
         private void fQuanLyDanhMuc_Load(object sender, EventArgs e)
         {
-            KiemTraKetNoi();
             txtID.ReadOnly = true;
             SetInputReadOnly(true);
         }
@@ -48,16 +40,10 @@ namespace QuanLyQuanCaPhe.Forms
         {
             List<DanhMuc> list = new List<DanhMuc>();
             string query = "SELECT * FROM DanhMuc ORDER BY Id ASC";
-            using (SqlConnection conn = new SqlConnection(connectionString))
+            DataTable data = DataProvider.Instance.ExecuteQuery(query);
+            foreach (DataRow item in data.Rows)
             {
-                conn.Open();
-                SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                DataTable data = new DataTable();
-                adapter.Fill(data);
-                foreach (DataRow item in data.Rows)
-                {
-                    list.Add(new DanhMuc(item));
-                }
+                list.Add(new DanhMuc(item));
             }
             return list;
         }
@@ -112,25 +98,22 @@ namespace QuanLyQuanCaPhe.Forms
             string ten = txtDanhMuc.Text.Trim();
             if (string.IsNullOrEmpty(ten)) { MessageBox.Show("Tên danh mục không được trống."); return; }
 
-            KiemTraKetNoi(); 
-
             // Kiểm tra trùng tên
             string checkQuery = "SELECT COUNT(*) FROM DanhMuc WHERE TenDanhMuc = @ten";
-            using (SqlCommand checkCmd = new SqlCommand(checkQuery, sqlCon))
+            SqlParameter[] checkParams = new SqlParameter[] { new SqlParameter("@ten", ten) };
+            if ((int)DataProvider.Instance.ExecuteScalar(checkQuery, checkParams) > 0)
             {
-                checkCmd.Parameters.AddWithValue("@ten", ten);
-                if ((int)checkCmd.ExecuteScalar() > 0) { MessageBox.Show("Tên đã tồn tại.Bạn vui lòng nhập tên khác"); return; }
+                MessageBox.Show("Tên đã tồn tại.Bạn vui lòng nhập tên khác");
+                return;
             }
 
             string query = "INSERT INTO DanhMuc (TenDanhMuc) VALUES (@ten)";
-            using (SqlCommand cmd = new SqlCommand(query, sqlCon))
+            SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@ten", ten) };
+
+            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
             {
-                cmd.Parameters.AddWithValue("@ten", ten);
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Thêm thành công.");
-                    btnXem_Click(null, null); // Tự động load lại
-                }
+                MessageBox.Show("Thêm thành công.");
+                btnXem_Click(null, null);
             }
         }
 
@@ -147,17 +130,17 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
-            KiemTraKetNoi();
             string query = "UPDATE DanhMuc SET TenDanhMuc = @ten WHERE Id = @id";
-            using (SqlCommand cmd = new SqlCommand(query, sqlCon))
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                cmd.Parameters.AddWithValue("@ten", txtDanhMuc.Text.Trim());
-                cmd.Parameters.AddWithValue("@id", txtID.Text);
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Cập nhật thành công.");
-                    btnXem_Click(null, null);
-                }
+                new SqlParameter("@ten", txtDanhMuc.Text.Trim()),
+                new SqlParameter("@id", txtID.Text)
+            };
+
+            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+            {
+                MessageBox.Show("Cập nhật thành công.");
+                btnXem_Click(null, null);
             }
         }
 
@@ -169,20 +152,17 @@ namespace QuanLyQuanCaPhe.Forms
             {
                 try
                 {
-                    KiemTraKetNoi();
                     string query = "DELETE FROM DanhMuc WHERE Id = @id";
-                    using (SqlCommand cmd = new SqlCommand(query, sqlCon))
-                    {
-                        cmd.Parameters.AddWithValue("@id", txtID.Text);
-                        if (cmd.ExecuteNonQuery() > 0)
-                        {
-                            // RESET ID
-                            string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM DanhMuc; DBCC CHECKIDENT ('DanhMuc', RESEED, @max);";
-                            using (SqlCommand cmdReset = new SqlCommand(resetQuery, sqlCon)) { cmdReset.ExecuteNonQuery(); }
+                    SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@id", txtID.Text) };
 
-                            MessageBox.Show("Xóa thành công.");
-                            btnXem_Click(null, null);
-                        }
+                    if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+                    {
+                        // Reset ID
+                        string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM DanhMuc; DBCC CHECKIDENT ('DanhMuc', RESEED, @max);";
+                        DataProvider.Instance.ExecuteNonQuery(resetQuery);
+
+                        MessageBox.Show("Xóa thành công.");
+                        btnXem_Click(null, null);
                     }
                 }
                 catch

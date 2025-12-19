@@ -9,19 +9,12 @@ namespace QuanLyQuanCaPhe.Forms
 {
     public partial class fQuanLyBan : Form
     {
-        private string connectionString = "Data Source = .\\SQLEXPRESS; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
-        private SqlConnection sqlCon = null;
         private bool isAdding = false;
         private bool isEditing = false;
 
         public fQuanLyBan()
         {
             InitializeComponent();
-        }
-        private void KiemTraKetNoi()
-        {
-            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
-            if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
         }
 
         private void LockControls(bool lockState)
@@ -38,7 +31,6 @@ namespace QuanLyQuanCaPhe.Forms
 
         private void fQuanLyBan_Load(object sender, EventArgs e)
         {
-            KiemTraKetNoi();
             txtID.ReadOnly = true;
             SetInputReadOnly(true);
             btnXem_Click(null, null); 
@@ -53,16 +45,10 @@ namespace QuanLyQuanCaPhe.Forms
             string query = "SELECT * FROM Ban ORDER BY Id ASC";
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
+                DataTable data = DataProvider.Instance.ExecuteQuery(query);
+                foreach (DataRow item in data.Rows)
                 {
-                    conn.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                    DataTable data = new DataTable();
-                    adapter.Fill(data);
-                    foreach (DataRow item in data.Rows)
-                    {
-                        list.Add(new Ban(item));
-                    }
+                    list.Add(new Ban(item));
                 }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi tải dữ liệu: " + ex.Message); }
@@ -137,19 +123,18 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
-            KiemTraKetNoi();
             string query = "INSERT INTO Ban (TenBan, ViTri, TrangThai) VALUES (@TenBan, @ViTri, @TrangThai)";
-            using (SqlCommand cmd = new SqlCommand(query, sqlCon))
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                cmd.Parameters.AddWithValue("@TenBan", txtTenBan.Text.Trim());
-                cmd.Parameters.AddWithValue("@ViTri", txtViTri.Text.Trim());
-                cmd.Parameters.AddWithValue("@TrangThai", txtTrangThai.Text.Trim());
+                new SqlParameter("@TenBan", txtTenBan.Text.Trim()),
+                new SqlParameter("@ViTri", txtViTri.Text.Trim()),
+                new SqlParameter("@TrangThai", txtTrangThai.Text.Trim())
+            };
 
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Thêm bàn thành công.");
-                    btnXem_Click(null, null);
-                }
+            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+            {
+                MessageBox.Show("Thêm bàn thành công.");
+                btnXem_Click(null, null);
             }
         }
 
@@ -166,20 +151,19 @@ namespace QuanLyQuanCaPhe.Forms
                 return;
             }
 
-            KiemTraKetNoi();
             string query = "UPDATE Ban SET TenBan = @TenBan, ViTri = @ViTri, TrangThai = @TrangThai WHERE Id = @Id";
-            using (SqlCommand cmd = new SqlCommand(query, sqlCon))
+            SqlParameter[] parameters = new SqlParameter[]
             {
-                cmd.Parameters.AddWithValue("@TenBan", txtTenBan.Text.Trim());
-                cmd.Parameters.AddWithValue("@ViTri", txtViTri.Text.Trim());
-                cmd.Parameters.AddWithValue("@TrangThai", txtTrangThai.Text.Trim());
-                cmd.Parameters.AddWithValue("@Id", txtID.Text);
+                new SqlParameter("@TenBan", txtTenBan.Text.Trim()),
+                new SqlParameter("@ViTri", txtViTri.Text.Trim()),
+                new SqlParameter("@TrangThai", txtTrangThai.Text.Trim()),
+                new SqlParameter("@Id", txtID.Text)
+            };
 
-                if (cmd.ExecuteNonQuery() > 0)
-                {
-                    MessageBox.Show("Cập nhật bàn thành công.");
-                    btnXem_Click(null, null);
-                }
+            if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+            {
+                MessageBox.Show("Cập nhật bàn thành công.");
+                btnXem_Click(null, null);
             }
         }
 
@@ -189,20 +173,17 @@ namespace QuanLyQuanCaPhe.Forms
 
             if (MessageBox.Show("Bạn có chắc muốn xóa bàn này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                KiemTraKetNoi();
                 string query = "DELETE FROM Ban WHERE Id = @Id";
-                using (SqlCommand cmd = new SqlCommand(query, sqlCon))
-                {
-                    cmd.Parameters.AddWithValue("@Id", txtID.Text);
-                    if (cmd.ExecuteNonQuery() > 0)
-                    {
-                        // ⭐ Reset Identity
-                        string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM Ban; DBCC CHECKIDENT ('Ban', RESEED, @max);";
-                        using (SqlCommand cmdReset = new SqlCommand(resetQuery, sqlCon)) { cmdReset.ExecuteNonQuery(); }
+                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@Id", txtID.Text) };
 
-                        MessageBox.Show("Xóa bàn thành công.");
-                        btnXem_Click(null, null);
-                    }
+                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+                {
+                    // Reset Identity
+                    string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM Ban; DBCC CHECKIDENT ('Ban', RESEED, @max);";
+                    DataProvider.Instance.ExecuteNonQuery(resetQuery);
+
+                    MessageBox.Show("Xóa bàn thành công.");
+                    btnXem_Click(null, null);
                 }
             }
         }

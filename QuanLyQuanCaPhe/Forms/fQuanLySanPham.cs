@@ -9,8 +9,6 @@ namespace QuanLyQuanCaPhe.Forms
 {
     public partial class fQuanLySanPham : Form
     {
-        private string connectionString = "Data Source = .\\SQLEXPRESS; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
-        private SqlConnection sqlCon = null;
         private bool isAdding = false;
         private bool isEditing = false;
         private BindingSource monList = new BindingSource();
@@ -22,13 +20,10 @@ namespace QuanLyQuanCaPhe.Forms
 
         private void fQuanLySanPham_Load(object sender, EventArgs e)
         {
-            if (sqlCon == null) sqlCon = new SqlConnection(connectionString);
-
             txtID.ReadOnly = true;
             SetInputReadOnly(true);
             LockControls(false);
 
-           
             LoadDanhMucComBoBox(cboDanhMuc);
         }
 
@@ -58,24 +53,20 @@ namespace QuanLyQuanCaPhe.Forms
             string query = "SELECT * FROM SanPham ORDER BY Id ASC";
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                    DataTable data = new DataTable();
-                    adapter.Fill(data);
-                    foreach (DataRow item in data.Rows)
-                        list.Add(new SanPham(item));
-                }
+                DataTable data = DataProvider.Instance.ExecuteQuery(query);
+                foreach (DataRow item in data.Rows)
+                    list.Add(new SanPham(item));
             }
             catch (Exception ex) { MessageBox.Show("Lỗi load: " + ex.Message); }
             return list;
         }
+
         private void LoadListSanPham()
         {
             monList.DataSource = GetListSanPham();
             grvMon.DataSource = monList;
         }
+
         private void AddSanPhamBinding()
         {
             txtID.DataBindings.Clear();
@@ -98,16 +89,10 @@ namespace QuanLyQuanCaPhe.Forms
             string query = "SELECT Id, TenDanhMuc FROM DanhMuc ORDER BY Id";
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                    DataTable data = new DataTable();
-                    adapter.Fill(data);
-                    cb.DataSource = data;
-                    cb.DisplayMember = "TenDanhMuc";
-                    cb.ValueMember = "Id";
-                }
+                DataTable data = DataProvider.Instance.ExecuteQuery(query);
+                cb.DataSource = data;
+                cb.DisplayMember = "TenDanhMuc";
+                cb.ValueMember = "Id";
             }
             catch { }
         }
@@ -164,20 +149,20 @@ namespace QuanLyQuanCaPhe.Forms
 
             try
             {
-                if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
                 string query = "INSERT INTO SanPham (TenSP, DonGia, DonViTinh, MaDanhMuc, TrangThai) VALUES (@ten, @gia, @dvt, @madm, @tt)";
-                using (SqlCommand cmd = new SqlCommand(query, sqlCon))
+                SqlParameter[] parameters = new SqlParameter[]
                 {
-                    cmd.Parameters.AddWithValue("@ten", txtTenSanPham.Text.Trim());
-                    cmd.Parameters.AddWithValue("@gia", gia);
-                    cmd.Parameters.AddWithValue("@dvt", txtDVT.Text.Trim());
-                    cmd.Parameters.AddWithValue("@madm", cboDanhMuc.SelectedValue);
-                    cmd.Parameters.AddWithValue("@tt", txtTrangThai.Text.Trim());
-                    if (cmd.ExecuteNonQuery() > 0)
-                    {
-                        MessageBox.Show("Thêm thành công.");
-                        btnXem_Click(null, null);
-                    }
+                    new SqlParameter("@ten", txtTenSanPham.Text.Trim()),
+                    new SqlParameter("@gia", gia),
+                    new SqlParameter("@dvt", txtDVT.Text.Trim()),
+                    new SqlParameter("@madm", cboDanhMuc.SelectedValue),
+                    new SqlParameter("@tt", txtTrangThai.Text.Trim())
+                };
+
+                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+                {
+                    MessageBox.Show("Thêm thành công.");
+                    btnXem_Click(null, null);
                 }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
@@ -203,21 +188,21 @@ namespace QuanLyQuanCaPhe.Forms
             if (!int.TryParse(txtID.Text, out int id)) return;
             try
             {
-                if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
                 string query = "UPDATE SanPham SET TenSP=@ten, DonGia=@gia, DonViTinh=@dvt, MaDanhMuc=@madm, TrangThai=@tt WHERE Id=@id";
-                using (SqlCommand cmd = new SqlCommand(query, sqlCon))
+                SqlParameter[] parameters = new SqlParameter[]
                 {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    cmd.Parameters.AddWithValue("@ten", txtTenSanPham.Text.Trim());
-                    cmd.Parameters.AddWithValue("@gia", float.Parse(txtGia.Text.Trim()));
-                    cmd.Parameters.AddWithValue("@dvt", txtDVT.Text.Trim());
-                    cmd.Parameters.AddWithValue("@madm", cboDanhMuc.SelectedValue);
-                    cmd.Parameters.AddWithValue("@tt", txtTrangThai.Text.Trim());
-                    if (cmd.ExecuteNonQuery() > 0)
-                    {
-                        MessageBox.Show("Sửa thành công.");
-                        btnXem_Click(null, null);
-                    }
+                    new SqlParameter("@id", id),
+                    new SqlParameter("@ten", txtTenSanPham.Text.Trim()),
+                    new SqlParameter("@gia", float.Parse(txtGia.Text.Trim())),
+                    new SqlParameter("@dvt", txtDVT.Text.Trim()),
+                    new SqlParameter("@madm", cboDanhMuc.SelectedValue),
+                    new SqlParameter("@tt", txtTrangThai.Text.Trim())
+                };
+
+                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+                {
+                    MessageBox.Show("Sửa thành công.");
+                    btnXem_Click(null, null);
                 }
             }
             catch (Exception ex) { MessageBox.Show("Lỗi: " + ex.Message); }
@@ -233,19 +218,16 @@ namespace QuanLyQuanCaPhe.Forms
 
             try
             {
-                if (sqlCon.State == ConnectionState.Closed) sqlCon.Open();
                 string query = "DELETE FROM SanPham WHERE Id = @id";
-                using (SqlCommand cmd = new SqlCommand(query, sqlCon))
-                {
-                    cmd.Parameters.AddWithValue("@id", id);
-                    if (cmd.ExecuteNonQuery() > 0)
-                    {
-                        string reset = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM SanPham; DBCC CHECKIDENT ('SanPham', RESEED, @max);";
-                        using (SqlCommand cmdReset = new SqlCommand(reset, sqlCon)) { cmdReset.ExecuteNonQuery(); }
+                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@id", id) };
 
-                        MessageBox.Show("Xóa thành công.");
-                        btnXem_Click(null, null);
-                    }
+                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+                {
+                    string reset = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM SanPham; DBCC CHECKIDENT ('SanPham', RESEED, @max);";
+                    DataProvider.Instance.ExecuteNonQuery(reset);
+
+                    MessageBox.Show("Xóa thành công.");
+                    btnXem_Click(null, null);
                 }
             }
             catch { MessageBox.Show("Không thể xóa món này."); }
@@ -259,16 +241,10 @@ namespace QuanLyQuanCaPhe.Forms
             string query = "SELECT * FROM SanPham WHERE TenSP LIKE @ten ORDER BY Id ASC";
             try
             {
-                using (SqlConnection conn = new SqlConnection(connectionString))
-                {
-                    conn.Open();
-                    SqlDataAdapter adapter = new SqlDataAdapter(query, conn);
-                    adapter.SelectCommand.Parameters.AddWithValue("@ten", "%" + keyword + "%");
-                    DataTable data = new DataTable();
-                    adapter.Fill(data);
-                    monList.DataSource = data;
-                    grvMon.DataSource = monList;
-                }
+                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@ten", "%" + keyword + "%") };
+                DataTable data = DataProvider.Instance.ExecuteQuery(query, parameters);
+                monList.DataSource = data;
+                grvMon.DataSource = monList;
             }
             catch { }
         }
