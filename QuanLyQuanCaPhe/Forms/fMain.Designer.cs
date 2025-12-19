@@ -154,6 +154,8 @@
             // 
             // pnlLeft
             // 
+            this.pnlLeft.Controls.Clear();
+            this.pnlLeft.Controls.Add(this.pnlChatBot);
             this.pnlLeft.Controls.Add(this.flpBan);
             this.pnlLeft.Controls.Add(this.pnlFilter);
             this.pnlLeft.Dock = System.Windows.Forms.DockStyle.Fill;
@@ -167,13 +169,137 @@
             // 
             this.flpBan.AutoScroll = true;
             this.flpBan.BackColor = System.Drawing.Color.WhiteSmoke;
-            this.flpBan.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.flpBan.Dock = System.Windows.Forms.DockStyle.Top;
             this.flpBan.Location = new System.Drawing.Point(0, 41);
             this.flpBan.Margin = new System.Windows.Forms.Padding(2);
             this.flpBan.Name = "flpBan";
             this.flpBan.Padding = new System.Windows.Forms.Padding(8);
-            this.flpBan.Size = new System.Drawing.Size(266, 451);
+            this.flpBan.Size = new System.Drawing.Size(266, 225);
             this.flpBan.TabIndex = 1;
+            // 
+            // pnlChatBot
+            // 
+            this.pnlChatBot = new System.Windows.Forms.Panel();
+            this.pnlChatBot.BackColor = System.Drawing.Color.White;
+            this.pnlChatBot.BorderStyle = System.Windows.Forms.BorderStyle.FixedSingle;
+            this.pnlChatBot.Controls.Add(this.rtbChatHistory);
+            this.pnlChatBot.Controls.Add(this.pnlChatInput);
+            this.pnlChatBot.Controls.Add(this.lblChatTitle);
+            this.pnlChatBot.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.pnlChatBot.Location = new System.Drawing.Point(0, 266);
+            this.pnlChatBot.Name = "pnlChatBot";
+            this.pnlChatBot.Padding = new System.Windows.Forms.Padding(5);
+            this.pnlChatBot.Size = new System.Drawing.Size(266, 226);
+            this.pnlChatBot.TabIndex = 2;
+
+            // 
+            // lblChatTitle
+            // 
+            this.lblChatTitle = new System.Windows.Forms.Label();
+            this.lblChatTitle.BackColor = System.Drawing.Color.SaddleBrown;
+            this.lblChatTitle.Dock = System.Windows.Forms.DockStyle.Top;
+            this.lblChatTitle.Font = new System.Drawing.Font("Microsoft Sans Serif", 10F, System.Drawing.FontStyle.Bold);
+            this.lblChatTitle.ForeColor = System.Drawing.Color.White;
+            this.lblChatTitle.Location = new System.Drawing.Point(5, 5);
+            this.lblChatTitle.Name = "lblChatTitle";
+            this.lblChatTitle.Padding = new System.Windows.Forms.Padding(5);
+            this.lblChatTitle.Size = new System.Drawing.Size(254, 30);
+            this.lblChatTitle.TabIndex = 0;
+            this.lblChatTitle.Text = "🤖 Trợ Lý AI Gợi Ý Món";
+            this.lblChatTitle.TextAlign = System.Drawing.ContentAlignment.MiddleCenter;
+
+            // 
+            // rtbChatHistory
+            // 
+            this.rtbChatHistory = new System.Windows.Forms.RichTextBox();
+            this.rtbChatHistory.BackColor = System.Drawing.Color.WhiteSmoke;
+            this.rtbChatHistory.BorderStyle = System.Windows.Forms.BorderStyle.None;
+            this.rtbChatHistory.Dock = System.Windows.Forms.DockStyle.Fill;
+            this.rtbChatHistory.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.rtbChatHistory.Location = new System.Drawing.Point(5, 35);
+            this.rtbChatHistory.Name = "rtbChatHistory";
+            this.rtbChatHistory.ReadOnly = true;
+            this.rtbChatHistory.Size = new System.Drawing.Size(254, 126);
+            this.rtbChatHistory.TabIndex = 1;
+            this.rtbChatHistory.Text = "Xin chào! Tôi có thể giúp gì cho bạn?\n\n💡 Thử hỏi:\n- \"Món bán chạy nhất hôm nay?\"\n- \"Gợi ý món cho khách nữ?\"\n- \"Món phù hợp buổi sáng?\"";
+
+            // 
+            // pnlChatInput
+            // 
+            this.pnlChatInput = new System.Windows.Forms.Panel();
+            this.pnlChatInput.Controls.Add(this.txtChatInput);
+            this.pnlChatInput.Controls.Add(this.btnSendChat);
+            this.pnlChatInput.Controls.Add(this.btnClearChat);
+            this.pnlChatInput.Controls.Add(this.cboChatMode);
+            this.pnlChatInput.Dock = System.Windows.Forms.DockStyle.Bottom;
+            this.pnlChatInput.Location = new System.Drawing.Point(5, 161);
+            this.pnlChatInput.Name = "pnlChatInput";
+            this.pnlChatInput.Size = new System.Drawing.Size(254, 60);
+            this.pnlChatInput.TabIndex = 2;
+
+            // 
+            // cboChatMode
+            // 
+            this.cboChatMode = new System.Windows.Forms.ComboBox();
+            this.cboChatMode.Dock = System.Windows.Forms.DockStyle.Top;
+            this.cboChatMode.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
+            this.cboChatMode.Font = new System.Drawing.Font("Segoe UI", 8F);
+            this.cboChatMode.Items.AddRange(new object[] {
+                "🎯 Gợi ý theo bối cảnh",
+                "📊 Món bán chạy nhất",
+                "💰 Món lợi nhuận cao",
+                "⏰ Món theo thời gian"
+            });
+            this.cboChatMode.Location = new System.Drawing.Point(0, 0);
+            this.cboChatMode.Name = "cboChatMode";
+            this.cboChatMode.Size = new System.Drawing.Size(254, 21);
+            this.cboChatMode.TabIndex = 0;
+            this.cboChatMode.SelectedIndex = 0;
+
+            // 
+            // txtChatInput
+            // 
+            this.txtChatInput.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left)
+                | System.Windows.Forms.AnchorStyles.Right)));
+            this.txtChatInput.Font = new System.Drawing.Font("Segoe UI", 9F);
+            this.txtChatInput.Location = new System.Drawing.Point(0, 25);
+            this.txtChatInput.Name = "txtChatInput";
+            this.txtChatInput.Size = new System.Drawing.Size(144, 23);
+            this.txtChatInput.TabIndex = 1;
+            this.txtChatInput.Text = "Nhập câu hỏi...";
+            this.txtChatInput.GotFocus += new System.EventHandler(this.txtChatInput_GotFocus);
+            this.txtChatInput.LostFocus += new System.EventHandler(this.txtChatInput_LostFocus);
+            // 
+            // btnSendChat
+            // 
+            this.btnSendChat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnSendChat.BackColor = System.Drawing.Color.ForestGreen;
+            this.btnSendChat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnSendChat.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnSendChat.ForeColor = System.Drawing.Color.White;
+            this.btnSendChat.Location = new System.Drawing.Point(148, 25);
+            this.btnSendChat.Name = "btnSendChat";
+            this.btnSendChat.Size = new System.Drawing.Size(50, 23);
+            this.btnSendChat.TabIndex = 2;
+            this.btnSendChat.Text = "Gửi";
+            this.btnSendChat.UseVisualStyleBackColor = false;
+            this.btnSendChat.Click += new System.EventHandler(this.btnSendChat_Click);
+
+            // 
+            // btnClearChat
+            // 
+            this.btnClearChat.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnClearChat.BackColor = System.Drawing.Color.IndianRed;
+            this.btnClearChat.FlatStyle = System.Windows.Forms.FlatStyle.Flat;
+            this.btnClearChat.Font = new System.Drawing.Font("Segoe UI", 8F, System.Drawing.FontStyle.Bold);
+            this.btnClearChat.ForeColor = System.Drawing.Color.White;
+            this.btnClearChat.Location = new System.Drawing.Point(202, 25);
+            this.btnClearChat.Name = "btnClearChat";
+            this.btnClearChat.Size = new System.Drawing.Size(50, 23);
+            this.btnClearChat.TabIndex = 3;
+            this.btnClearChat.Text = "Xóa";
+            this.btnClearChat.UseVisualStyleBackColor = false;
+            this.btnClearChat.Click += new System.EventHandler(this.btnClearChat_Click);
             // 
             // pnlFilter
             // 
@@ -734,5 +860,14 @@
         private System.Windows.Forms.ToolStripMenuItem tsmiBaoCaoBanChay;
         private System.Windows.Forms.ToolStripMenuItem tsmiBaoCaoDoanhThu;
         private System.Windows.Forms.Label lblTrangThaiThanhToan;
+        // Chatbot components
+        private System.Windows.Forms.Panel pnlChatBot;
+        private System.Windows.Forms.RichTextBox rtbChatHistory;
+        private System.Windows.Forms.TextBox txtChatInput;
+        private System.Windows.Forms.Button btnSendChat;
+        private System.Windows.Forms.Label lblChatTitle;
+        private System.Windows.Forms.Panel pnlChatInput;
+        private System.Windows.Forms.ComboBox cboChatMode;
+        private System.Windows.Forms.Button btnClearChat;
     }
 }

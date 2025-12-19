@@ -6,6 +6,7 @@ using System.Data;
 using System.Data.SqlClient;
 using System.Drawing;
 using System.Linq;
+using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace QuanLyQuanCaPhe
@@ -21,6 +22,7 @@ namespace QuanLyQuanCaPhe
             InitializeComponent();
             InitializeForm();
             SetupEventHandlers();
+            InitializeChatBot();
 
             // Load dữ liệu
             LoadComboBoxKhuVuc();
@@ -604,6 +606,118 @@ namespace QuanLyQuanCaPhe
             // trường hợp không tìm thấy (ví dụ admin hệ thống không có trong bảng nhân viên)
             // trả về 1 hoặc xử lý tùy logic, ở đây mình mặc định trả về null hoặc báo lỗi
             return -1;
+        }
+
+        // Event handlers cho chatbot
+        private void btnSendChat_Click(object sender, EventArgs e)
+        {
+            SendChatMessage();
+        }
+
+        private async void SendChatMessage()
+        {
+            string userMessage = txtChatInput.Text.Trim();
+            if (string.IsNullOrEmpty(userMessage))
+            {
+                MessageBox.Show("Vui lòng nhập câu hỏi!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            // Hiển thị tin nhắn người dùng
+            AppendChatMessage("👤 Bạn: " + userMessage, Color.Blue);
+            txtChatInput.Clear();
+
+            // Hiển thị loading
+            AppendChatMessage("⏳ Đang suy nghĩ...", Color.Gray);
+            btnSendChat.Enabled = false;
+
+            try
+            {
+                // Lấy mode đã chọn
+                string mode = cboChatMode.SelectedItem?.ToString() ?? "🎯 Gợi ý theo bối cảnh";
+
+                // Gọi AI (async để không block UI)
+                string aiResponse = await Task.Run(() =>
+                    AIService.GetAISuggestion(userMessage, mode));
+
+                // Xóa loading message
+                RemoveLastChatMessage();
+
+                // Hiển thị phản hồi AI
+                AppendChatMessage("🤖 AI: " + aiResponse, Color.DarkGreen);
+            }
+            catch (Exception ex)
+            {
+                RemoveLastChatMessage();
+                AppendChatMessage("❌ Lỗi: " + ex.Message, Color.Red);
+            }
+            finally
+            {
+                btnSendChat.Enabled = true;
+                txtChatInput.Focus();
+            }
+        }
+
+        private void AppendChatMessage(string message, Color color)
+        {
+            rtbChatHistory.SelectionStart = rtbChatHistory.TextLength;
+            rtbChatHistory.SelectionLength = 0;
+            rtbChatHistory.SelectionColor = color;
+            rtbChatHistory.AppendText(message + "\n\n");
+            rtbChatHistory.SelectionColor = rtbChatHistory.ForeColor;
+            rtbChatHistory.ScrollToCaret();
+        }
+
+        private void RemoveLastChatMessage()
+        {
+            string text = rtbChatHistory.Text;
+            int lastIndex = text.LastIndexOf("\n\n");
+            if (lastIndex > 0)
+            {
+                lastIndex = text.LastIndexOf("\n\n", lastIndex - 1);
+                if (lastIndex > 0)
+                {
+                    rtbChatHistory.Text = text.Substring(0, lastIndex + 2);
+                }
+            }
+        }
+
+        private void btnClearChat_Click(object sender, EventArgs e)
+        {
+            DialogResult result = MessageBox.Show(
+                "Xóa toàn bộ lịch sử chat?",
+                "Xác nhận",
+                MessageBoxButtons.YesNo,
+                MessageBoxIcon.Question);
+
+            if (result == DialogResult.Yes)
+            {
+                rtbChatHistory.Clear();
+                rtbChatHistory.Text = "Xin chào! Tôi có thể giúp gì cho bạn?\n\n💡 Thử hỏi:\n- \"Món bán chạy nhất hôm nay?\"\n- \"Gợi ý món cho khách nữ?\"\n- \"Món phù hợp buổi sáng?\"";
+            }
+        }
+
+        // Thêm vào constructor hoặc InitializeForm()
+        private void InitializeChatBot()
+        {
+            // Enter key để gửi tin nhắn
+            txtChatInput.KeyPress += (s, e) =>
+            {
+                if (e.KeyChar == (char)Keys.Enter)
+                {
+                    e.Handled = true;
+                    SendChatMessage();
+                }
+            };
+        }
+        private void txtChatInput_GotFocus(object sender, EventArgs e)
+        {
+            if (txtChatInput.Text == "Nhập câu hỏi...") txtChatInput.Text = "";
+        }
+        private void txtChatInput_LostFocus(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(txtChatInput.Text)) txtChatInput.Text = "Nhập câu hỏi...";
         }
     }
 }
