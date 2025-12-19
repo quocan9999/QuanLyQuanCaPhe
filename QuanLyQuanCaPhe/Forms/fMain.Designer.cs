@@ -653,6 +653,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
+            this.BackColor = System.Drawing.Color.FromArgb(((int)(((byte)(250)))), ((int)(((byte)(240)))), ((int)(((byte)(230)))));
             this.ClientSize = new System.Drawing.Size(900, 569);
             this.Controls.Add(this.tableLayoutMain);
             this.Controls.Add(this.pnlHeader);
