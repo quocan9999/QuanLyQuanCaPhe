@@ -603,5 +603,19 @@ namespace QuanLyQuanCaPhe
             // trả về 1 hoặc xử lý tùy logic, ở đây mình mặc định trả về null hoặc báo lỗi
             return -1;
         }
+
+        private void tsmiThongTinCaNhan_Click(object sender, EventArgs e)
+        {
+            if (string.IsNullOrWhiteSpace(LuuTruThongTinDangNhap.TenDangNhap))
+            {
+                MessageBox.Show("Không tìm thấy thông tin đăng nhập hiện tại!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                return;
+            }
+
+            using (fThongTinCaNhan formThongTin = new fThongTinCaNhan(LuuTruThongTinDangNhap.TenDangNhap))
+            {
+                formThongTin.ShowDialog();
+            }
+        }
     }
 }

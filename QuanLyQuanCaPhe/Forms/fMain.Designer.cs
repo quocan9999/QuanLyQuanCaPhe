@@ -225,8 +225,8 @@
             // dgvHoaDon
             // 
             this.dgvHoaDon.AllowUserToAddRows = false;
-            this.dgvHoaDon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom)
-            | System.Windows.Forms.AnchorStyles.Left)
+            this.dgvHoaDon.Anchor = ((System.Windows.Forms.AnchorStyles)((((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Bottom) 
+            | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.dgvHoaDon.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.Fill;
             this.dgvHoaDon.BackgroundColor = System.Drawing.Color.White;
@@ -306,7 +306,7 @@
             // 
             // pnlChonDichVu
             // 
-            this.pnlChonDichVu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.pnlChonDichVu.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlChonDichVu.Controls.Add(this.btnXoa);
             this.pnlChonDichVu.Controls.Add(this.btnSua);
@@ -380,7 +380,7 @@
             // 
             // pnlServiceButton
             // 
-            this.pnlServiceButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.pnlServiceButton.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.pnlServiceButton.Controls.Add(this.tlpActions);
             this.pnlServiceButton.Location = new System.Drawing.Point(8, 391);
@@ -478,7 +478,7 @@
             // 
             // lblTrangThaiThanhToan
             // 
-            this.lblTrangThaiThanhToan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.lblTrangThaiThanhToan.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTrangThaiThanhToan.BackColor = System.Drawing.Color.WhiteSmoke;
             this.lblTrangThaiThanhToan.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
@@ -492,7 +492,7 @@
             // 
             // lblTongTien
             // 
-            this.lblTongTien.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left)
+            this.lblTongTien.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.lblTongTien.BackColor = System.Drawing.Color.White;
             this.lblTongTien.Font = new System.Drawing.Font("Segoe UI", 12F, System.Drawing.FontStyle.Bold);
@@ -576,13 +576,14 @@
             // tsmiThongTinCaNhan
             // 
             this.tsmiThongTinCaNhan.Name = "tsmiThongTinCaNhan";
-            this.tsmiThongTinCaNhan.Size = new System.Drawing.Size(170, 22);
+            this.tsmiThongTinCaNhan.Size = new System.Drawing.Size(180, 22);
             this.tsmiThongTinCaNhan.Text = "Thông tin cá nhân";
+            this.tsmiThongTinCaNhan.Click += new System.EventHandler(this.tsmiThongTinCaNhan_Click);
             // 
             // tsmiDangXuat
             // 
             this.tsmiDangXuat.Name = "tsmiDangXuat";
-            this.tsmiDangXuat.Size = new System.Drawing.Size(170, 22);
+            this.tsmiDangXuat.Size = new System.Drawing.Size(180, 22);
             this.tsmiDangXuat.Text = "Đăng xuất";
             this.tsmiDangXuat.Click += new System.EventHandler(this.tsmiDangXuat_Click);
             // 
