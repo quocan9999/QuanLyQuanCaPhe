@@ -9,7 +9,7 @@
 
 **Ứng dụng quản lý quán cà phê hoàn chỉnh được xây dựng bằng C# Windows Forms và SQL Server**
 
-[Tính năng](#-tính-năng-chính) • [Cài đặt](#-hướng-dẫn-cài-đặt) • [Cấu hình](#%EF%B8%8F-cấu-hình-connection-string) • [Sử dụng](#-hướng-dẫn-sử-dụng) • [Cấu trúc](#-cấu-trúc-project)
+[Tính năng](#-tính-năng-chính) • [Cài đặt](#-hướng-dẫn-cài-đặt) • [Cấu hình](#%EF%B8%8F-cấu-hình-connection-string) • [AI Chatbot](#-cấu-hình-gemini-api-key-chatbot-ai) • [Sử dụng](#-hướng-dẫn-sử-dụng) • [Cấu trúc](#-cấu-trúc-project)
 
 </div>
 
@@ -197,6 +197,79 @@ private DataProvider()
   ```csharp
   connectionString = @"Data Source = .; Initial Catalog = QuanLyCaPhe; User ID = sa; Password = 123456; TrustServerCertificate = True";
   ```
+
+</details>
+
+---
+
+## 🤖 Cấu hình Gemini API Key (Chatbot AI)
+
+> ⚠️ **QUAN TRỌNG:** Để sử dụng tính năng **Trợ lý AI gợi ý món**, bạn cần có API Key của Google Gemini.
+
+### 🔑 Bước 1: Lấy API Key miễn phí
+
+1. Truy cập **Google AI Studio**: [https://makersuite.google.com/app/apikey](https://makersuite.google.com/app/apikey)
+2. Đăng nhập bằng tài khoản Google
+3. Click **"Create API Key"** để tạo key mới
+4. **Copy API Key** đã được tạo (dạng `AIzaSy...`)
+
+> 💡 **Lưu ý:** API Key miễn phí có giới hạn 60 requests/phút, đủ dùng cho mục đích học tập.
+
+### 📝 Bước 2: Cập nhật API Key vào Project
+
+Mở file `QuanLyQuanCaPhe/Class/AIService.cs`, tìm đến **dòng 19** và thay thế:
+
+```csharp
+// Dòng 19 trong AIService.cs
+// TRƯỚC:
+private const string GEMINI_API_KEY = "YOUR_API_KEY";
+
+// SAU: (thay bằng API key thực của bạn)
+private const string GEMINI_API_KEY = "AIzaSyxxxxxxxxxxxxxxxxxxxxxxxxxx";
+```
+
+### ✅ Bước 3: Kiểm tra kết nối
+
+1. Build và chạy ứng dụng
+2. Đăng nhập vào hệ thống
+3. Tại giao diện chính, tìm giao diện **"Trợ lý AI"**
+4. Thử gửi tin nhắn để kiểm tra AI phản hồi
+
+### 🔧 Khắc phục lỗi thường gặp
+
+<details>
+<summary><b>❌ Lỗi: "Lỗi API (HTTP 400)" hoặc "API key not valid"</b></summary>
+
+**Nguyên nhân:** API Key không hợp lệ hoặc chưa được kích hoạt.
+
+**Cách khắc phục:**
+1. Kiểm tra lại API Key đã copy đúng chưa (không có khoảng trắng thừa)
+2. Đảm bảo đã **Enable Generative Language API** trong [Google Cloud Console](https://console.cloud.google.com/)
+3. Tạo API Key mới nếu vẫn lỗi
+
+</details>
+
+<details>
+<summary><b>❌ Lỗi: "Lỗi kết nối mạng"</b></summary>
+
+**Nguyên nhân:** Không có kết nối internet hoặc bị chặn.
+
+**Cách khắc phục:**
+1. Kiểm tra kết nối internet
+2. Tắt VPN/Proxy nếu đang sử dụng
+3. Kiểm tra Firewall không chặn ứng dụng
+
+</details>
+
+<details>
+<summary><b>❌ Lỗi: "Exceeded quota" (Vượt hạn mức)</b></summary>
+
+**Nguyên nhân:** Đã vượt quá 60 requests/phút của gói miễn phí.
+
+**Cách khắc phục:**
+1. Đợi 1 phút và thử lại
+2. Hạn chế số lần gửi tin nhắn
+3. Nâng cấp lên gói trả phí nếu cần sử dụng nhiều
 
 </details>
 
