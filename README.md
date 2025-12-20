@@ -3,7 +3,7 @@
 <div align="center">
 
 ![.NET Framework](https://img.shields.io/badge/.NET%20Framework-4.8-purple?style=for-the-badge&logo=dotnet)
-![SQL Server](https://img.shields.io/badge/SQL%20Server-2022-red?style=for-the-badge&logo=microsoftsqlserver)
+![SQL Server](https://img.shields.io/badge/SQL%20Server-2012+-red?style=for-the-badge&logo=microsoftsqlserver)
 ![Windows Forms](https://img.shields.io/badge/Windows%20Forms-Desktop-blue?style=for-the-badge&logo=windows)
 ![License](https://img.shields.io/badge/License-MIT-green?style=for-the-badge)
 
@@ -71,7 +71,7 @@ Hệ thống Quản Lý Quán Cà Phê là một ứng dụng desktop được p
 
 - **Hệ điều hành:** Windows 10/11
 - **Framework:** .NET Framework 4.8
-- **Database:** SQL Server 2022 (hoặc SQL Server Express 2022)
+- **Database:** SQL Server 2012+
 - **IDE:** Visual Studio 2019/2022 (khuyến nghị)
 - **Công cụ:** SQL Server Management Studio (SSMS)
 
