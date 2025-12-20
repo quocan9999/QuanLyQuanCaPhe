@@ -74,6 +74,7 @@ Hệ thống Quản Lý Quán Cà Phê là một ứng dụng desktop được p
 - **Database:** SQL Server 2012+
 - **IDE:** Visual Studio 2019/2022 (khuyến nghị)
 - **Công cụ:** SQL Server Management Studio (SSMS)
+- **Reporting Tool:** Crystal Reports (cần thiết cho chức năng báo cáo và in hóa đơn)
 
 ## 📥 Hướng dẫn cài đặt
 
@@ -319,6 +320,8 @@ QuanLyQuanCaPhe/
 │
 ├── 📂 Database/                 # Database Backup
 │   └── QuanLyCaPhe.bak          # File backup database (restore để sử dụng)
+│
+├── 📂 Lib/                      # Thư viện DLLs cần thiết cho Crystal Report
 │
 ├── 📂 Forms/                    # Các Windows Forms
 │   ├── fDangNhap.cs             # Form đăng nhập
