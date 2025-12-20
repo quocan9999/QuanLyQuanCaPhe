@@ -195,14 +195,21 @@ namespace QuanLyQuanCaPhe.Forms
             if (string.IsNullOrEmpty(txtID.Text)) return;
             if (MessageBox.Show("Bạn có chắc muốn xóa bàn này?", "Xác nhận", MessageBoxButtons.YesNo) == DialogResult.Yes)
             {
-                string query = "DELETE FROM Ban WHERE Id = @Id";
-                SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@Id", txtID.Text) };
-                if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+                try
                 {
-                    string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM Ban; DBCC CHECKIDENT ('Ban', RESEED, @max);";
-                    DataProvider.Instance.ExecuteNonQuery(resetQuery);
-                    MessageBox.Show("Xóa bàn thành công.");
-                    LoadData();
+                    string query = "DELETE FROM Ban WHERE Id = @Id";
+                    SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@Id", txtID.Text) };
+                    if (DataProvider.Instance.ExecuteNonQuery(query, parameters) > 0)
+                    {
+                        string resetQuery = "DECLARE @max INT; SELECT @max = ISNULL(MAX(Id),0) FROM Ban; DBCC CHECKIDENT ('Ban', RESEED, @max);";
+                        DataProvider.Instance.ExecuteNonQuery(resetQuery);
+                        MessageBox.Show("Xóa bàn thành công.");
+                        LoadData();
+                    }
+                }
+                catch (Exception)
+                {
+                    MessageBox.Show("Không thể xóa bàn vì có hóa đơn liên kết tới bàn này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 }
             }
         }
