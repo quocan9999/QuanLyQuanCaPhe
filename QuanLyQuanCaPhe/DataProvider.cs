@@ -18,8 +18,8 @@ namespace QuanLyQuanCaPhe
         // Constructor private để đảm bảo Singleton pattern
         private DataProvider()
         {
-            connectionString = @"Data Source = .; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
-            //connectionString = @"Data Source = .\SQLEXPRESS; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
+            //connectionString = @"Data Source = .; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
+            connectionString = @"Data Source = .\SQLEXPRESS; Initial Catalog = QuanLyCaPhe; Integrated Security = True; TrustServerCertificate = True";
         }
 
         /// <summary>

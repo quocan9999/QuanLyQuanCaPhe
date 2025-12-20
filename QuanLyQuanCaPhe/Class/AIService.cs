@@ -15,7 +15,8 @@ namespace QuanLyQuanCaPhe.Class
         private static readonly HttpClient httpClient = new HttpClient();
 
         // Lấy tại: https://makersuite.google.com/app/apikey
-        private const string GEMINI_API_KEY = "AIzaSyC8TxTKmESTXIQo7YKBpdGfsHHuEU65Z-I";
+        // Thay YOUR_API_KEY bằng API key thực tế của bạn
+        private const string GEMINI_API_KEY = "YOUR_API_KEY";
 
         // Gemini API endpoint
         private const string API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
