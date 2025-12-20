@@ -20,23 +20,16 @@ namespace QuanLyQuanCaPhe.Class
         // Gemini API endpoint
         private const string API_URL = "https://generativelanguage.googleapis.com/v1beta/models/gemini-2.5-flash:generateContent";
 
-        /// <summary>
-        /// Gọi Gemini API để gợi ý món ăn (Async)
-        /// </summary>
         public static async Task<string> GetAISuggestionAsync(string userMessage, string mode)
         {
             try
             {
-                // 1. Lấy dữ liệu từ database
                 string context = BuildContextFromDatabase(mode);
 
-                // 2. Tạo prompt dựa trên mode
                 string systemPrompt = BuildSystemPrompt(mode, context);
 
-                // 3. Kết hợp system prompt + user message
                 string fullPrompt = systemPrompt + "\n\nCÂU HỎI CỦA NHÂN VIÊN: " + userMessage;
 
-                // 4. Tạo request body theo format của Gemini
                 var requestBody = new
                 {
                     contents = new[]
@@ -66,28 +59,21 @@ namespace QuanLyQuanCaPhe.Class
                     }
                 };
 
-                // 5. Serialize request
                 string jsonRequest = JsonSerializer.Serialize(requestBody);
                 var content = new StringContent(jsonRequest, Encoding.UTF8, "application/json");
 
-                // 6. Gửi request tới Gemini API
                 string urlWithKey = $"{API_URL}?key={GEMINI_API_KEY}";
                 HttpResponseMessage response = await httpClient.PostAsync(urlWithKey, content);
 
-                // 7. Đọc response
                 string jsonResponse = await response.Content.ReadAsStringAsync();
 
-                // 8. Kiểm tra lỗi HTTP
                 if (!response.IsSuccessStatusCode)
                 {
                     return $"❌ Lỗi API (HTTP {response.StatusCode}): {jsonResponse}";
                 }
 
-                // 9. Parse response từ Gemini
                 using (JsonDocument doc = JsonDocument.Parse(jsonResponse))
                 {
-                    // Gemini response format: 
-                    // { "candidates": [{ "content": { "parts": [{ "text": "..." }] } }] }
 
                     if (doc.RootElement.TryGetProperty("candidates", out JsonElement candidates))
                     {
@@ -111,7 +97,6 @@ namespace QuanLyQuanCaPhe.Class
                         }
                     }
 
-                    // Nếu có lỗi trong response
                     if (doc.RootElement.TryGetProperty("error", out JsonElement error))
                     {
                         if (error.TryGetProperty("message", out JsonElement errorMessage))
@@ -137,9 +122,6 @@ namespace QuanLyQuanCaPhe.Class
             }
         }
 
-        /// <summary>
-        /// Xây dựng context từ database dựa trên mode
-        /// </summary>
         private static string BuildContextFromDatabase(string mode)
         {
             StringBuilder sb = new StringBuilder();
@@ -271,7 +253,7 @@ namespace QuanLyQuanCaPhe.Class
                             var matchingProducts = dtTG.AsEnumerable()
                                 .Where(r => r["TenSP"].ToString().ToLower().Contains(keyword.ToLower()) ||
                                            r["TenDM"].ToString().ToLower().Contains(keyword.ToLower()))
-                                .Take(2); // Giảm từ 3 xuống 2 món
+                                .Take(2);
 
                             foreach (var product in matchingProducts)
                             {
