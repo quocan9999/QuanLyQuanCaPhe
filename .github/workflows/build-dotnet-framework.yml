@@ -1,0 +1,39 @@
+name: Build ứng dụng Windows Forms (.NET Framework)
+
+on:
+  push:
+    branches: [ "master" ]
+  pull_request:
+    branches: [ "master" ]
+
+jobs:
+  build:
+    name: Build trên Windows
+    runs-on: windows-latest
+
+    env:
+      Solution_Name: QuanLyQuanCaPhe.sln
+      Configuration: Release
+
+    steps:
+    # 1. Lấy code từ GitHub về máy ảo
+    - name: Lấy code về (Checkout)
+      uses: actions/checkout@v4
+      with:
+        fetch-depth: 0
+
+    # 2. Cài đặt NuGet (Công cụ quản lý thư viện cho .NET Framework)
+    - name: Cài đặt công cụ NuGet
+      uses: nuget/setup-nuget@v2
+
+    # 3. Tải các thư viện cần thiết
+    - name: Khôi phục thư viện (Restore NuGet)
+      run: nuget restore $env:Solution_Name
+
+    # 4. Cài đặt MSBuild
+    - name: Cài đặt MSBuild
+      uses: microsoft/setup-msbuild@v2
+
+    # 5. Tiến hành Build code
+    - name: Chạy lệnh Build
+      run: msbuild $env:Solution_Name /p:Configuration=$env:Configuration
