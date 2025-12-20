@@ -174,6 +174,7 @@ namespace QuanLyQuanCaPhe.Forms
 
             if (string.IsNullOrEmpty(txtTenSanPham.Text)) { MessageBox.Show("Tên không được để trống."); return; }
             if (!float.TryParse(txtGia.Text, out float gia)) { MessageBox.Show("Nhập giá là số."); return; }
+            if (gia < 0) { MessageBox.Show("Giá không được nhỏ hơn 0.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
             if (string.IsNullOrEmpty(txtDVT.Text)) { MessageBox.Show("Đơn vị tính không được để trống."); return; }
             if (KiemTraTrungTenSanPham(txtTenSanPham.Text))
             {
@@ -215,6 +216,8 @@ namespace QuanLyQuanCaPhe.Forms
             }
 
             if (!int.TryParse(txtID.Text, out int id)) return;
+            if (!float.TryParse(txtGia.Text, out float gia)) { MessageBox.Show("Nhập giá là số."); return; }
+            if (gia < 0) { MessageBox.Show("Giá không được nhỏ hơn 0.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning); return; }
             if (KiemTraTrungTenSanPham(txtTenSanPham.Text, id))
             {
                 MessageBox.Show($"Sản phẩm '{txtTenSanPham.Text.Trim()}' đã tồn tại.", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
@@ -228,7 +231,7 @@ namespace QuanLyQuanCaPhe.Forms
                 {
                     new SqlParameter("@id", id),
                     new SqlParameter("@ten", txtTenSanPham.Text.Trim()),
-                    new SqlParameter("@gia", float.Parse(txtGia.Text.Trim())),
+                    new SqlParameter("@gia", gia),
                     new SqlParameter("@dvt", txtDVT.Text.Trim()),
                     new SqlParameter("@madm", cboDanhMuc.SelectedValue),
                     new SqlParameter("@tt", cboTrangThai.SelectedValue.ToString())
