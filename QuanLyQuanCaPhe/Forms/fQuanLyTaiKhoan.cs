@@ -210,12 +210,32 @@ namespace QuanLyQuanCaPhe.Forms
             {
                 try
                 {
+                    // Xóa nhân viên liên kết trước
+                    string queryDeleteNhanVien = "DELETE FROM NhanVien WHERE TenDangNhap = @TenDangNhap";
+                    dataProvider.ExecuteNonQuery(queryDeleteNhanVien, new SqlParameter[] { new SqlParameter("@TenDangNhap", selectedTenDangNhap) });
+
+                    // Sau đó xóa tài khoản
                     string query = "DELETE FROM NguoiDung WHERE TenDangNhap = @TenDangNhap";
                     SqlParameter[] parameters = new SqlParameter[] { new SqlParameter("@TenDangNhap", selectedTenDangNhap) };
                     int result = dataProvider.ExecuteNonQuery(query, parameters);
                     if (result > 0) { MessageBox.Show("Xóa tài khoản thành công!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Information); LoadDanhSachNguoiDung(); SetDefaultValues(); }
                 }
-                catch (Exception ex) { MessageBox.Show("Lỗi khi xóa tài khoản: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error); }
+                catch (Exception ex)
+                {
+                    SqlException sqlEx = ex.InnerException as SqlException;
+                    if (sqlEx != null && sqlEx.Number == 547)
+                    {
+                        MessageBox.Show("Không thể xóa tài khoản này vì nhân viên này đã từng lập hóa đơn, chỉ có thể vô hiệu hóa tài khoản này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else if (ex.Message.Contains("REFERENCE constraint") || ex.Message.Contains("FK_"))
+                    {
+                        MessageBox.Show("Không thể xóa tài khoản này vì nhân viên này đã từng lập hóa đơn, chỉ có thể vô hiệu hóa tài khoản này!", "Thông báo", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    else
+                    {
+                        MessageBox.Show("Lỗi khi xóa tài khoản: " + ex.Message, "Lỗi", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    }
+                }
             }
         }
 
