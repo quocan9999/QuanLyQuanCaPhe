@@ -503,6 +503,18 @@ AND hd.NgayLap <= @DenNgay
                 );
                 formIn.ShowDialog();
             }
+            catch (System.IO.FileNotFoundException)
+            {
+                // Bắt lỗi thiếu thư viện Crystal Report
+                MessageBox.Show("Tính năng này cần Crystal Report!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            catch (System.IO.FileLoadException)
+            {
+                // Bắt lỗi không thể load thư viện Crystal Report
+                MessageBox.Show("Tính năng này cần Crystal Report!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi khi in báo cáo: " + ex.Message, "Lỗi",

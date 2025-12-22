@@ -89,6 +89,20 @@ namespace QuanLyQuanCaPhe
                 crystalReportViewer1.ReportSource = baoCao;
                 crystalReportViewer1.Refresh();
             }
+            catch (System.IO.FileNotFoundException)
+            {
+                // Bắt lỗi thiếu thư viện Crystal Report
+                MessageBox.Show("Tính năng này cần Crystal Report!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.Close();
+            }
+            catch (System.IO.FileLoadException)
+            {
+                // Bắt lỗi không thể load thư viện Crystal Report
+                MessageBox.Show("Tính năng này cần Crystal Report!", "Thông báo",
+                    MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                this.Close();
+            }
             catch (Exception ex)
             {
                 MessageBox.Show("Lỗi: " + ex.Message);
